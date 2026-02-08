@@ -1,4 +1,4 @@
-# 📱 Guia de Build do APK PaixãoFlix Pro Max
+## 📱 Guia de Build do APK PaixãoFlix Pro Max
 
 ## 🚀 Configurações Rápidas
 
@@ -16,7 +16,7 @@
 app/
 ├── src/main/
 │   ├── java/com/paixaoflix/app/
-│   │   ├── MainActivity.java          # ✅ Já configurado
+│   │   ├── MainActivity.java          # ✅ Já configurado com orientação
 │   │   └── WebViewActivity.java    # Opcional
 │   ├── res/
 │   │   ├── layout/
@@ -34,6 +34,75 @@ app/
 │           └── performance-optimizations.js
 ├── AndroidManifest.xml              # ✅ Já configurado
 └── build.gradle                    # Configurar abaixo
+```
+
+### 3. Orientação de Tela Automática
+
+#### MainActivity.java - Comandos Essenciais
+```java
+// Comando para forçar modo paisagem ao abrir o player
+setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+// Comando para voltar ao modo retrato (em pé) ao fechar o player
+setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+// Interface JavaScript para comunicação bidirecional
+public class WebAppInterface {
+    @JavascriptInterface
+    public void lockOrientation() {
+        mActivity.runOnUiThread(() -> {
+            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        });
+    }
+    
+    @JavascriptInterface
+    public void unlockOrientation() {
+        mActivity.runOnUiThread(() -> {
+            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        });
+    }
+}
+```
+
+#### JavaScript - Screen Orientation API
+```javascript
+// Bloquear orientação em paisagem
+await screen.orientation.lock('landscape');
+
+// Desbloquear orientação
+screen.orientation.unlock();
+
+// Fallback para Android WebView
+if (window.Android && window.Android.lockOrientation) {
+    window.Android.lockOrientation();
+}
+```
+
+### 4. Botão de Orientação no Player
+```html
+<!-- Botão adicionado automaticamente -->
+<button class="orientation-btn" id="orientation-btn" title="Girar Tela">
+    <i class="fas fa-mobile-alt"></i>
+</button>
+```
+
+```css
+.orientation-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: var(--text-primary);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.orientation-btn.locked {
+    background: var(--accent-yellow);
+    border-color: var(--accent-yellow);
+    color: var(--bg-primary);
+}
 ```
 
 ### 3. build.gradle (app level)
