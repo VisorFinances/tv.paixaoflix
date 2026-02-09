@@ -17,6 +17,11 @@
     <meta name="msapplication-TileColor" content="#ffc107">
     <meta name="msapplication-config" content="/browserconfig.xml">
     
+    <!-- Favicon Dinâmico -->
+    <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logo192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logo192.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logo192.png">
+    
     <!-- PWA Icons -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-512.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-192.png">
@@ -55,7 +60,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <div class="logo" onclick="app.resetToHome()">
+            <div class="logo" onclick="app.resetToHome(); app.loadData();">
                 <img src="https://raw.githubusercontent.com/paixaoflix-mobile/paixaoflix-mobile/main/logoof512.png" alt="PaixãoFlix">
             </div>
             <div class="header-info">
