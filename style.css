@@ -144,12 +144,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .adult-warning i {
     font-size: 3rem;
-    color: #ff4444;
+    color: rgba(255, 193, 7, 0.8); /* Amarelo PaixãoFlix */
     margin-bottom: 15px;
 }
 
 .adult-warning h3 {
-    color: #ff4444;
+    color: rgba(255, 193, 7, 0.8); /* Amarelo PaixãoFlix */
     margin: 10px 0;
     font-size: 1.3rem;
 }
@@ -597,13 +597,17 @@ h1, h2, h3, h4, h5, h6 {
     flex: 0 0 auto;
     width: 200px;
     aspect-ratio: 16/9;
-    background: var(--bg-secondary);
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
-    cursor: pointer;
-    transition: all var(--transition-fast);
+    background: var(--bg-secondary);
     border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-normal);
     position: relative;
+    /* GPU Performance Optimizations */
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .movie-card-2-3 {
@@ -617,6 +621,17 @@ h1, h2, h3, h4, h5, h6 {
     transition: all var(--transition-fast);
     border: 2px solid transparent;
     position: relative;
+    aspect-ratio: 16/9;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    /* GPU Performance Optimizations */
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .movie-card:focus,
@@ -1796,6 +1811,30 @@ h1, h2, h3, h4, h5, h6 {
     animation: fadeIn var(--transition-normal) ease-out;
 }
 
+/* Fallback de imagem com gradiente e texto */
+.img-fallback {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    position: relative;
+}
+
+.img-fallback::after {
+    content: attr(alt);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffc107;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+}
+
 /* Lazy Loading */
 .lazy-load {
     opacity: 0;
@@ -1804,6 +1843,101 @@ h1, h2, h3, h4, h5, h6 {
 
 .lazy-load.loaded {
     opacity: 1;
+}
+
+/* Botão de Áudio com Pulsação */
+#audio-track-button {
+    animation: pulse-yellow 2s infinite;
+}
+
+@keyframes pulse-yellow {
+    0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+
+/* Botão de Busca por Voz */
+.voice-search-btn {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #333;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    margin-left: 10px;
+}
+
+.voice-search-btn.recording {
+    background: #ea4335; /* Vermelho Google */
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(234, 67, 53, 0.5);
+}
+
+/* Ondas de som animadas ao redor do mic */
+.voice-search-btn.recording::after,
+.voice-search-btn.recording::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(234, 67, 53, 0.4);
+    animation: voice-ripple 1.5s infinite;
+    z-index: -1;
+}
+
+.voice-search-btn.recording::before {
+    animation-delay: 0.5s;
+}
+
+@keyframes voice-ripple {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* Toast de Voz - Estilo Android TV */
+.voice-toast {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(40, 40, 40, 0.95);
+    padding: 15px 40px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 11000;
+}
+
+/* Badge TOP 10 */
+.top10-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: linear-gradient(135deg, #ffc107, #ff6b6b);
+    color: #000;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    z-index: 10;
+    animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 /* Botão de Troca de Áudio para MKV */
