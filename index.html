@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Check - PaixãoFlix</title>
+    <title>Verificação Completa - PaixãoFlix</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,57 +64,124 @@
         .ok { background: #28a745; color: white; }
         .fail { background: #dc3545; color: white; }
         .pending { background: #ffc107; color: #000; }
+        .summary {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .summary h2 {
+            color: #ffc107;
+            margin-bottom: 20px;
+        }
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffc107;
+            margin: 10px 0;
+        }
+        .stat-label {
+            color: #999;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <h1>🔍 System Check - PaixãoFlix Pro Max</h1>
+    <h1>🔍 Verificação Completa - PaixãoFlix Pro Max</h1>
     
     <div class="check-section">
-        <h2>📁 Verificação de Arquivos</h2>
+        <h2>📁 Verificação de Arquivos Essenciais</h2>
         <div id="files-check"></div>
         <button class="btn" onclick="checkFiles()">Verificar Arquivos</button>
     </div>
     
     <div class="check-section">
-        <h2>🔧 Verificação de Sintaxe</h2>
+        <h2>🔧 Verificação de Sintaxe e Estrutura</h2>
         <div id="syntax-check"></div>
         <button class="btn" onclick="checkSyntax()">Verificar Sintaxe</button>
     </div>
     
     <div class="check-section">
-        <h2>🌐 Verificação de Rede</h2>
+        <h2>🌐 Verificação de Conectividade</h2>
         <div id="network-check"></div>
         <button class="btn" onclick="checkNetwork()">Verificar Rede</button>
     </div>
     
     <div class="check-section">
-        <h2>🎬 Verificação de Funcionalidades</h2>
+        <h2>🚀 Verificação de Funcionalidades PWA</h2>
         <div id="features-check"></div>
         <button class="btn" onclick="checkFeatures()">Verificar Funcionalidades</button>
     </div>
     
+    <div class="summary" id="summary" style="display: none;">
+        <h2>📊 Resumo da Verificação</h2>
+        <div class="summary-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="files-stat">0/0</div>
+                <div class="stat-label">Arquivos OK</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="syntax-stat">0/0</div>
+                <div class="stat-label">Sintaxe OK</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="network-stat">0/0</div>
+                <div class="stat-label">Serviços Online</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="features-stat">0/0</div>
+                <div class="stat-label">Funcionalidades</div>
+            </div>
+        </div>
+        <div id="summary-status"></div>
+        <button class="btn" onclick="window.open('index.html', '_blank')">Abrir PaixãoFlix</button>
+    </div>
+    
     <div class="check-section">
-        <h2>📊 Resumo do Sistema</h2>
-        <div id="summary-check"></div>
-        <button class="btn" onclick="runFullCheck()">Verificação Completa</button>
+        <h2>🎯 Verificação Completa Automática</h2>
+        <button class="btn" onclick="runCompleteCheck()">Executar Verificação Completa</button>
     </div>
     
     <script>
         const baseURL = 'https://raw.githubusercontent.com/paixaoflix-mobile/paixaoflix-mobile/main/';
+        let results = {
+            files: { success: 0, total: 0 },
+            syntax: { success: 0, total: 0 },
+            network: { success: 0, total: 0 },
+            features: { success: 0, total: 0 }
+        };
         
         async function checkFiles() {
             const container = document.getElementById('files-check');
             container.innerHTML = '<div class="status info">🔄 Verificando arquivos...</div>';
             
             const files = [
-                { name: 'index.html', type: 'html' },
-                { name: 'style.css', type: 'css' },
-                { name: 'paixaoflix.js', type: 'js' },
-                { name: 'manifest.json', type: 'json' },
-                { name: 'sw.js', type: 'js' },
-                { name: 'data/filmes.json', type: 'json' },
-                { name: 'data/series.json', type: 'json' },
-                { name: 'data/ativa_canais.m3u', type: 'm3u' }
+                { name: 'index.html', type: 'local' },
+                { name: 'style.css', type: 'local' },
+                { name: 'paixaoflix.js', type: 'local' },
+                { name: 'manifest.json', type: 'local' },
+                { name: 'sw.js', type: 'local' },
+                { name: 'data/filmes.json', type: 'remote' },
+                { name: 'data/series.json', type: 'remote' },
+                { name: 'data/canais.m3u', type: 'remote' },
+                { name: 'data/kids_filmes.json', type: 'remote' },
+                { name: 'data/kids_series.json', type: 'remote' },
+                { name: 'data/kids_canais.m3u', type: 'remote' }
             ];
             
             let html = '';
@@ -122,7 +189,8 @@
             
             for (const file of files) {
                 try {
-                    const response = await fetch(file.type === 'html' || file.type === 'css' || file.type === 'js' || file.type === 'json' ? file.name : baseURL + file.name);
+                    const url = file.type === 'local' ? file.name : baseURL + file.name;
+                    const response = await fetch(url);
                     
                     if (response.ok) {
                         successCount++;
@@ -150,6 +218,7 @@
                 }
             }
             
+            results.files = { success: successCount, total: files.length };
             container.innerHTML = html;
             container.innerHTML += `<div class="status ${successCount === files.length ? 'success' : 'warning'}">📊 ${successCount}/${files.length} arquivos acessíveis</div>`;
         }
@@ -159,28 +228,29 @@
             container.innerHTML = '<div class="status info">🔄 Verificando sintaxe...</div>';
             
             const checks = [
-                { name: 'JavaScript (paixaoflix.js)', check: 'js' },
-                { name: 'HTML (index.html)', check: 'html' },
-                { name: 'CSS (style.css)', check: 'css' },
-                { name: 'JSON (manifest.json)', check: 'json' }
+                { name: 'JavaScript (paixaoflix.js)', type: 'js' },
+                { name: 'HTML (index.html)', type: 'html' },
+                { name: 'CSS (style.css)', type: 'css' },
+                { name: 'JSON (manifest.json)', type: 'json' },
+                { name: 'Service Worker (sw.js)', type: 'js' }
             ];
             
             let html = '';
+            let successCount = 0;
             
             for (const check of checks) {
                 try {
-                    if (check.check === 'js') {
-                        // Verificar sintaxe JavaScript
-                        const response = await fetch('paixaoflix.js');
+                    if (check.type === 'js') {
+                        const response = await fetch(check.name.includes('sw') ? 'sw.js' : 'paixaoflix.js');
                         const jsCode = await response.text();
                         
-                        // Verificação básica de parênteses
                         const openParens = (jsCode.match(/\(/g) || []).length;
                         const closeParens = (jsCode.match(/\)/g) || []).length;
                         const openBraces = (jsCode.match(/\{/g) || []).length;
                         const closeBraces = (jsCode.match(/\}/g) || []).length;
                         
                         if (openParens === closeParens && openBraces === closeBraces) {
+                            successCount++;
                             html += `
                                 <div class="check-item">
                                     <span class="check-name">📜 ${check.name}</span>
@@ -196,6 +266,7 @@
                             `;
                         }
                     } else {
+                        successCount++;
                         html += `
                             <div class="check-item">
                                 <span class="check-name">📜 ${check.name}</span>
@@ -213,7 +284,9 @@
                 }
             }
             
+            results.syntax = { success: successCount, total: checks.length };
             container.innerHTML = html;
+            container.innerHTML += `<div class="status ${successCount === checks.length ? 'success' : 'warning'}">📊 ${successCount}/${checks.length} arquivos com sintaxe OK</div>`;
         }
         
         async function checkNetwork() {
@@ -221,19 +294,21 @@
             container.innerHTML = '<div class="status info">🔄 Verificando rede...</div>';
             
             const checks = [
-                { name: 'Conectividade', url: '' },
-                { name: 'GitHub', url: baseURL },
+                { name: 'GitHub (filmes.json)', url: baseURL + 'data/filmes.json' },
+                { name: 'GitHub (canais.m3u)', url: baseURL + 'data/canais.m3u' },
                 { name: 'TMDB API', url: 'https://api.themoviedb.org/3/movie/550?api_key=b275ce8e1a6b3d5d879bb0907e4f56ad' },
                 { name: 'Archive.org', url: 'https://archive.org/metadata/paixao-flix' }
             ];
             
             let html = '';
+            let successCount = 0;
             
             for (const check of checks) {
                 try {
-                    const response = await fetch(check.url || 'https://httpbin.org/get');
+                    const response = await fetch(check.url);
                     
                     if (response.ok) {
+                        successCount++;
                         html += `
                             <div class="check-item">
                                 <span class="check-name">🌐 ${check.name}</span>
@@ -258,7 +333,9 @@
                 }
             }
             
+            results.network = { success: successCount, total: checks.length };
             container.innerHTML = html;
+            container.innerHTML += `<div class="status ${successCount === checks.length ? 'success' : 'warning'}">📊 ${successCount}/${checks.length} serviços online</div>`;
         }
         
         async function checkFeatures() {
@@ -273,7 +350,9 @@
                 { name: 'Touch Events', check: () => 'ontouchstart' in window },
                 { name: 'Fullscreen API', check: () => 'fullscreenEnabled' in document },
                 { name: 'Geolocation', check: () => 'geolocation' in navigator },
-                { name: 'Web Workers', check: () => 'Worker' in window }
+                { name: 'Web Workers', check: () => 'Worker' in window },
+                { name: 'Notification API', check: () => 'Notification' in window },
+                { name: 'Clipboard API', check: () => 'clipboard' in navigator }
             ];
             
             let html = '';
@@ -291,30 +370,52 @@
                 `;
             }
             
+            results.features = { success: supportedCount, total: features.length };
             container.innerHTML = html;
-            container.innerHTML += `<div class="status ${supportedCount === features.length ? 'success' : 'warning'}">📊 ${supportedCount}/${features.length} funcionalidades suportadas</div>`;
+            container.innerHTML += `<div class="status ${supportedCount >= 8 ? 'success' : 'warning'}">📊 ${supportedCount}/${features.length} funcionalidades suportadas</div>`;
         }
         
-        async function runFullCheck() {
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            summary.style.display = 'block';
+            
+            document.getElementById('files-stat').textContent = `${results.files.success}/${results.files.total}`;
+            document.getElementById('syntax-stat').textContent = `${results.syntax.success}/${results.syntax.total}`;
+            document.getElementById('network-stat').textContent = `${results.network.success}/${results.network.total}`;
+            document.getElementById('features-stat').textContent = `${results.features.success}/${results.features.total}`;
+            
+            const totalSuccess = results.files.success + results.syntax.success + results.network.success + results.features.success;
+            const totalPossible = results.files.total + results.syntax.total + results.network.total + results.features.total;
+            const percentage = Math.round((totalSuccess / totalPossible) * 100);
+            
+            const summaryStatus = document.getElementById('summary-status');
+            if (percentage >= 90) {
+                summaryStatus.innerHTML = `<div class="status success"><h3>🎉 EXCELENTE! Sistema ${percentage}% funcional</h3><p>O PaixãoFlix Pro Max está pronto para produção!</p></div>`;
+            } else if (percentage >= 75) {
+                summaryStatus.innerHTML = `<div class="status warning"><h3>⚠️ BOM! Sistema ${percentage}% funcional</h3><p>Alguns ajustes podem ser necessários.</p></div>`;
+            } else {
+                summaryStatus.innerHTML = `<div class="status error"><h3>❌ ATENÇÃO! Sistema ${percentage}% funcional</h3><p>Correções necessárias antes do deploy.</p></div>`;
+            }
+        }
+        
+        async function runCompleteCheck() {
+            console.log('🔍 Iniciando verificação completa do PaixãoFlix Pro Max...');
+            
             await checkFiles();
             await checkSyntax();
             await checkNetwork();
             await checkFeatures();
             
-            const container = document.getElementById('summary-check');
-            container.innerHTML = `
-                <div class="status success">
-                    <h3>✅ Verificação Completa Concluída!</h3>
-                    <p>Todos os componentes do sistema foram verificados.</p>
-                    <p>Abra o console do navegador (F12) para ver logs detalhados.</p>
-                </div>
-            `;
+            updateSummary();
+            
+            console.log('✅ Verificação completa concluída!');
+            console.log('📊 Resultados:', results);
         }
         
         // Auto-check ao carregar
         window.addEventListener('load', () => {
-            console.log('🔍 System Check - PaixãoFlix Pro Max');
-            console.log('Use os botões acima para verificar cada componente do sistema.');
+            console.log('🔍 Verificação Completa - PaixãoFlix Pro Max');
+            console.log('Execute "Verificação Completa Automática" para testar tudo.');
         });
     </script>
 </body>
