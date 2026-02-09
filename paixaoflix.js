@@ -153,35 +153,123 @@ class PaixaoFlixApp {
         try {
             console.log('🚀 Inicializando PaixãoFlix V4...');
             
-            // Carregar filmes
-            const filmesResponse = await fetch(this.baseURL + 'data/filmes.json');
-            const filmesData = await filmesResponse.json();
-            this.data.filmes = filmesData.filmes || filmesData || [];
+            // Aguardar DOM estar pronto
+            if (document.readyState === 'loading') {
+                await new Promise(resolve => {
+                    document.addEventListener('DOMContentLoaded', resolve);
+                });
+            }
             
-            // Carregar séries
-            const seriesResponse = await fetch(this.baseURL + 'data/series.json');
-            const seriesData = await seriesResponse.json();
-            this.data.series = seriesData.series || seriesData || [];
+            // Carregar dados em paralelo para melhor performance
+            const [filmesData, seriesData, kidsFilmesData, kidsSeriesData] = await Promise.all([
+                this.fetchWithRetry(this.baseURL + 'data/filmes.json'),
+                this.fetchWithRetry(this.baseURL + 'data/series.json'),
+                this.fetchWithRetry(this.baseURL + 'data/kids_filmes.json'),
+                this.fetchWithRetry(this.baseURL + 'data/kids_series.json')
+            ]);
             
-            // Carregar filmes kids
-            const kidsFilmesResponse = await fetch(this.baseURL + 'data/kids_filmes.json');
-            const kidsFilmesData = await kidsFilmesResponse.json();
-            this.data.kidsFilmes = kidsFilmesData.filmes || kidsFilmesData || [];
+            // Processar dados com tratamento de erro
+            this.data.filmes = this.processJSONData(filmesData, 'filmes');
+            this.data.series = this.processJSONData(seriesData, 'series');
+            this.data.kidsFilmes = this.processJSONData(kidsFilmesData, 'filmes');
+            this.data.kidsSeries = this.processJSONData(kidsSeriesData, 'series');
             
-            // Carregar séries kids
-            const kidsSeriesResponse = await fetch(this.baseURL + 'data/kids_series.json');
-            const kidsSeriesData = await kidsSeriesResponse.json();
-            this.data.kidsSeries = kidsSeriesData.series || kidsSeriesData || [];
+            // Carregar canais com tratamento robusto
+            try {
+                const [channelsResponse, kidsChannelsResponse] = await Promise.all([
+                    this.fetchWithRetry(this.baseURL + 'data/canais.m3u'),
+                    this.fetchWithRetry(this.baseURL + 'data/kids_canais.m3u')
+                ]);
+                
+                const channelsText = await channelsResponse.text();
+                const kidsChannelsText = await kidsChannelsResponse.text();
+                
+                this.data.channels = this.parseM3U(channelsText);
+                this.data.kidsChannels = this.parseM3U(kidsChannelsText);
+                
+                console.log(`✅ Canais carregados: ${this.data.channels.length} adultos, ${this.data.kidsChannels.length} kids`);
+            } catch (channelError) {
+                console.warn('⚠️ Erro ao carregar canais:', channelError);
+                this.data.channels = [];
+                this.data.kidsChannels = [];
+            }
             
+            // Carregar dados do localStorage
+            this.loadLocalStorageData();
+            
+            // Atualizar contadores
+            this.updateContentCount();
+            
+            console.log('✅ Todos os dados carregados com sucesso!');
+            
+        } catch (error) {
+            console.error('❌ Erro crítico ao carregar dados:', error);
+            this.showToast('Erro ao carregar conteúdo. Tente novamente.');
+            
+            // Dados fallback para não quebrar o app
+            this.data = {
+                filmes: [],
+                series: [],
+                kidsFilmes: [],
+                kidsSeries: [],
+                channels: [],
+                kidsChannels: [],
+                favoritos: []
+            };
+        }
+    }
+    
+    async fetchWithRetry(url, retries = 3) {
+        for (let i = 0; i < retries; i++) {
+            try {
+                console.log(`📡 Tentativa ${i + 1} para: ${url}`);
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                console.log(`✅ Sucesso na tentativa ${i + 1}: ${url}`);
+                return response;
+                
+            } catch (error) {
+                console.warn(`⚠️ Erro na tentativa ${i + 1}:`, error.message);
+                
+                if (i === retries - 1) {
+                    throw error;
+                }
+                
+                // Esperar antes de tentar novamente
+                await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+            }
+        }
+    }
+    
+    processJSONData(response, dataType) {
+        try {
+            const data = typeof response === 'string' ? JSON.parse(response) : response;
+            return data[dataType] || data || [];
+        } catch (error) {
+            console.warn(`⚠️ Erro ao processar JSON de ${dataType}:`, error);
+            return [];
+        }
+    }
+    
+    loadLocalStorageData() {
+        try {
             // Carregar favoritos
             const favoritos = localStorage.getItem('paixaoflix_favorites');
             if (favoritos) {
-                try {
-                    const favoritosData = JSON.parse(favoritos);
-                    this.data.favoritos = favoritosData.favoritos || favoritosData || [];
-                } catch (e) {
-                    this.data.favoritos = [];
-                }
+                const favoritosData = JSON.parse(favoritos);
+                this.data.favoritos = favoritosData.favoritos || favoritosData || [];
+            } else {
+                this.data.favoritos = [];
             }
             
             // Carregar continuar assistindo
@@ -190,24 +278,11 @@ class PaixaoFlixApp {
                 this.continueWatching = JSON.parse(continueWatching);
             }
             
-            // Carregar canais
-            try {
-                const channelsResponse = await fetch(this.baseURL + 'data/canais.m3u');
-                const channelsText = await channelsResponse.text();
-                this.data.channels = this.parseM3U(channelsText);
-                
-                const kidsChannelsResponse = await fetch(this.baseURL + 'data/kids_canais.m3u');
-                const kidsChannelsText = await kidsChannelsResponse.text();
-                this.data.kidsChannels = this.parseM3U(kidsChannelsText);
-            } catch (error) {
-                this.data.channels = [];
-                this.data.kidsChannels = [];
-            }
-            
-            console.log('✅ Dados carregados com sucesso');
-            this.buildSearchIndex();
+            console.log('✅ Dados do localStorage carregados');
         } catch (error) {
-            console.error('❌ Erro ao carregar dados:', error);
+            console.warn('⚠️ Erro ao carregar localStorage:', error);
+            this.data.favoritos = [];
+            this.continueWatching = [];
         }
     }
     
@@ -417,12 +492,14 @@ class PaixaoFlixApp {
             if (data.results && data.results.length > 0) {
                 const movie = data.results[Math.floor(Math.random() * data.results.length)];
                 
+                // IDs corretos do HTML
                 const heroBackground = document.getElementById('hero-background');
                 const heroTitle = document.getElementById('hero-title');
                 const heroDescription = document.getElementById('hero-description');
                 
+                // URL completa do TMDB
                 if (movie.backdrop_path) {
-                    heroBackground.style.backgroundImage = `url(https://image.tmdb.org/t/p/w1280${movie.backdrop_path})`;
+                    heroBackground.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`;
                 }
                 
                 heroTitle.textContent = movie.title;
@@ -433,7 +510,7 @@ class PaixaoFlixApp {
                 this.currentFeaturedContent = {
                     title: movie.title,
                     description: movie.overview,
-                    backdrop: `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`,
+                    backdrop: `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
                     rating: movie.vote_average
                 };
             }
@@ -459,7 +536,8 @@ class PaixaoFlixApp {
         
         container.parentElement.style.display = 'block';
         this.continueWatching.slice(0, 5).forEach(item => {
-            const card = this.createMovieCard(item, true, '2-3');
+            // Usar landscape 400x225 para continuar assistindo
+            const card = this.createMovieCard(item, true, 'landscape', false);
             container.appendChild(card);
         });
     }
@@ -490,7 +568,8 @@ class PaixaoFlixApp {
         }
         
         loopContent.forEach(item => {
-            const card = this.createMovieCard(item, false, '16-9', true);
+            // Usar tamanho 300x450 para catálogo principal
+            const card = this.createMovieCard(item, false, 'catalog', false);
             container.appendChild(card);
         });
     }
@@ -602,18 +681,36 @@ class PaixaoFlixApp {
         const container = document.getElementById('momento-crianca-row');
         container.innerHTML = '';
         
-        const kidsContent = [...this.data.kidsFilmes, ...this.data.kidsSeries];
-        const filteredKids = kidsContent.filter(item => {
-            const genre = item.genre || item.genero || '';
-            return !genre.toLowerCase().includes('adulto');
+        // Filtrar conteúdo infantil por gênero
+        const kidsContent = [];
+        
+        // Adicionar filmes kids
+        this.data.kidsFilmes.forEach(item => {
+            if (item.genre && (item.genre.includes('Criança') || item.genre.includes('Infantil'))) {
+                kidsContent.push({...item, type: 'kids-movie'});
+            }
         });
         
-        if (filteredKids.length === 0) return;
+        // Adicionar séries kids
+        this.data.kidsSeries.forEach(item => {
+            if (item.genre && (item.genre.includes('Criança') || item.genre.includes('Infantil'))) {
+                kidsContent.push({...item, type: 'kids-series'});
+            }
+        });
         
-        filteredKids.slice(0, 5).forEach(item => {
-            const card = this.createMovieCard(item);
+        // Se não encontrar por gênero, usar todo conteúdo kids
+        if (kidsContent.length === 0) {
+            kidsContent.push(...this.data.kidsFilmes.map(item => ({...item, type: 'kids-movie'})));
+            kidsContent.push(...this.data.kidsSeries.map(item => ({...item, type: 'kids-series'})));
+        }
+        
+        // Limitar a 10 itens e criar cards
+        kidsContent.slice(0, 10).forEach(item => {
+            const card = this.createMovieCard(item, false, 'catalog', false);
             container.appendChild(card);
         });
+        
+        console.log(`✅ Momento Criança carregado: ${kidsContent.length} itens`);
     }
     
     loadPreparePopcorn() {
@@ -682,12 +779,35 @@ class PaixaoFlixApp {
         card.className = aspectRatio === '2-3' ? 'movie-card-2-3' : 'movie-card';
         card.tabIndex = 0;
         
+        // Definir tamanhos baseados no aspectRatio
+        let thumbnailSize, imageSize;
+        if (aspectRatio === '2-3') {
+            // Poster vertical: 400x600 (2:3)
+            thumbnailSize = '400x600';
+            imageSize = '400x600';
+        } else if (aspectRatio === 'landscape') {
+            // Landscape: 400x225 (16:9)
+            thumbnailSize = '400x225';
+            imageSize = '400x225';
+        } else if (aspectRatio === 'catalog') {
+            // Catálogo: 300x450 (2:3)
+            thumbnailSize = '300x450';
+            imageSize = '300x450';
+        } else {
+            // Padrão: 300x450 (2:3) para catálogo
+            thumbnailSize = '300x450';
+            imageSize = '300x450';
+        }
+        
         const thumbnail = item.thumbnail || item.poster || item.cover || 
-                       'https://via.placeholder.com/200x112/1a1a1a/ffffff?text=Sem+Imagem';
+                       `https://via.placeholder.com/${imageSize}/1a1a1a/ffffff?text=Sem+Imagem`;
         const title = item.title || item.nome || 'Sem Título';
         
         let cardHTML = `
-            <img src="${thumbnail}" alt="${title}" loading="lazy">
+            <img src="${thumbnail}" alt="${title}" loading="lazy" 
+                 style="width: 100%; height: 100%; object-fit: cover;"
+                 onerror="this.src='https://via.placeholder.com/${imageSize}/1a1a1a/ffffff?text=Erro+Imagem';"
+                 onerror="this.onerror=null;">
             ${showProgress && item.progress ? `
                 <div class="progress-overlay">
                     <div class="progress-bar" style="width: ${item.progress}%"></div>
@@ -1878,44 +1998,125 @@ class PaixaoFlixApp {
         this.updateFocusableElements();
     }
     
+    showHome() {
+        console.log('🏠 Exibindo página inicial');
+        
+        try {
+            // Ocultar todos os containers exceto o principal
+            const allContainers = document.querySelectorAll('.content-section, .search-overlay, .modal, .series-modal, #video-player');
+            allContainers.forEach(container => {
+                if (container && container.id !== 'main-content') {
+                    container.style.display = 'none';
+                }
+            });
+            
+            // Limpar conteúdo principal
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) {
+                // Manter apenas o hero
+                const sectionsToKeep = ['hero'];
+                Array.from(mainContent.children).forEach(child => {
+                    if (!sectionsToKeep.some(section => child.id === section)) {
+                        child.remove();
+                    }
+                });
+            }
+            
+            // Fechar modais e overlays
+            this.closeModal();
+            this.closeSeriesModal();
+            this.closeSearch();
+            this.closePlayer();
+            
+            // Recarregar conteúdo da home
+            this.loadHomeContent();
+            
+            // Atualizar menu ativo
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const homeMenuItem = document.querySelector('[data-page="home"]');
+            if (homeMenuItem) {
+                homeMenuItem.classList.add('active');
+            }
+            
+            // Resetar foco
+            setTimeout(() => {
+                const firstFocusable = document.querySelector('.focusable');
+                if (firstFocusable) {
+                    firstFocusable.focus();
+                }
+            }, 100);
+            
+            console.log('✅ Página inicial exibida');
+        } catch (error) {
+            console.error('❌ Erro ao exibir home:', error);
+            this.showToast('Erro ao carregar página inicial');
+        }
+    }
+    
     resetToHome() {
         console.log('🏠 Resetando para página inicial');
         
-        // Limpar conteúdo principal
-        const mainContent = document.getElementById('main-content');
-        const sectionsToKeep = ['hero'];
-        
-        // Remover todas as seções exceto as que devem permanecer
-        Array.from(mainContent.children).forEach(child => {
-            if (!sectionsToKeep.some(section => child.id === section)) {
-                child.remove();
+        try {
+            // Esconder seções de pesquisa, canais e detalhes
+            const searchOverlay = document.getElementById('search-overlay');
+            if (searchOverlay) searchOverlay.style.display = 'none';
+            
+            const modal = document.getElementById('modal');
+            if (modal) modal.style.display = 'none';
+            
+            const seriesModal = document.getElementById('series-modal');
+            if (seriesModal) seriesModal.style.display = 'none';
+            
+            const videoPlayer = document.getElementById('video-player');
+            if (videoPlayer) videoPlayer.classList.remove('active');
+            
+            // Voltar display do main-content e hero para visível
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) mainContent.style.display = 'block';
+            
+            const hero = document.getElementById('hero');
+            if (hero) hero.style.display = 'block';
+            
+            // Limpar conteúdo principal mantendo apenas o hero
+            if (mainContent) {
+                const sectionsToKeep = ['hero'];
+                Array.from(mainContent.children).forEach(child => {
+                    if (!sectionsToKeep.some(section => child.id === section)) {
+                        child.remove();
+                    }
+                });
             }
-        });
-        
-        // Fechar modais e overlays
-        this.closeModal();
-        this.closeSeriesModal();
-        this.closeSearch();
-        this.closePlayer();
-        
-        // Recarregar conteúdo da home
-        this.loadHomeContent();
-        
-        // Atualizar menu ativo
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        document.querySelector('[data-page="home"]').classList.add('active');
-        
-        // Resetar foco
-        setTimeout(() => {
-            const firstFocusable = document.querySelector('.focusable');
-            if (firstFocusable) {
-                firstFocusable.focus();
+            
+            // Recarregar conteúdo da home
+            this.loadHomeContent();
+            
+            // Atualizar menu ativo
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const homeMenuItem = document.querySelector('[data-page="home"]');
+            if (homeMenuItem) {
+                homeMenuItem.classList.add('active');
             }
-        }, 100);
-        
-        console.log('✅ Página inicial carregada');
+            
+            // Resetar foco
+            setTimeout(() => {
+                const firstFocusable = document.querySelector('.focusable');
+                if (firstFocusable) {
+                    firstFocusable.focus();
+                }
+            }, 100);
+            
+            // Atualizar conteúdo sem refresh total
+            this.loadData();
+            
+            console.log('✅ Página inicial resetada');
+        } catch (error) {
+            console.error('❌ Erro ao resetar para home:', error);
+            this.showToast('Erro ao carregar página inicial');
+        }
     }
     
     openSearch() {
@@ -2148,11 +2349,13 @@ class PaixaoFlixApp {
         card.className = 'movie-card channel-card';
         card.tabIndex = 0;
         
-        const logo = channel.logo || 'https://via.placeholder.com/200x112/1a1a1a/ffffff?text=Canal';
+        // Logo canal 200x200 (1:1)
+        const logo = channel.logo || 'https://via.placeholder.com/200x200/1a1a1a/ffffff?text=Canal';
         
         card.innerHTML = `
             <div class="channel-logo-container">
-                <img src="${logo}" alt="${channel.name}" loading="lazy">
+                <img src="${logo}" alt="${channel.name}" loading="lazy" 
+                     style="width: 200px; height: 200px; object-fit: contain;">
                 <div class="channel-name">${channel.name}</div>
             </div>
         `;
@@ -2165,13 +2368,31 @@ class PaixaoFlixApp {
     }
     
     playChannel(channel) {
+        console.log('📺 Reproduzindo canal:', channel.name);
+        
         const player = document.getElementById('video-player');
         const video = document.getElementById('video-element');
         
+        if (!player || !video) {
+            console.error('❌ Player não encontrado');
+            return;
+        }
+        
+        // Configurar vídeo
         video.src = channel.url;
+        video.load();
+        
+        // Mostrar player em tela cheia
         player.classList.add('active');
         document.body.style.overflow = 'hidden';
-        video.play();
+        
+        // Tentar reproduzir
+        video.play().then(() => {
+            console.log('✅ Canal reproduzido com sucesso');
+        }).catch(error => {
+            console.error('❌ Erro ao reproduzir canal:', error);
+            this.showToast('Erro ao reproduzir canal');
+        });
     }
     
     loadCinemaPage() {
@@ -2817,4 +3038,13 @@ class PaixaoFlixApp {
 document.addEventListener('DOMContentLoaded', () => {
     const app = new PaixaoFlixApp();
     window.app = app;
+    
+    // Forçar favicon dinamicamente
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/png';
+    link.rel = 'shortcut icon';
+    link.href = 'https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logo192.png';
+    document.getElementsByTagName('head')[0].appendChild(link);
+    
+    console.log('✅ Favicon dinâmico carregado');
 });
