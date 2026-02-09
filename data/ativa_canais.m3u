@@ -51,8 +51,6 @@ https://stmv1.srvsite.com/ely/ely/playlist.m3u8
 https://cdn.jmvstream.com/w/LVW-8719/LVW8719_AcLVAxWy5J/playlist.m3u8
 #EXTINF:-1 tvg-id="FonteTV.br@SD",Fonte TV PaixãoFlix
 http://flash.softhost.com.br:1935/fonte/fontetv/live.m3u8
-#EXTINF:-1 tvg-id="TVAlternativa.br@SD",TV Alternativa PaixãoFlix
-https://stmv5.samcast.com.br/wagner7919/wagner7919/playlist.m3u8
 #EXTINF:-1 tvg-id="TVAparecida.br@SD",TV Aparecida PaixãoFlix
 https://cdn.jmvstream.com/w/LVW-9716/LVW9716_HbtQtezcaw/playlist.m3u8
 #EXTINF:-1 tvg-id="TVSeries.br@SD",TV Series 1 As Panteras PaixãoFlix
