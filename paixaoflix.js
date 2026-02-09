@@ -1,3 +1,4 @@
+// 1. CONFIGURAÇÃO (Onde está sua chave)
 const TMDB_CONFIG = {
     apiKey: 'b275ce8e1a6b3d5d879bb0907e4f56ad',
     baseUrl: 'https://api.themoviedb.org/3',
@@ -5,27 +6,52 @@ const TMDB_CONFIG = {
     lang: 'pt-BR'
 };
 
-// Esta função é o coração da busca
+// 2. O COMANDO DE BUSCAR (O cérebro)
 async function buscarNoTMDB(nome, tipo = 'movie') {
     const url = `${TMDB_CONFIG.baseUrl}/search/${tipo}?api_key=${TMDB_CONFIG.apiKey}&query=${encodeURIComponent(nome)}&language=${TMDB_CONFIG.lang}`;
     
     try {
         const response = await fetch(url);
         const data = await response.json();
-        
         if (data.results && data.results.length > 0) {
-            const resultado = data.results[0];
-            return {
-                titulo: resultado.title || resultado.name,
-                poster: TMDB_CONFIG.imgUrl + resultado.poster_path,
-                banner: 'https://image.tmdb.org/t/p/original' + resultado.backdrop_path,
-                resumo: resultado.overview,
-                nota: resultado.vote_average,
-                id: resultado.id
-            };
+            return data.results[0]; // Retorna o primeiro filme encontrado
         }
     } catch (erro) {
-        console.error("Erro ao conectar com TMDB:", erro);
+        console.error("Erro na API:", erro);
     }
     return null;
 }
+
+// 3. O PASSO 3: COLOCAR NA TELA (A mágica)
+// Esta função cria o HTML dentro das prateleiras do seu index.html
+async function carregarCatalogo() {
+    // Exemplo: Vamos buscar 3 filmes para testar
+    const filmesParaTestar = ['Batman', 'Superman', 'Avatar'];
+    
+    // Onde os filmes vão aparecer no HTML? No ID que criamos no index.html
+    const container = document.getElementById('melhores-2025-row');
+
+    for (let nome of filmesParaTestar) {
+        const info = await buscarNoTMDB(nome);
+        
+        if (info) {
+            // Criamos o elemento do Card
+            const card = document.createElement('div');
+            card.className = 'movie-card focusable'; 
+            card.tabIndex = 0;
+
+            // Colocamos a imagem e o título dentro dele
+            card.innerHTML = `
+                <img src="${TMDB_CONFIG.imgUrl + info.poster_path}" alt="${info.title}">
+                <div style="padding:10px; font-size:12px;">${info.title}</div>
+            `;
+            
+            // Adicionamos o card na "prateleira"
+            container.appendChild(card);
+        }
+    }
+}
+
+// 4. INICIALIZAÇÃO
+// Quando o site carregar, ele executa a função acima
+document.addEventListener('DOMContentLoaded', carregarCatalogo);
