@@ -55,3 +55,51 @@ async function carregarCatalogo() {
 // 4. INICIALIZAÇÃO
 // Quando o site carregar, ele executa a função acima
 document.addEventListener('DOMContentLoaded', carregarCatalogo);
+
+// SISTEMA DE NAVEGAÇÃO POR SETAS (D-PAD)
+document.addEventListener('keydown', function(e) {
+    // Busca todos os itens que podem ser focados
+    const itensFocaveis = document.querySelectorAll('.focusable');
+    let index = Array.from(itensFocaveis).indexOf(document.activeElement);
+
+    if (e.key === 'ArrowRight') {
+        index = (index + 1 < itensFocaveis.length) ? index + 1 : index;
+    } 
+    else if (e.key === 'ArrowLeft') {
+        index = (index - 1 >= 0) ? index - 1 : index;
+    }
+    // Para subir e descer entre as prateleiras
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        // Lógica simplificada: procura o item mais próximo verticalmente
+        const currentRect = document.activeElement.getBoundingClientRect();
+        let closest = null;
+        let minDistance = Infinity;
+
+        itensFocaveis.forEach(item => {
+            if (item === document.activeElement) return;
+            const rect = item.getBoundingClientRect();
+            
+            // Verifica se está acima ou abaixo
+            const isVertical = e.key === 'ArrowDown' ? rect.top > currentRect.bottom : rect.bottom < currentRect.top;
+            
+            if (isVertical) {
+                const distance = Math.sqrt(Math.pow(rect.left - currentRect.left, 2) + Math.pow(rect.top - currentRect.top, 2));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closest = item;
+                }
+            }
+        });
+        if (closest) closest.focus();
+        return; // Sai da função para não usar o index de lateral
+    }
+    else if (e.key === 'Enter') {
+        // Quando carregar no OK do comando
+        document.activeElement.click();
+    }
+
+    // Aplica o foco no novo item
+    if (itensFocaveis[index]) {
+        itensFocaveis[index].focus();
+    }
+});
