@@ -362,8 +362,8 @@ defaultConfig {
 - [ ] Testado em emulador Android TV
 - [ ] Testado em dispositivo real
 - [ ] Performance otimizada (ProGuard ativo)
-- [ ] Tamanho do APK < 50MB
-- [ ] Controle remoto funcionando
+- [ ] Tamanho do APK < 50MB 
+- [ ] Controle remoto funcionando 
 - [ ] Streaming de vídeo funcionando
 
 ---
