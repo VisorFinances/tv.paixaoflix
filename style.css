@@ -1550,3 +1550,164 @@ body {
 .lazy-load.loaded {
     opacity: 1;
 }
+
+/* Botão de Troca de Áudio para MKV */
+#audio-track-button {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 107, 107, 0.9)) !important;
+    color: #000 !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    z-index: 10000 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(10px) !important;
+    font-family: var(--font-title) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+#audio-track-button:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.9), rgba(255, 193, 7, 0.9)) !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4) !important;
+}
+
+#audio-track-button:active {
+    transform: scale(0.98) !important;
+}
+
+/* Menu de Seleção de Áudio */
+#audio-track-menu {
+    position: fixed !important;
+    top: 70px !important;
+    right: 20px !important;
+    background: rgba(26, 26, 26, 0.95) !important;
+    border: 2px solid var(--accent-yellow) !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    z-index: 10001 !important;
+    min-width: 200px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(10px) !important;
+    font-family: var(--font-title) !important;
+    animation: slideDown 0.3s ease-out !important;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#audio-track-menu .menu-title {
+    color: var(--accent-yellow) !important;
+    font-weight: bold !important;
+    margin-bottom: 10px !important;
+    font-size: 16px !important;
+    text-align: center !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+#audio-track-menu .track-option {
+    padding: 10px !important;
+    margin: 5px 0 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid #666 !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    color: var(--text-primary) !important;
+    font-size: 14px !important;
+}
+
+#audio-track-menu .track-option:hover {
+    background: rgba(255, 193, 7, 0.3) !important;
+    border-color: var(--accent-yellow) !important;
+    transform: translateX(5px) !important;
+}
+
+#audio-track-menu .track-option.active {
+    background: rgba(255, 193, 7, 0.2) !important;
+    border-color: var(--accent-yellow) !important;
+}
+
+#audio-track-menu .track-option .track-info {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+#audio-track-menu .track-option .track-name {
+    font-weight: 500 !important;
+}
+
+#audio-track-menu .track-option .track-language {
+    color: var(--text-secondary) !important;
+    font-size: 12px !important;
+}
+
+#audio-track-menu .track-option .track-active {
+    color: #28a745 !important;
+    font-weight: bold !important;
+}
+
+#audio-track-menu .close-button {
+    padding: 8px !important;
+    margin-top: 10px !important;
+    background: rgba(220, 53, 69, 0.8) !important;
+    border-radius: 4px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 12px !important;
+    transition: all 0.3s ease !important;
+    color: var(--text-primary) !important;
+}
+
+#audio-track-menu .close-button:hover {
+    background: rgba(220, 53, 69, 1) !important;
+}
+
+/* Responsividade para o Botão de Áudio */
+@media (max-width: 768px) {
+    #audio-track-button {
+        top: 15px !important;
+        right: 15px !important;
+        padding: 10px 15px !important;
+        font-size: 12px !important;
+    }
+    
+    #audio-track-menu {
+        top: 65px !important;
+        right: 15px !important;
+        min-width: 180px !important;
+        padding: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #audio-track-button {
+        top: 10px !important;
+        right: 10px !important;
+        padding: 8px 12px !important;
+        font-size: 11px !important;
+    }
+    
+    #audio-track-menu {
+        top: 55px !important;
+        right: 10px !important;
+        min-width: 160px !important;
+        padding: 10px !important;
+    }
+}
