@@ -2,633 +2,283 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="PaixãoFlix Pro Max - Streaming profissional com cinema, séries e conteúdo infantil">
-    <meta name="keywords" content="streaming, filmes, séries, cinema, online, gratis">
-    <meta name="author" content="PaixãoFlix">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#ffc107">
-    <meta name="background-color" content="#050505">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="PaixãoFlix">
-    <meta name="application-name" content="PaixãoFlix">
-    <meta name="msapplication-TileColor" content="#ffc107">
-    <meta name="msapplication-config" content="/browserconfig.xml">
-    
-    <!-- PWA Icons -->
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-512.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-192.png">
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Preconnect para performance -->
-    <link rel="preconnect" href="https://raw.githubusercontent.com">
-    <link rel="preconnect" href="https://api.themoviedb.org">
-    <link rel="preconnect" href="https://image.tmdb.org">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <title>PaixãoFlix Pro Max V4</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Clappr Player -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.css">
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Carregamento - PaixãoFlix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+        }
+        .test-section {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #28a745; }
+        .error { background: #dc3545; }
+        .warning { background: #ffc107; color: #000; }
+        .info { background: #17a2b8; }
+        h1 { color: #ffc107; text-align: center; }
+        .btn {
+            background: #ffc107;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .btn:hover { background: #ff6b6b; }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #ffc107;
+            transition: width 0.3s ease;
+        }
+    </style>
 </head>
 <body>
-    <!-- Splash Screen -->
-    <div id="splash-screen">
-        <img src="https://raw.githubusercontent.com/paixaoflix-mobile/paixaoflix-mobile/main/logoof512.png" alt="PaixãoFlix" class="splash-logo">
-        <div class="loader-bar">
-            <div class="loader-progress"></div>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo" onclick="app.resetToHome()">
-                <img src="https://raw.githubusercontent.com/paixaoflix-mobile/paixaoflix-mobile/main/logoof512.png" alt="PaixãoFlix">
-            </div>
-            <div class="header-info">
-                <span id="title-count">Carregando...</span>
-                <span id="date-time">Carregando...</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Menu Lateral -->
-    <nav class="sidebar" id="sidebar">
-        <div class="menu">
-            <div class="menu-item" data-page="home">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-home"></i>
-                    <span class="menu-text">Início</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="live-channels">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-broadcast-tower"></i>
-                    <span class="menu-text">Canais ao Vivo</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="cinema">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-film"></i>
-                    <span class="menu-text">Cinema</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="series">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-tv"></i>
-                    <span class="menu-text">Séries</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="kids-movies">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-child"></i>
-                    <span class="menu-text">Filmes Kids</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="kids-series">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-baby"></i>
-                    <span class="menu-text">Séries Kids</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="kids-channels">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-gamepad"></i>
-                    <span class="menu-text">Canais Kids</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="my-list">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-heart"></i>
-                    <span class="menu-text">Minha Lista</span>
-                </a>
-            </div>
-            <div class="menu-item" data-page="search">
-                <a href="#" class="menu-link">
-                    <i class="fas fa-search"></i>
-                    <span class="menu-text">Pesquisar</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Conteúdo Principal -->
-    <main class="main-content" id="main-content">
-        <!-- Hero Banner -->
-        <section class="hero" id="hero">
-            <div class="hero-background" id="hero-background">
-                <div class="hero-scrim"></div>
-            </div>
-            <div class="hero-content">
-                <h1 class="hero-title" id="hero-title">PaixãoFlix Pro Max</h1>
-                <p class="hero-description" id="hero-description">A melhor experiência de streaming premium</p>
-                <div class="hero-buttons">
-                    <button class="btn-primary" id="play-hero">
-                        <i class="fas fa-play"></i>
-                        Assistir Agora
-                    </button>
-                    <button class="btn-secondary" id="info-hero">
-                        <i class="fas fa-info-circle"></i>
-                        Mais Informações
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Seções da Home -->
-        <section class="content-section continue-watching">
-            <h2 class="section-title">Continuar Assistindo</h2>
-            <div class="movie-row-2-3" id="continue-watching-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2 class="section-title">Você Não Pode Perder</h2>
-            <div class="movie-row" id="lancamentos-2026-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section saturday-night-section" id="saturday-section" style="display: none;">
-            <h2 class="section-title">🌙 Sábado a Noite Merece</h2>
-            <div class="movie-row" id="saturday-night-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2 class="section-title">Os Melhores de 2025</h2>
-            <div class="movie-row" id="melhores-2025-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2 class="section-title">Premiados pela Mídia</h2>
-            <div class="movie-row infinite-loop" id="premiados-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2 class="section-title">Momento Criança</h2>
-            <div class="movie-row" id="momento-crianca-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2 class="section-title">Prepare a Pipoca</h2>
-            <div class="movie-row" id="prepare-pipoca-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2 class="section-title">Aquecendo o Coração</h2>
-            <div class="movie-row" id="classicos-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-
-        <section class="content-section novelas-section" id="novelas-section" style="display: none;">
-            <h2 class="section-title">Novelas que Amamos</h2>
-            <div class="movie-row" id="novelas-row">
-                <!-- Será preenchido pelo JavaScript -->
-            </div>
-        </section>
-    </main>
-
-    <!-- Seção de Pesquisa -->
-    <div class="search-overlay" id="search-overlay" style="display: none;">
-        <div class="search-container">
-            <div class="search-header">
-                <input type="text" id="search-input" placeholder="Digite para buscar..." autofocus>
-                <button id="search-close-btn" class="search-close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="search-results" id="search-results">
-                <div class="search-loading" id="search-loading" style="display: none;">
-                    <i class="fas fa-spinner fa-spin"></i> Buscando...
-                </div>
-                <div class="search-empty" id="search-empty" style="display: none;">
-                    <i class="fas fa-search"></i>
-                    <p>Nenhum resultado encontrado</p>
-                </div>
-                <div class="search-grid" id="search-grid">
-                    <!-- Resultados serão inseridos aqui -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Conteúdo -->
-    <div class="modal" id="content-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">Título</h3>
-                <button class="modal-close" id="modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-poster" id="modal-poster">
-                    <img src="" alt="Poster">
-                </div>
-                <div class="modal-info">
-                    <p class="modal-description" id="modal-description">Descrição</p>
-                    <div class="modal-meta">
-                        <span class="modal-year" id="modal-year">2024</span>
-                        <span class="modal-genre" id="modal-genre">Drama</span>
-                        <span class="modal-rating" id="modal-rating">⭐ 8.0</span>
-                        <span class="modal-duration" id="modal-duration">2h</span>
-                    </div>
-                    <div class="modal-actions" id="modal-actions">
-                        <!-- Botões serão inseridos dinamicamente -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Video Player -->
-    <div class="video-player" id="video-player">
-        <div class="player-container" id="player-wrapper">
-            <div id="clappr-player"></div>
-            <div class="player-controls">
-                <button class="close-btn" id="player-close">
-                    <i class="fas fa-times"></i>
-                </button>
-                <button class="orientation-btn" id="orientation-btn" title="Girar Tela">
-                    <i class="fas fa-mobile-alt"></i>
-                </button>
-                <button class="next-episode-btn" id="next-episode-btn" style="display: none;">
-                    <i class="fas fa-forward"></i>
-                    Próximo Episódio
-                </button>
-            </div>
-        </div>
-        
-        <!-- Overlay de Próximo Episódio -->
-        <div id="next-episode-overlay" style="display: none;">
-            <div class="countdown-circle" id="countdown-circle">5</div>
-            <p class="next-episode-text" id="next-episode-text">O próximo episódio começa em...</p>
-            <button class="play-now-btn" id="play-now-btn">
-                <i class="fas fa-play"></i>
-                Reproduzir Agora
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal de Séries -->
-    <div class="series-modal" id="series-modal">
-        <div class="series-modal-content">
-            <div class="series-modal-header">
-                <h3 class="series-modal-title" id="series-modal-title">Título da Série</h3>
-                <button class="series-modal-close" id="series-modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="series-modal-body">
-                <div class="season-selector">
-                    <label for="season-select">Temporada:</label>
-                    <select id="season-select" class="season-select">
-                        <option value="1">Temporada 1</option>
-                    </select>
-                </div>
-                <div class="episodes-container" id="ep-container">
-                    <!-- Episódios serão inseridos aqui -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    <script src="performance-optimizations.js"></script>
-    <script src="paixaoflix.js"></script>
-</body>
+    <h1>🧪 Teste de Carregamento - PaixãoFlix</h1>
     
-    <!-- Service Worker Registration -->
+    <div class="test-section">
+        <h2>📁 Teste de Arquivos</h2>
+        <div id="file-status" class="status info">Aguardando teste...</div>
+        <button class="btn" onclick="testFiles()">Testar Arquivos</button>
+        <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+        </div>
+        <div id="file-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🌐 Teste de Conectividade</h2>
+        <div id="network-status" class="status info">Aguardando teste...</div>
+        <button class="btn" onclick="testNetwork()">Testar Rede</button>
+        <button class="btn" onclick="testGitHub()">Testar GitHub</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🚀 Teste de Inicialização</h2>
+        <div id="init-status" class="status info">Aguardando teste...</div>
+        <button class="btn" onclick="testInit()">Testar Init</button>
+        <button class="btn" onclick="testSplash()">Testar Splash</button>
+    </div>
+    
     <script>
-        // PWA Installation Banner
-        let deferredPrompt;
-        let installBannerShown = false;
+        const baseURL = 'https://raw.githubusercontent.com/paixaoflix-mobile/paixaoflix-mobile/main/';
         
-        // Registrar Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(registration => {
-                    console.log('✅ PWA: Service Worker registrado com sucesso!', registration);
-                    
-                    // Verificar atualizações
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                showUpdateBanner();
-                            }
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error('❌ PWA: Falha no registro do Service Worker:', error);
-                });
-        }
-        
-        // Banner de Instalação PWA
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
+        async function testFiles() {
+            const status = document.getElementById('file-status');
+            const progressFill = document.getElementById('progress-fill');
+            const results = document.getElementById('file-results');
             
-            // Mostrar banner após 3 segundos de uso
-            if (!installBannerShown) {
-                setTimeout(() => {
-                    showInstallBanner();
-                }, 3000);
-            }
-        });
-        
-        // Detectar se já está instalado
-        window.addEventListener('load', () => {
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('🎉 PWA: PaixãoFlix já está instalado!');
-                trackPWAInstallation();
-            }
-        });
-        
-        function showInstallBanner() {
-            if (deferredPrompt && !installBannerShown) {
-                const banner = document.createElement('div');
-                banner.id = 'pwa-install-banner';
-                banner.innerHTML = `
-                    <div class="pwa-banner-content">
-                        <div class="pwa-banner-icon">
-                            <img src="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-192.png" alt="PaixãoFlix">
-                        </div>
-                        <div class="pwa-banner-text">
-                            <h3>📱 Instalar PaixãoFlix</h3>
-                            <p>Adicione à tela inicial para acesso rápido!</p>
-                        </div>
-                        <div class="pwa-banner-actions">
-                            <button class="pwa-btn-install" onclick="installPWA()">
-                                <i class="fas fa-download"></i>
-                                Instalar
-                            </button>
-                            <button class="pwa-btn-dismiss" onclick="dismissInstallBanner()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                // Estilos do banner
-                banner.style.cssText = `
-                    position: fixed;
-                    bottom: 20px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-                    border: 2px solid #ffc107;
-                    border-radius: 12px;
-                    padding: 15px 20px;
-                    z-index: 10000;
-                    box-shadow: 0 8px 32px rgba(255, 193, 7, 0.3);
-                    animation: slideUp 0.5s ease-out;
-                    max-width: 90%;
-                    width: 400px;
-                `;
-                
-                // Adicionar estilos internos
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes slideUp {
-                        from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-                        to { transform: translateX(-50%) translateY(0); opacity: 1; }
-                    }
-                    
-                    .pwa-banner-content {
-                        display: flex;
-                        align-items: center;
-                        gap: 15px;
-                    }
-                    
-                    .pwa-banner-icon img {
-                        width: 50px;
-                        height: 50px;
-                        border-radius: 10px;
-                        border: 2px solid #ffc107;
-                    }
-                    
-                    .pwa-banner-text {
-                        flex: 1;
-                    }
-                    
-                    .pwa-banner-text h3 {
-                        color: #ffc107;
-                        margin: 0 0 5px 0;
-                        font-size: 16px;
-                        font-weight: 600;
-                    }
-                    
-                    .pwa-banner-text p {
-                        color: #b3b3b3;
-                        margin: 0;
-                        font-size: 14px;
-                    }
-                    
-                    .pwa-banner-actions {
-                        display: flex;
-                        gap: 10px;
-                        align-items: center;
-                    }
-                    
-                    .pwa-btn-install {
-                        background: #ffc107;
-                        color: #000;
-                        border: none;
-                        padding: 8px 16px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 600;
-                        font-size: 14px;
-                        transition: all 0.3s;
-                    }
-                    
-                    .pwa-btn-install:hover {
-                        background: #ff6b6b;
-                        transform: scale(1.05);
-                    }
-                    
-                    .pwa-btn-dismiss {
-                        background: transparent;
-                        color: #b3b3b3;
-                        border: none;
-                        padding: 8px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-size: 16px;
-                        transition: all 0.3s;
-                    }
-                    
-                    .pwa-btn-dismiss:hover {
-                        color: #ffc107;
-                        background: rgba(255, 193, 7, 0.1);
-                    }
-                    
-                    @media (max-width: 480px) {
-                        .pwa-banner-content {
-                            flex-direction: column;
-                            text-align: center;
-                        }
+            status.className = 'status info';
+            status.innerHTML = '🔄 Testando arquivos...';
+            results.innerHTML = '';
+            
+            const arquivos = [
+                'data/filmes.json', 
+                'data/series.json', 
+                'data/ativa_canais.m3u', 
+                'data/kids_filmes.json',
+                'data/kids_series.json',
+                'data/kids_canais.m3u'
+            ];
+            
+            let carregados = 0;
+            let successCount = 0;
+            let errorCount = 0;
+            
+            try {
+                for (const arquivo of arquivos) {
+                    try {
+                        const startTime = Date.now();
+                        const response = await fetch(baseURL + arquivo);
+                        const endTime = Date.now();
+                        const loadTime = endTime - startTime;
                         
-                        .pwa-banner-actions {
-                            width: 100%;
-                            justify-content: center;
+                        if (response.ok) {
+                            successCount++;
+                            results.innerHTML += `
+                                <div style="color: #28a745; margin: 5px 0;">
+                                    ✅ ${arquivo} - ${loadTime}ms - ${response.status}
+                                </div>
+                            `;
+                        } else {
+                            errorCount++;
+                            results.innerHTML += `
+                                <div style="color: #dc3545; margin: 5px 0;">
+                                    ❌ ${arquivo} - ${response.status} ${response.statusText}
+                                </div>
+                            `;
                         }
+                    } catch (error) {
+                        errorCount++;
+                        results.innerHTML += `
+                            <div style="color: #dc3545; margin: 5px 0;">
+                                ❌ ${arquivo} - ${error.message}
+                            </div>
+                        `;
                     }
-                `;
+                    
+                    carregados++;
+                    const progress = (carregados / arquivos.length) * 100;
+                    progressFill.style.width = `${progress}%`;
+                }
                 
-                document.head.appendChild(style);
-                document.body.appendChild(banner);
-                installBannerShown = true;
+                status.className = successCount === arquivos.length ? 'status success' : 'status warning';
+                status.innerHTML = `✅ Teste concluído: ${successCount}/${arquivos.length} arquivos carregados`;
+                
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = `❌ Erro no teste: ${error.message}`;
             }
         }
         
-        async function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                
-                if (outcome === 'accepted') {
-                    console.log('🎉 PWA: Usuário aceitou instalação!');
-                    trackPWAInstallation();
-                    showInstallSuccess();
+        async function testNetwork() {
+            const status = document.getElementById('network-status');
+            
+            if (navigator.onLine) {
+                status.className = 'status success';
+                status.innerHTML = '✅ Conectado à internet';
+            } else {
+                status.className = 'status error';
+                status.innerHTML = '❌ Modo offline';
+            }
+        }
+        
+        async function testGitHub() {
+            const status = document.getElementById('network-status');
+            
+            try {
+                const response = await fetch(baseURL);
+                if (response.ok) {
+                    status.className = 'status success';
+                    status.innerHTML = `✅ GitHub acessível - ${response.status}`;
                 } else {
-                    console.log('❌ PWA: Usuário recusou instalação');
+                    status.className = 'status error';
+                    status.innerHTML = `❌ GitHub erro - ${response.status}`;
+                }
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = `❌ GitHub falha: ${error.message}`;
+            }
+        }
+        
+        async function testInit() {
+            const status = document.getElementById('init-status');
+            
+            try {
+                // Simular inicialização básica
+                console.log('🧪 Iniciando teste de inicialização...');
+                
+                // Testar se os elementos existiriam
+                const mockSplash = document.createElement('div');
+                mockSplash.id = 'splash-screen';
+                mockSplash.style.display = 'none';
+                document.body.appendChild(mockSplash);
+                
+                const mockBar = document.createElement('div');
+                mockBar.className = 'loader-progress';
+                mockBar.style.display = 'none';
+                document.body.appendChild(mockBar);
+                
+                // Verificar se foram encontrados
+                const splash = document.getElementById('splash-screen');
+                const bar = document.querySelector('.loader-progress');
+                
+                if (splash && bar) {
+                    status.className = 'status success';
+                    status.innerHTML = '✅ Elementos da splash screen encontrados';
+                } else {
+                    status.className = 'status error';
+                    status.innerHTML = '❌ Elementos da splash screen não encontrados';
                 }
                 
-                deferredPrompt = null;
-                dismissInstallBanner();
+                // Limpar elementos de teste
+                mockSplash.remove();
+                mockBar.remove();
+                
+            } catch (error) {
+                status.className = 'status error';
+                status.innerHTML = `❌ Erro no teste: ${error.message}`;
             }
         }
         
-        function dismissInstallBanner() {
-            const banner = document.getElementById('pwa-install-banner');
-            if (banner) {
-                banner.style.animation = 'slideUp 0.5s ease-out reverse';
-                setTimeout(() => {
-                    banner.remove();
-                }, 500);
-            }
-        }
-        
-        function showInstallSuccess() {
-            const success = document.createElement('div');
-            success.innerHTML = `
-                <div style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-                    color: white;
-                    padding: 15px 20px;
-                    border-radius: 8px;
-                    z-index: 10001;
-                    box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
-                    animation: slideInRight 0.5s ease-out;
-                ">
-                    <i class="fas fa-check-circle"></i>
-                    <strong>PaixãoFlix instalado com sucesso!</strong>
+        async function testSplash() {
+            const status = document.getElementById('init-status');
+            
+            // Criar splash screen de teste
+            const splash = document.createElement('div');
+            splash.id = 'test-splash-screen';
+            splash.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #0a0a0a;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+            `;
+            
+            splash.innerHTML = `
+                <div style="color: #ffc107; font-size: 24px; margin-bottom: 20px;">
+                    🎬 Teste Splash Screen
+                </div>
+                <div style="width: 300px; height: 4px; background: #333; border-radius: 2px;">
+                    <div style="width: 0%; height: 100%; background: #ffc107; border-radius: 2px; transition: width 0.3s;" id="test-progress"></div>
                 </div>
             `;
             
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideInRight {
-                    from { transform: translateX(100px); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
+            document.body.appendChild(splash);
+            
+            // Simular progresso
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                document.getElementById('test-progress').style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        splash.style.opacity = '0';
+                        setTimeout(() => splash.remove(), 500);
+                        status.className = 'status success';
+                        status.innerHTML = '✅ Splash screen testada com sucesso!';
+                    }, 500);
                 }
-            `;
+            }, 200);
             
-            document.head.appendChild(style);
-            document.body.appendChild(success);
-            
-            setTimeout(() => {
-                success.remove();
-            }, 5000);
+            status.className = 'status info';
+            status.innerHTML = '🔄 Testando splash screen...';
         }
         
-        function showUpdateBanner() {
-            const updateBanner = document.createElement('div');
-            updateBanner.innerHTML = `
-                <div style="
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, #ffc107 0%, #ff6b6b 100%);
-                    color: #000;
-                    padding: 15px 20px;
-                    border-radius: 8px;
-                    z-index: 10001;
-                    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
-                    max-width: 300px;
-                ">
-                    <i class="fas fa-download"></i>
-                    <strong>Nova versão disponível!</strong>
-                    <p style="margin: 5px 0; font-size: 14px;">Clique para atualizar</p>
-                    <button onclick="updatePWA()" style="
-                        background: #000;
-                        color: #ffc107;
-                        border: none;
-                        padding: 5px 10px;
-                        border-radius: 4px;
-                        cursor: pointer;
-                        font-weight: 600;
-                    ">Atualizar</button>
-                </div>
-            `;
-            
-            document.body.appendChild(updateBanner);
-        }
-        
-        function updatePWA() {
-            window.location.reload();
-        }
-        
-        function trackPWAInstallation() {
-            // Salvar no localStorage que foi instalado
-            localStorage.setItem('paixaoflix_pwa_installed', 'true');
-            localStorage.setItem('paixaoflix_install_date', new Date().toISOString());
-            
-            // Enviar analytics (opcional)
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'pwa_installed', {
-                    'app_name': 'PaixãoFlix Pro Max',
-                    'custom_parameter': 'success'
-                });
-            }
-        }
-        
-        // Verificar primeira visita
-        if (!localStorage.getItem('paixaoflix_first_visit')) {
-            localStorage.setItem('paixaoflix_first_visit', new Date().toISOString());
-            console.log('👋 Primeira visita detectada!');
-        }
+        // Testes automáticos ao carregar
+        window.addEventListener('load', () => {
+            testNetwork();
+            testGitHub();
+        });
     </script>
+</body>
 </html>
