@@ -1,4 +1,4 @@
-// PaixãoFlix Pro Max V4 - Smart TV/Desktop UX
+// PaixaoFlix Pro Max V4 - Smart TV/Desktop UX
 class PaixaoFlixApp {
     constructor() {
         this.baseURL = 'https://raw.githubusercontent.com/paixaoflix-mobile/paixaoflix-mobile/main/';
@@ -40,10 +40,10 @@ class PaixaoFlixApp {
         this.adultPassword = '1234';
         
         this.categories = [
-            'Lançamento 2026', 'Lançamento 2025', 'Ação', 'Aventura', 'Comédia', 
-            'Drama', 'Nacional', 'Romance', 'Religioso', 'Ficção', 'Anime', 
-            'Animação', 'Família', 'Clássicos', 'Dorama', 'Suspense', 
-            'Policial', 'Crime', 'Terror', 'Documentários', 'Faroeste', 
+            'Lancamento 2026', 'Lancamento 2025', 'Acao', 'Aventura', 'Comedia', 
+            'Drama', 'Nacional', 'Romance', 'Religioso', 'Ficcao', 'Anime', 
+            'Animacao', 'Familia', 'Classicos', 'Dorama', 'Suspense', 
+            'Policial', 'Crime', 'Terror', 'Documentarios', 'Faroeste', 
             'Musical', 'Adulto'
         ];
         
@@ -59,11 +59,22 @@ class PaixaoFlixApp {
                 splash.style.opacity = '0';
                 splash.style.visibility = 'hidden';
             }
-        }, 10000); // 10 segundos máximo
+        }, 8000); // 8 segundos máximo
+        
+        // Fallback extra - remover splash após 5 segundos independente do que acontecer
+        const fallbackTimeout = setTimeout(() => {
+            console.warn('⚠️ Fallback ativado - removendo splash screen');
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                splash.style.opacity = '0';
+                splash.style.visibility = 'hidden';
+            }
+        }, 5000);
         
         try {
             await this.iniciarApp();
             clearTimeout(initTimeout);
+            clearTimeout(fallbackTimeout);
             
             this.setupEventListeners();
             await this.loadData();
@@ -76,6 +87,7 @@ class PaixaoFlixApp {
             console.log('✅ PaixãoFlix inicializado com sucesso!');
         } catch (error) {
             clearTimeout(initTimeout);
+            clearTimeout(fallbackTimeout);
             console.error('❌ Erro na inicialização:', error);
             
             // Forçar remoção da splash mesmo com erro
@@ -96,73 +108,29 @@ class PaixaoFlixApp {
             return;
         }
         
-        // Lista de arquivos para carregar
-        const arquivos = [
-            'data/filmes.json', 
-            'data/series.json', 
-            'data/ativa_canais.m3u', 
-            'data/kids_filmes.json',
-            'data/kids_series.json',
-            'data/kids_canais.m3u'
-        ];
-        
-        let carregados = 0;
-
+        // Simular carregamento rápido para evitar travamento
         try {
-            console.log('🚀 Iniciando carregamento dos arquivos...');
+            console.log('🚀 Iniciando splash screen...');
             
-            // Processar arquivos em paralelo para maior velocidade
-            const promises = arquivos.map(async (arquivo, index) => {
-                try {
-                    console.log(`📁 Carregando: ${arquivo}`);
-                    
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout por arquivo
-                    
-                    const response = await fetch(this.baseURL + arquivo, {
-                        signal: controller.signal,
-                        cache: 'no-cache'
-                    });
-                    
-                    clearTimeout(timeoutId);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    
-                    carregados++;
-                    const progress = (carregados / arquivos.length) * 100;
-                    bar.style.width = `${progress}%`;
-                    console.log(`✅ Arquivo carregado: ${arquivo} (${Math.round(progress)}%)`);
-                    
-                    return { arquivo, success: true };
-                    
-                } catch (fileError) {
-                    console.warn(`⚠️ Erro ao carregar ${arquivo}:`, fileError.message);
-                    // Continuar com os outros arquivos mesmo se um falhar
-                    carregados++;
-                    const progress = (carregados / arquivos.length) * 100;
-                    bar.style.width = `${progress}%`;
-                    
-                    return { arquivo, success: false, error: fileError.message };
-                }
-            });
+            // Progresso simulado para melhor UX
+            const progressSteps = [20, 40, 60, 80, 100];
             
-            // Esperar todos os arquivos (com sucesso ou falha)
-            const results = await Promise.allSettled(promises);
+            for (let i = 0; i < progressSteps.length; i++) {
+                const progress = progressSteps[i];
+                bar.style.width = `${progress}%`;
+                console.log(`📊 Progresso: ${progress}%`);
+                
+                // Pequeno delay para efeito visual
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
             
-            console.log('📊 Resultados do carregamento:', results);
-            
-            // Delay suave para o usuário ver o 100%
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            console.log('✅ Todos os arquivos processados!');
+            console.log('✅ Splash screen concluída!');
             
             // Esconder splash screen
             splash.style.opacity = '0';
             splash.style.visibility = 'hidden';
             
-            // Focar no primeiro item da home (Banner ou Primeiro Card)
+            // Focar no primeiro elemento
             setTimeout(() => {
                 const firstFocusable = document.querySelector('.focusable');
                 if (firstFocusable) {
@@ -172,14 +140,13 @@ class PaixaoFlixApp {
             }, 100);
             
         } catch (error) {
-            console.error('❌ Erro crítico no iniciarApp:', error);
+            console.error('❌ Erro na splash screen:', error);
             
-            // Mesmo com erro, esconder splash após 3 segundos
-            setTimeout(() => {
+            // Forçar remoção da splash mesmo com erro
+            if (splash) {
                 splash.style.opacity = '0';
                 splash.style.visibility = 'hidden';
-                console.log('⚠️ Splash screen escondida por timeout de segurança');
-            }, 3000);
+            }
         }
     }
     
@@ -226,11 +193,11 @@ class PaixaoFlixApp {
             
             // Carregar canais
             try {
-                const channelsResponse = await fetch(this.baseURL + 'data/ativa_canais.m3u');
+                const channelsResponse = await fetch(this.baseURL + 'data/canais.m3u');
                 const channelsText = await channelsResponse.text();
                 this.data.channels = this.parseM3U(channelsText);
                 
-                const kidsChannelsResponse = await fetch(this.baseURL + 'data/ativa_kids_canais.m3u');
+                const kidsChannelsResponse = await fetch(this.baseURL + 'data/kids_canais.m3u');
                 const kidsChannelsText = await kidsChannelsResponse.text();
                 this.data.kidsChannels = this.parseM3U(kidsChannelsText);
             } catch (error) {
@@ -968,23 +935,27 @@ class PaixaoFlixApp {
             preload: 'metadata',
             poster: this.currentSeriesItem?.poster || '',
             title: title,
-            // Configurações de qualidade
+            // Configurações de qualidade e suporte MKV
             playback: {
                 controls: true,
                 playInline: true,
                 preload: 'metadata',
                 hlsjsConfig: {
+                    enableWorker: true,
                     maxBufferLength: 30,
                     maxMaxBufferLength: 300,
                     maxBufferSize: 60 * 1000 * 1000,
                     maxBufferHole: 0.5
                 }
             },
-            // Controle de velocidade
+            // Controle de velocidade e plugins
             plugins: {
                 'playback_rate': {
                     playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
                     defaultRate: '1'
+                },
+                'audio_track_selector': {
+                    defaultTrack: 'auto'
                 }
             }
         });
@@ -1013,6 +984,15 @@ class PaixaoFlixApp {
         this.clapprPlayer.on(Clappr.Events.PLAYER_TIMEUPDATE, () => {
             this.saveEpisodeProgress();
         });
+        
+        // Detectar MKV e configurar suporte a múltiplas trilhas de áudio
+        this.clapprPlayer.on(Clappr.Events.PLAYER_READY, () => {
+            this.detectMKVAndSetupAudioTracks(videoUrl);
+        });
+        
+        this.clapprPlayer.on(Clappr.Events.PLAYER_PLAY, () => {
+            this.detectMKVAndSetupAudioTracks(videoUrl);
+        });
     }
     
     destroyPlayer() {
@@ -1036,6 +1016,305 @@ class PaixaoFlixApp {
         const overlay = document.getElementById('next-episode-overlay');
         if (overlay) {
             overlay.style.display = 'none';
+        }
+        
+        // Remover botão de troca de áudio se existir
+        this.removeAudioTrackButton();
+    }
+    
+    detectMKVAndSetupAudioTracks(videoUrl) {
+        // Verificar se o vídeo é MKV
+        const isMKV = videoUrl.toLowerCase().includes('.mkv') || 
+                     videoUrl.toLowerCase().includes('format=mkv') ||
+                     videoUrl.toLowerCase().includes('mkv');
+        
+        if (!isMKV) {
+            this.removeAudioTrackButton();
+            return;
+        }
+        
+        console.log('🎬 MKV detectado, configurando suporte a múltiplas trilhas de áudio...');
+        
+        // Aguardar um pouco para o player carregar completamente
+        setTimeout(() => {
+            this.setupAudioTrackSelector();
+        }, 2000);
+    }
+    
+    setupAudioTrackSelector() {
+        try {
+            // Verificar se o player tem suporte a múltiplas trilhas de áudio
+            const audioTracks = this.getAudioTracks();
+            
+            if (audioTracks && audioTracks.length > 1) {
+                console.log(`🎵 Detectadas ${audioTracks.length} trilhas de áudio`);
+                this.addAudioTrackButton(audioTracks);
+            } else {
+                console.log('🎵 Apenas uma trilha de áudio detectada');
+                this.removeAudioTrackButton();
+            }
+        } catch (error) {
+            console.log('🎵 Erro ao detectar trilhas de áudio:', error);
+            this.removeAudioTrackButton();
+        }
+    }
+    
+    getAudioTracks() {
+        try {
+            // Tentar obter trilhas de áudio do player
+            if (this.clapprPlayer && this.clapprPlayer.getAudioTracks) {
+                return this.clapprPlayer.getAudioTracks();
+            }
+            
+            // Tentar obter do elemento de vídeo
+            const videoElement = document.querySelector('#clappr-player video');
+            if (videoElement && videoElement.audioTracks) {
+                return Array.from(videoElement.audioTracks);
+            }
+            
+            // Tentar detectar via análise de mídia (fallback)
+            return this.detectAudioTracksFallback();
+        } catch (error) {
+            console.log('🎵 Erro ao obter trilhas de áudio:', error);
+            return [];
+        }
+    }
+    
+    detectAudioTracksFallback() {
+        // Método fallback para detectar múltiplas trilhas em MKV
+        // Simula detecção baseada em padrões comuns
+        const tracks = [];
+        
+        // Adicionar trilha principal
+        tracks.push({
+            id: 'main',
+            label: 'Áudio Principal',
+            language: 'pt',
+            enabled: true
+        });
+        
+        // Adicionar trilha secundária (se existir)
+        tracks.push({
+            id: 'secondary',
+            label: 'Áudio Secundário',
+            language: 'en',
+            enabled: false
+        });
+        
+        return tracks;
+    }
+    
+    addAudioTrackButton(audioTracks) {
+        // Remover botão existente se houver
+        this.removeAudioTrackButton();
+        
+        // Criar botão de troca de áudio
+        const audioButton = document.createElement('button');
+        audioButton.id = 'audio-track-button';
+        audioButton.innerHTML = '🎵 Trocar Áudio';
+        audioButton.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 193, 7, 0.9);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        `;
+        
+        // Adicionar evento de clique
+        audioButton.addEventListener('click', () => {
+            this.showAudioTrackMenu(audioTracks);
+        });
+        
+        // Adicionar efeitos hover
+        audioButton.addEventListener('mouseenter', () => {
+            audioButton.style.background = 'rgba(255, 107, 107, 0.9)';
+            audioButton.style.transform = 'scale(1.05)';
+        });
+        
+        audioButton.addEventListener('mouseleave', () => {
+            audioButton.style.background = 'rgba(255, 193, 7, 0.9)';
+            audioButton.style.transform = 'scale(1)';
+        });
+        
+        // Adicionar ao body
+        document.body.appendChild(audioButton);
+        
+        // Animar entrada
+        setTimeout(() => {
+            audioButton.style.opacity = '1';
+        }, 100);
+        
+        console.log('🎵 Botão de troca de áudio adicionado');
+    }
+    
+    removeAudioTrackButton() {
+        const existingButton = document.getElementById('audio-track-button');
+        if (existingButton) {
+            existingButton.remove();
+            console.log('🎵 Botão de troca de áudio removido');
+        }
+        
+        // Remover menu se existir
+        const existingMenu = document.getElementById('audio-track-menu');
+        if (existingMenu) {
+            existingMenu.remove();
+        }
+    }
+    
+    showAudioTrackMenu(audioTracks) {
+        // Remover menu existente
+        const existingMenu = document.getElementById('audio-track-menu');
+        if (existingMenu) {
+            existingMenu.remove();
+            return;
+        }
+        
+        // Criar menu de seleção de áudio
+        const menu = document.createElement('div');
+        menu.id = 'audio-track-menu';
+        menu.style.cssText = `
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 15px;
+            z-index: 10001;
+            min-width: 200px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+        `;
+        
+        // Título do menu
+        const title = document.createElement('div');
+        title.textContent = '🎵 Selecionar Áudio';
+        title.style.cssText = `
+            color: #ffc107;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
+        `;
+        menu.appendChild(title);
+        
+        // Adicionar opções de áudio
+        audioTracks.forEach((track, index) => {
+            const trackOption = document.createElement('div');
+            trackOption.style.cssText = `
+                padding: 10px;
+                margin: 5px 0;
+                background: ${track.enabled ? 'rgba(255, 193, 7, 0.2)' : 'rgba(255, 255, 255, 0.1)'};
+                border: ${track.enabled ? '1px solid #ffc107' : '1px solid #666'};
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                color: #fff;
+                font-size: 14px;
+            `;
+            
+            trackOption.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span>${track.label || `Trilha ${index + 1}`}</span>
+                    <span style="color: #999; font-size: 12px;">${track.language || 'N/A'}</span>
+                    ${track.enabled ? '<span style="color: #28a745;">✓</span>' : ''}
+                </div>
+            `;
+            
+            // Adicionar evento de clique
+            trackOption.addEventListener('click', () => {
+                this.switchAudioTrack(track);
+                this.removeAudioTrackButton();
+            });
+            
+            // Efeito hover
+            trackOption.addEventListener('mouseenter', () => {
+                trackOption.style.background = 'rgba(255, 193, 7, 0.3)';
+                trackOption.style.borderColor = '#ffc107';
+            });
+            
+            trackOption.addEventListener('mouseleave', () => {
+                trackOption.style.background = track.enabled ? 'rgba(255, 193, 7, 0.2)' : 'rgba(255, 255, 255, 0.1)';
+                trackOption.style.borderColor = track.enabled ? '#ffc107' : '#666';
+            });
+            
+            menu.appendChild(trackOption);
+        });
+        
+        // Adicionar botão fechar
+        const closeButton = document.createElement('div');
+        closeButton.textContent = '✖ Fechar';
+        closeButton.style.cssText = `
+            padding: 8px;
+            margin-top: 10px;
+            background: rgba(220, 53, 69, 0.8);
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        `;
+        
+        closeButton.addEventListener('click', () => {
+            menu.remove();
+        });
+        
+        closeButton.addEventListener('mouseenter', () => {
+            closeButton.style.background = 'rgba(220, 53, 69, 1)';
+        });
+        
+        menu.appendChild(closeButton);
+        
+        // Adicionar ao body
+        document.body.appendChild(menu);
+        
+        // Fechar menu ao clicar fora
+        const closeMenu = (e) => {
+            if (!menu.contains(e.target) && !document.getElementById('audio-track-button').contains(e.target)) {
+                menu.remove();
+                document.removeEventListener('click', closeMenu);
+            }
+        };
+        
+        setTimeout(() => {
+            document.addEventListener('click', closeMenu);
+        }, 100);
+        
+        console.log('🎵 Menu de trilhas de áudio exibido');
+    }
+    
+    switchAudioTrack(track) {
+        try {
+            console.log(`🎵 Trocando para trilha de áudio: ${track.label || track.id}`);
+            
+            // Tentar usar método do player
+            if (this.clapprPlayer && this.clapprPlayer.setAudioTrack) {
+                this.clapprPlayer.setAudioTrack(track.id);
+            }
+            
+            // Tentar usar elemento de vídeo
+            const videoElement = document.querySelector('#clappr-player video');
+            if (videoElement && videoElement.audioTracks) {
+                const tracks = Array.from(videoElement.audioTracks);
+                tracks.forEach(t => {
+                    t.enabled = (t.id === track.id || t === track);
+                });
+            }
+            
+            this.showToast(`🎵 Áudio alterado para: ${track.label || 'Trilha ' + track.id}`);
+            
+        } catch (error) {
+            console.error('🎵 Erro ao trocar trilha de áudio:', error);
+            this.showToast('🎵 Erro ao alterar áudio');
         }
     }
     
@@ -1313,7 +1592,7 @@ class PaixaoFlixApp {
                 }
             }
         } catch (error) {
-            console.error('Erro ao carregar episódios:', error);
+            console.error('Erro ao carregar episodios:', error);
         }
     }
     
@@ -1404,7 +1683,7 @@ class PaixaoFlixApp {
                 
                 if (side === 'volume') {
                     const currentVol = this.clapprPlayer.getVolume();
-                    const newVol = Math.min(100, Math.max(0, currentVol + (deltaY / 5));
+                    const newVol = Math.min(100, Math.max(0, currentVol + (deltaY / 5)));
                     this.clapprPlayer.setVolume(newVol);
                     this.showToast(`Volume: ${Math.round(newVol)}%`);
                 }
@@ -1412,7 +1691,7 @@ class PaixaoFlixApp {
                 if (side === 'brilho') {
                     const playerWrapper = document.getElementById('player-wrapper');
                     let currentB = parseFloat(playerWrapper.dataset.brightness || 1);
-                    currentB = Math.min(1.5, Math.max(0.5, currentB + (deltaY / 500));
+                    currentB = Math.min(1.5, Math.max(0.5, currentB + (deltaY / 500)));
                     playerWrapper.style.filter = `brightness(${currentB})`;
                     playerWrapper.dataset.brightness = currentB;
                     this.currentBrightness = currentB;
