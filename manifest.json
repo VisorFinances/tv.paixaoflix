@@ -1,1 +1,74 @@
-
+{
+  "name": "PaixãoFlix Pro Max",
+  "short_name": "PaixãoFlix",
+  "description": "Streaming profissional com cinema, séries e conteúdo infantil",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#ffc107",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "pt-BR",
+  "categories": ["entertainment", "video", "streaming"],
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "PaixãoFlix no desktop"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/screenshot-mobile.png",
+      "sizes": "375x667",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "PaixãoFlix no mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buscar Filmes",
+      "short_name": "Buscar",
+      "description": "Busca rápida de conteúdo",
+      "url": "index.html?search=true",
+      "icons": [
+        {
+          "src": "https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Continuar Assistindo",
+      "short_name": "Continuar",
+      "description": "Retomar reprodução",
+      "url": "index.html?continue=true",
+      "icons": [
+        {
+          "src": "https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
