@@ -54,22 +54,14 @@ class PaixaoFlixApp {
         // Timeout de segurança para evitar travamento
         const initTimeout = setTimeout(() => {
             console.warn('⚠️ Timeout de segurança ativado - forçando inicialização');
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                splash.style.opacity = '0';
-                splash.style.visibility = 'hidden';
-            }
-        }, 8000); // 8 segundos máximo
+            this.forceHideSplash();
+        }, 6000); // Reduzido para 6 segundos
         
-        // Fallback extra - remover splash após 5 segundos independente do que acontecer
+        // Fallback extra - remover splash após 3 segundos independente do que acontecer
         const fallbackTimeout = setTimeout(() => {
             console.warn('⚠️ Fallback ativado - removendo splash screen');
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                splash.style.opacity = '0';
-                splash.style.visibility = 'hidden';
-            }
-        }, 5000);
+            this.forceHideSplash();
+        }, 3000); // Reduzido para 3 segundos
         
         try {
             await this.iniciarApp();
@@ -86,16 +78,23 @@ class PaixaoFlixApp {
             
             console.log('✅ PaixãoFlix inicializado com sucesso!');
         } catch (error) {
+            console.error('❌ Erro na inicialização:', error);
+            this.forceHideSplash();
             clearTimeout(initTimeout);
             clearTimeout(fallbackTimeout);
-            console.error('❌ Erro na inicialização:', error);
-            
-            // Forçar remoção da splash mesmo com erro
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                splash.style.opacity = '0';
-                splash.style.visibility = 'hidden';
-            }
+        }
+    }
+    
+    forceHideSplash() {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+            splash.style.opacity = '0';
+            splash.style.visibility = 'hidden';
+            splash.style.pointerEvents = 'none';
+            // Forçar remoção do DOM após transição
+            setTimeout(() => {
+                splash.remove();
+            }, 800);
         }
     }
     
@@ -1880,18 +1879,43 @@ class PaixaoFlixApp {
     }
     
     resetToHome() {
+        console.log('🏠 Resetando para página inicial');
+        
         // Limpar conteúdo principal
         const mainContent = document.getElementById('main-content');
         const sectionsToKeep = ['hero'];
         
+        // Remover todas as seções exceto as que devem permanecer
         Array.from(mainContent.children).forEach(child => {
-            if (child.nodeType === 1 && !sectionsToKeep.includes(child.id)) {
+            if (!sectionsToKeep.some(section => child.id === section)) {
                 child.remove();
             }
         });
         
+        // Fechar modais e overlays
+        this.closeModal();
+        this.closeSeriesModal();
+        this.closeSearch();
+        this.closePlayer();
+        
         // Recarregar conteúdo da home
         this.loadHomeContent();
+        
+        // Atualizar menu ativo
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector('[data-page="home"]').classList.add('active');
+        
+        // Resetar foco
+        setTimeout(() => {
+            const firstFocusable = document.querySelector('.focusable');
+            if (firstFocusable) {
+                firstFocusable.focus();
+            }
+        }, 100);
+        
+        console.log('✅ Página inicial carregada');
     }
     
     openSearch() {
@@ -1923,16 +1947,16 @@ class PaixaoFlixApp {
             clearTimeout(this.searchDebounceTimeout);
         }
         
-        // Debounce de 300ms para economizar memória
+        // Busca em tempo real com debounce menor
         this.searchDebounceTimeout = setTimeout(() => {
             this.executeSearch(query);
-        }, 300);
+        }, 150); // Reduzido para 150ms para busca mais rápida
     }
     
     executeSearch(query) {
         this.clearSearchResults();
         
-        if (!query || query.trim().length < 2) {
+        if (!query || query.trim().length < 1) { // Reduzido para 1 caractere
             return;
         }
         
@@ -1942,34 +1966,31 @@ class PaixaoFlixApp {
         
         loading.style.display = 'block';
         
-        // Usar índice para busca rápida
+        // Busca global em tempo real
         const searchTerm = query.toLowerCase().trim();
-        const results = {
-            channels: [],
-            filmes: [],
-            series: []
-        };
+        const allResults = [];
         
-        // Buscar em cada categoria com prioridade
-        // 1. Canais (prioridade máxima)
-        results.channels = this.searchIndex.channels.filter(item => {
-            return this.matchesSearch(item, searchTerm);
-        });
+        // Buscar em TODAS as categorias simultaneamente
+        const allData = [
+            ...this.data.channels.map(item => ({...item, type: 'channel'})),
+            ...this.data.filmes.map(item => ({...item, type: 'movie'})),
+            ...this.data.series.map(item => ({...item, type: 'series'})),
+            ...this.data.kidsChannels.map(item => ({...item, type: 'kids-channel'})),
+            ...this.data.kidsFilmes.map(item => ({...item, type: 'kids-movie'})),
+            ...this.data.kidsSeries.map(item => ({...item, type: 'kids-series'}))
+        ];
         
-        // 2. Filmes (prioridade média)
-        results.filmes = this.searchIndex.filmes.filter(item => {
-            return this.matchesSearch(item, searchTerm);
-        });
-        
-        // 3. Séries (prioridade baixa)
-        results.series = this.searchIndex.series.filter(item => {
-            return this.matchesSearch(item, searchTerm);
+        // Filtrar resultados
+        allData.forEach(item => {
+            if (this.matchesSearch(item, searchTerm)) {
+                allResults.push(item);
+            }
         });
         
         loading.style.display = 'none';
         
-        // Exibir resultados por categoria
-        this.displaySearchResults(results, searchTerm);
+        // Exibir resultados em grid único 5 colunas
+        this.displaySearchResultsUnified(allResults, searchTerm);
     }
     
     matchesSearch(item, searchTerm) {
@@ -1984,17 +2005,14 @@ class PaixaoFlixApp {
                year.includes(searchTerm);
     }
     
-    displaySearchResults(results, searchTerm) {
+    displaySearchResultsUnified(allResults, searchTerm) {
         const searchGrid = document.getElementById('search-grid');
         const empty = document.getElementById('search-empty');
         
         // Limpar grid
         searchGrid.innerHTML = '';
         
-        // Contador de resultados
-        let totalResults = results.channels.length + results.filmes.length + results.series.length;
-        
-        if (totalResults === 0) {
+        if (allResults.length === 0) {
             empty.style.display = 'block';
             empty.innerHTML = `
                 <i class="fas fa-search"></i>
@@ -2003,123 +2021,141 @@ class PaixaoFlixApp {
             return;
         }
         
-        // Criar seções por categoria
-        const sections = [];
-        
-        // 1. Seção de Canais
-        if (results.channels.length > 0) {
-            const channelsSection = this.createSearchSection('Canais', results.channels, 'channel');
-            sections.push(channelsSection);
-        }
-        
-        // 2. Seção de Filmes
-        if (results.filmes.length > 0) {
-            const moviesSection = this.createSearchSection('Filmes', results.filmes, 'movie');
-            sections.push(moviesSection);
-        }
-        
-        // 3. Seção de Séries
-        if (results.series.length > 0) {
-            const seriesSection = this.createSearchSection('Séries', results.series, 'series');
-            sections.push(seriesSection);
-        }
-        
-        // Adicionar seções ao grid
-        sections.forEach(section => {
-            searchGrid.appendChild(section);
+        // Ordenar por relevância (título exato primeiro)
+        allResults.sort((a, b) => {
+            const aTitle = (a.title || '').toLowerCase();
+            const bTitle = (b.title || '').toLowerCase();
+            const searchLower = searchTerm.toLowerCase();
+            
+            // Prioridade para título exato
+            if (aTitle === searchLower && bTitle !== searchLower) return -1;
+            if (bTitle === searchLower && aTitle !== searchLower) return 1;
+            
+            // Depois prioridade para começo do título
+            if (aTitle.startsWith(searchLower) && !bTitle.startsWith(searchLower)) return -1;
+            if (bTitle.startsWith(searchLower) && !aTitle.startsWith(searchLower)) return 1;
+            
+            // Ordem alfabética
+            return aTitle.localeCompare(bTitle);
         });
         
-        // Atualizar elementos focáveis
-        this.updateFocusableElements();
+        // Limitar resultados para performance
+        const maxResults = 50;
+        const limitedResults = allResults.slice(0, maxResults);
         
-        // Focar no primeiro resultado
-        const firstResult = searchGrid.querySelector('.search-result-item');
-        if (firstResult) {
-            setTimeout(() => firstResult.focus(), 100);
-        }
-        
-        console.log(`🔍 Busca por "${searchTerm}": ${totalResults} resultados encontrados`);
-    }
-    
-    createSearchSection(title, items, type) {
-        const section = document.createElement('div');
-        section.className = 'search-section';
-        
-        // Header da seção
-        const header = document.createElement('div');
-        header.className = 'search-section-header';
-        header.innerHTML = `
-            <h3 class="search-section-title">${title}</h3>
-            <span class="search-section-count">${items.length}</span>
-        `;
-        section.appendChild(header);
-        
-        // Grid de itens
-        const grid = document.createElement('div');
-        grid.className = 'search-section-grid';
-        
-        // Limitar a 10 itens por seção para performance
-        items.slice(0, 10).forEach(item => {
-            const resultItem = this.createSearchResultItem(item, type);
-            grid.appendChild(resultItem);
+        // Criar cards em grid 5 colunas
+        limitedResults.forEach(item => {
+            const card = this.createSearchResultCard(item);
+            searchGrid.appendChild(card);
         });
         
-        section.appendChild(grid);
-        
-        return section;
+        // Adicionar contador de resultados
+        if (allResults.length > maxResults) {
+            const counter = document.createElement('div');
+            counter.className = 'search-counter';
+            counter.textContent = `Mostrando ${maxResults} de ${allResults.length} resultados`;
+            counter.style.cssText = `
+                grid-column: 1 / -1;
+                text-align: center;
+                color: #ffd700;
+                margin-top: 20px;
+                font-size: 14px;
+            `;
+            searchGrid.appendChild(counter);
+        }
     }
     
-    createSearchResultItem(item, type) {
-        const resultItem = document.createElement('div');
-        resultItem.className = 'search-result-item focusable';
-        resultItem.tabIndex = 0;
+    createSearchResultCard(item) {
+        const card = document.createElement('div');
+        card.className = 'movie-card search-result-item';
+        card.tabIndex = 0;
         
-        resultItem.innerHTML = `
-            <div class="search-result-thumbnail">
-                <img src="${item.thumbnail}" alt="${item.title}" loading="lazy">
-                <div class="search-result-overlay">
-                    <i class="fas fa-${type === 'channel' ? 'broadcast-tower' : 'play'}"></i>
+        // Determinar imagem e tipo
+        let imageUrl, title, typeLabel;
+        
+        switch(item.type) {
+            case 'channel':
+            case 'kids-channel':
+                imageUrl = item.logo || 'https://via.placeholder.com/200x112/1a1a1a/ffffff?text=Canal';
+                title = item.name || item.title;
+                typeLabel = 'Canal';
+                break;
+            case 'movie':
+            case 'kids-movie':
+                imageUrl = item.cover || item.poster || 'https://via.placeholder.com/200x112/1a1a1a/ffffff?text=Filme';
+                title = item.title;
+                typeLabel = 'Filme';
+                break;
+            case 'series':
+            case 'kids-series':
+                imageUrl = item.cover || item.poster || 'https://via.placeholder.com/200x112/1a1a1a/ffffff?text=Série';
+                title = item.title;
+                typeLabel = 'Série';
+                break;
+        }
+        
+        // Adicionar informações extras
+        const year = item.year ? ` (${item.year})` : '';
+        const rating = item.rating ? `⭐ ${item.rating}` : '';
+        const duration = item.duration ? `🕐 ${item.duration}` : '';
+        
+        card.innerHTML = `
+            <div class="search-card-content">
+                <img src="${imageUrl}" alt="${title}" loading="lazy">
+                <div class="search-card-info">
+                    <div class="search-card-title">${title}${year}</div>
+                    <div class="search-card-meta">
+                        <span class="search-card-type">${typeLabel}</span>
+                        ${rating ? `<span class="search-card-rating">${rating}</span>` : ''}
+                        ${duration ? `<span class="search-card-duration">${duration}</span>` : ''}
+                    </div>
                 </div>
             </div>
-            <div class="search-result-info">
-                <h4 class="search-result-title">${item.title}</h4>
-                <p class="search-result-description">${item.description.truncate(80)}</p>
-                <div class="search-result-meta">
-                    <span class="search-result-category">${item.category}</span>
-                    ${item.year ? `<span class="search-result-year">${item.year}</span>` : ''}
-                </div>
-            </div>
         `;
         
-        // Event listener
-        resultItem.addEventListener('click', () => {
-            this.handleSearchResultClick(item, type);
+        card.addEventListener('click', () => {
+            this.handleSearchResultClick(item);
         });
         
-        return resultItem;
+        return card;
     }
     
-    handleSearchResultClick(item, type) {
-        if (type === 'channel') {
-            this.playChannel(item.data);
-        } else if (type === 'movie') {
-            this.playContent(item.data);
-        } else if (type === 'series') {
-            this.showContentDetails(item.data);
-        }
-        
-        // Fechar busca após clicar
+    handleSearchResultClick(item) {
+        // Fechar busca
         this.closeSearch();
+        
+        // Ação baseada no tipo
+        switch(item.type) {
+            case 'channel':
+            case 'kids-channel':
+                this.playChannel(item);
+                break;
+            case 'movie':
+            case 'kids-movie':
+                this.playMovie(item);
+                break;
+            case 'series':
+                this.showSeriesDetails(item);
+                break;
+            case 'kids-series':
+                this.showKidsSeriesDetails(item);
+                break;
+        }
     }
     
     createChannelCard(channel) {
         const card = document.createElement('div');
-        card.className = 'movie-card';
+        card.className = 'movie-card channel-card';
         card.tabIndex = 0;
         
         const logo = channel.logo || 'https://via.placeholder.com/200x112/1a1a1a/ffffff?text=Canal';
         
-        card.innerHTML = `<img src="${logo}" alt="${channel.name}" loading="lazy">`;
+        card.innerHTML = `
+            <div class="channel-logo-container">
+                <img src="${logo}" alt="${channel.name}" loading="lazy">
+                <div class="channel-name">${channel.name}</div>
+            </div>
+        `;
         
         card.addEventListener('click', () => {
             this.playChannel(channel);
