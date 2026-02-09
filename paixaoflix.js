@@ -53,32 +53,43 @@ async function carregarCatalogo() {
 // Quando o site carregar, ele executa a função acima
 document.addEventListener('DOMContentLoaded', carregarCatalogo);
 
-// SISTEMA DE NAVEGAÇÃO POR SETAS (D-PAD)
+// SISTEMA DE NAVEGAÇÃO PROFISSIONAL (ESTILO DISNEY+)
 document.addEventListener('keydown', function(e) {
-    // 1. Pegar todos os elementos que podem ser focados
     const itens = Array.from(document.querySelectorAll('.focusable'));
     const atual = document.activeElement;
-    let proximo;
-
-    // 2. Lógica de Direção
     const index = itens.indexOf(atual);
 
+    let proximo;
+
     if (e.key === 'ArrowRight') {
+        // Simples: vai para o próximo da lista
         proximo = itens[index + 1];
-    } else if (e.key === 'ArrowLeft') {
+    } 
+    else if (e.key === 'ArrowLeft') {
+        // Simples: vai para o anterior da lista
         proximo = itens[index - 1];
-    } else if (e.key === 'ArrowDown') {
-        // Pula para o item logo abaixo (baseado na posição na tela)
-        proximo = itens.find(el => el.getBoundingClientRect().top > atual.getBoundingClientRect().bottom);
-    } else if (e.key === 'ArrowUp') {
-        // Pula para o item logo acima
-        proximo = itens.reverse().find(el => el.getBoundingClientRect().bottom < atual.getBoundingClientRect().top);
-        itens.reverse(); // Volta a lista ao normal
+    } 
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        const rectAtual = atual.getBoundingClientRect();
+        
+        proximo = itens.find(el => {
+            const rectEl = el.getBoundingClientRect();
+            // Para Baixo: procura alguém que esteja abaixo do meu pé
+            if (e.key === 'ArrowDown') {
+                return rectEl.top >= rectAtual.bottom - 10 && Math.abs(rectEl.left - rectAtual.left) < 50;
+            }
+            // Para Cima: procura alguém que o fundo esteja acima da minha cabeça
+            if (e.key === 'ArrowUp') {
+                return rectEl.bottom <= rectAtual.top + 10 && Math.abs(rectEl.left - rectAtual.left) < 50;
+            }
+        });
     }
 
-    // 3. Executar o Foco
     if (proximo) {
-        e.preventDefault(); // Impede a página de rolar sozinha
+        e.preventDefault();
         proximo.focus();
+        
+        // DICA DISNEY+: Faz a tela rolar suavemente para acompanhar o foco
+        proximo.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     }
 });
