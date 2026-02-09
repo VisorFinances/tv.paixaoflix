@@ -30,16 +30,42 @@ body {
     font-family: var(--font-body);
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     scroll-behavior: smooth;
-    /* Remover barra de rolagem */
+    /* Remover TODAS as barras de rolagem */
     scrollbar-width: none;  /* Firefox */
     -ms-overflow-style: none;  /* IE e Edge */
 }
 
 /* Remover barra de rolagem Chrome/Safari */
 body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Remover barra de rolagem de todos os elementos */
+*::-webkit-scrollbar {
+    display: none !important;
+}
+
+* {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+/* Permitir scroll apenas no body */
+html {
+    overflow: hidden;
+}
+
+/* Scroll containers específicos com scroll sem barra */
+.scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scroll-container::-webkit-scrollbar {
     display: none;
 }
 
@@ -546,7 +572,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 20px;
 }
 
-/* Movie Rows */
+/* Movie Rows - Scroll sem barra */
 .movie-row,
 .movie-row-2-3 {
     display: flex;
@@ -555,18 +581,15 @@ h1, h2, h3, h4, h5, h6 {
     overflow-y: hidden;
     padding: 10px 0 20px;
     scroll-behavior: smooth;
+    /* Remover barras de rolagem */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 /* Ocultar scrollbars */
 .movie-row::-webkit-scrollbar,
 .movie-row-2-3::-webkit-scrollbar {
-    display: none;
-}
-
-.movie-row,
-.movie-row-2-3 {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    display: none !important;
 }
 
 /* Movie Cards */
@@ -754,6 +777,13 @@ h1, h2, h3, h4, h5, h6 {
     flex: 1;
     overflow-y: auto;
     padding: 20px 0;
+    /* Remover barra de rolagem */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.search-results::-webkit-scrollbar {
+    display: none !important;
 }
 
 .search-loading,
@@ -830,6 +860,13 @@ h1, h2, h3, h4, h5, h6 {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 15px;
+    /* Remover barra de rolagem */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.search-section-grid::-webkit-scrollbar {
+    display: none !important;
 }
 
 /* Itens de resultado */
@@ -1014,6 +1051,13 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     padding: 25px;
     gap: 25px;
+    /* Remover barra de rolagem */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.modal-body::-webkit-scrollbar {
+    display: none !important;
 }
 
 .modal-poster {
@@ -1262,6 +1306,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .series-modal-body {
     padding: 25px;
+    /* Remover barra de rolagem */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.series-modal-body::-webkit-scrollbar {
+    display: none !important;
 }
 
 .season-selector {
@@ -1297,21 +1348,13 @@ h1, h2, h3, h4, h5, h6 {
 .episodes-container {
     max-height: 500px;
     overflow-y: auto;
-    padding-right: 10px;
+    /* Remover barra de rolagem */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .episodes-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.episodes-container::-webkit-scrollbar-track {
-    background: var(--bg-tertiary);
-    border-radius: 3px;
-}
-
-.episodes-container::-webkit-scrollbar-thumb {
-    background: var(--accent-yellow);
-    border-radius: 3px;
+    display: none !important;
 }
 
 .episode-pro-card {
@@ -1611,6 +1654,100 @@ h1, h2, h3, h4, h5, h6 {
     aspect-ratio: 16/9;
 }
 
+/* Smart TV Optimizations */
+@media (min-width: 1200px) {
+    /* Image Cache Aggressive para Smart TV */
+    img {
+        max-width: 400px;
+        image-rendering: high-quality;
+        image-rendering: -webkit-optimize-contrast;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        will-change: transform;
+    }
+    
+    /* Limitar renderização das capas */
+    .movie-card img,
+    .movie-card-2-3 img,
+    .search-result-item img {
+        max-width: 400px;
+        max-height: 600px;
+        image-rendering: high-quality;
+        image-rendering: -webkit-optimize-contrast;
+    }
+    
+    /* Hero Banner 1920x1080 */
+    .hero-banner {
+        width: 100%;
+        height: 60vh;
+        min-height: 600px;
+        max-height: 1080px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        image-rendering: high-quality;
+    }
+    
+    /* Performance optimizations */
+    .movie-row,
+    .movie-row-2-3,
+    .search-grid {
+        contain: layout style paint;
+        will-change: transform;
+    }
+    
+    /* Scroll suave para Smart TV */
+    html {
+        scroll-behavior: smooth;
+        overflow-scrolling: touch;
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .movie-card {
+        width: 150px;
+    }
+    
+    .movie-card-2-3 {
+        width: 120px;
+    }
+    
+    .search-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .seasonal-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-card {
+        width: 120px;
+    }
+    
+    .movie-card-2-3 {
+        width: 100px;
+    }
+    
+    .search-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .seasonal-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* Canal Cards - Apenas logo sem fundo */
 .channel-card {
     background: transparent !important;
@@ -1629,9 +1766,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .channel-logo-container img {
-    width: 80%;
-    height: auto;
-    max-height: 70%;
+    width: 200px;
+    height: 200px;
+    max-height: 100%;
     object-fit: contain;
     background: transparent;
     border-radius: 8px;
