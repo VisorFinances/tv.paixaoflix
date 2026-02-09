@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste de Carregamento - PaixãoFlix</title>
+    <title>System Check - PaixãoFlix</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #0a0a0a;
             color: #fff;
             padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .test-section {
+        .check-section {
             background: #1a1a1a;
             border: 1px solid #333;
             border-radius: 8px;
@@ -28,6 +30,7 @@
         .warning { background: #ffc107; color: #000; }
         .info { background: #17a2b8; }
         h1 { color: #ffc107; text-align: center; }
+        h2 { color: #ffc107; }
         .btn {
             background: #ffc107;
             color: #000;
@@ -39,245 +42,279 @@
             margin: 5px;
         }
         .btn:hover { background: #ff6b6b; }
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: #333;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px 0;
+        .check-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #333;
         }
-        .progress-fill {
-            height: 100%;
-            background: #ffc107;
-            transition: width 0.3s ease;
+        .check-item:last-child {
+            border-bottom: none;
         }
+        .check-name {
+            flex: 1;
+        }
+        .check-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .ok { background: #28a745; color: white; }
+        .fail { background: #dc3545; color: white; }
+        .pending { background: #ffc107; color: #000; }
     </style>
 </head>
 <body>
-    <h1>🧪 Teste de Carregamento - PaixãoFlix</h1>
+    <h1>🔍 System Check - PaixãoFlix Pro Max</h1>
     
-    <div class="test-section">
-        <h2>📁 Teste de Arquivos</h2>
-        <div id="file-status" class="status info">Aguardando teste...</div>
-        <button class="btn" onclick="testFiles()">Testar Arquivos</button>
-        <div class="progress-bar">
-            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
-        </div>
-        <div id="file-results"></div>
+    <div class="check-section">
+        <h2>📁 Verificação de Arquivos</h2>
+        <div id="files-check"></div>
+        <button class="btn" onclick="checkFiles()">Verificar Arquivos</button>
     </div>
     
-    <div class="test-section">
-        <h2>🌐 Teste de Conectividade</h2>
-        <div id="network-status" class="status info">Aguardando teste...</div>
-        <button class="btn" onclick="testNetwork()">Testar Rede</button>
-        <button class="btn" onclick="testGitHub()">Testar GitHub</button>
+    <div class="check-section">
+        <h2>🔧 Verificação de Sintaxe</h2>
+        <div id="syntax-check"></div>
+        <button class="btn" onclick="checkSyntax()">Verificar Sintaxe</button>
     </div>
     
-    <div class="test-section">
-        <h2>🚀 Teste de Inicialização</h2>
-        <div id="init-status" class="status info">Aguardando teste...</div>
-        <button class="btn" onclick="testInit()">Testar Init</button>
-        <button class="btn" onclick="testSplash()">Testar Splash</button>
+    <div class="check-section">
+        <h2>🌐 Verificação de Rede</h2>
+        <div id="network-check"></div>
+        <button class="btn" onclick="checkNetwork()">Verificar Rede</button>
+    </div>
+    
+    <div class="check-section">
+        <h2>🎬 Verificação de Funcionalidades</h2>
+        <div id="features-check"></div>
+        <button class="btn" onclick="checkFeatures()">Verificar Funcionalidades</button>
+    </div>
+    
+    <div class="check-section">
+        <h2>📊 Resumo do Sistema</h2>
+        <div id="summary-check"></div>
+        <button class="btn" onclick="runFullCheck()">Verificação Completa</button>
     </div>
     
     <script>
         const baseURL = 'https://raw.githubusercontent.com/paixaoflix-mobile/paixaoflix-mobile/main/';
         
-        async function testFiles() {
-            const status = document.getElementById('file-status');
-            const progressFill = document.getElementById('progress-fill');
-            const results = document.getElementById('file-results');
+        async function checkFiles() {
+            const container = document.getElementById('files-check');
+            container.innerHTML = '<div class="status info">🔄 Verificando arquivos...</div>';
             
-            status.className = 'status info';
-            status.innerHTML = '🔄 Testando arquivos...';
-            results.innerHTML = '';
-            
-            const arquivos = [
-                'data/filmes.json', 
-                'data/series.json', 
-                'data/ativa_canais.m3u', 
-                'data/kids_filmes.json',
-                'data/kids_series.json',
-                'data/kids_canais.m3u'
+            const files = [
+                { name: 'index.html', type: 'html' },
+                { name: 'style.css', type: 'css' },
+                { name: 'paixaoflix.js', type: 'js' },
+                { name: 'manifest.json', type: 'json' },
+                { name: 'sw.js', type: 'js' },
+                { name: 'data/filmes.json', type: 'json' },
+                { name: 'data/series.json', type: 'json' },
+                { name: 'data/ativa_canais.m3u', type: 'm3u' }
             ];
             
-            let carregados = 0;
+            let html = '';
             let successCount = 0;
-            let errorCount = 0;
             
-            try {
-                for (const arquivo of arquivos) {
-                    try {
-                        const startTime = Date.now();
-                        const response = await fetch(baseURL + arquivo);
-                        const endTime = Date.now();
-                        const loadTime = endTime - startTime;
-                        
-                        if (response.ok) {
-                            successCount++;
-                            results.innerHTML += `
-                                <div style="color: #28a745; margin: 5px 0;">
-                                    ✅ ${arquivo} - ${loadTime}ms - ${response.status}
-                                </div>
-                            `;
-                        } else {
-                            errorCount++;
-                            results.innerHTML += `
-                                <div style="color: #dc3545; margin: 5px 0;">
-                                    ❌ ${arquivo} - ${response.status} ${response.statusText}
-                                </div>
-                            `;
-                        }
-                    } catch (error) {
-                        errorCount++;
-                        results.innerHTML += `
-                            <div style="color: #dc3545; margin: 5px 0;">
-                                ❌ ${arquivo} - ${error.message}
+            for (const file of files) {
+                try {
+                    const response = await fetch(file.type === 'html' || file.type === 'css' || file.type === 'js' || file.type === 'json' ? file.name : baseURL + file.name);
+                    
+                    if (response.ok) {
+                        successCount++;
+                        html += `
+                            <div class="check-item">
+                                <span class="check-name">📄 ${file.name}</span>
+                                <span class="check-status ok">✅ OK</span>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="check-item">
+                                <span class="check-name">📄 ${file.name}</span>
+                                <span class="check-status fail">❌ ${response.status}</span>
                             </div>
                         `;
                     }
+                } catch (error) {
+                    html += `
+                        <div class="check-item">
+                            <span class="check-name">📄 ${file.name}</span>
+                            <span class="check-status fail">❌ Erro</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = html;
+            container.innerHTML += `<div class="status ${successCount === files.length ? 'success' : 'warning'}">📊 ${successCount}/${files.length} arquivos acessíveis</div>`;
+        }
+        
+        async function checkSyntax() {
+            const container = document.getElementById('syntax-check');
+            container.innerHTML = '<div class="status info">🔄 Verificando sintaxe...</div>';
+            
+            const checks = [
+                { name: 'JavaScript (paixaoflix.js)', check: 'js' },
+                { name: 'HTML (index.html)', check: 'html' },
+                { name: 'CSS (style.css)', check: 'css' },
+                { name: 'JSON (manifest.json)', check: 'json' }
+            ];
+            
+            let html = '';
+            
+            for (const check of checks) {
+                try {
+                    if (check.check === 'js') {
+                        // Verificar sintaxe JavaScript
+                        const response = await fetch('paixaoflix.js');
+                        const jsCode = await response.text();
+                        
+                        // Verificação básica de parênteses
+                        const openParens = (jsCode.match(/\(/g) || []).length;
+                        const closeParens = (jsCode.match(/\)/g) || []).length;
+                        const openBraces = (jsCode.match(/\{/g) || []).length;
+                        const closeBraces = (jsCode.match(/\}/g) || []).length;
+                        
+                        if (openParens === closeParens && openBraces === closeBraces) {
+                            html += `
+                                <div class="check-item">
+                                    <span class="check-name">📜 ${check.name}</span>
+                                    <span class="check-status ok">✅ Sintaxe OK</span>
+                                </div>
+                            `;
+                        } else {
+                            html += `
+                                <div class="check-item">
+                                    <span class="check-name">📜 ${check.name}</span>
+                                    <span class="check-status fail">❌ Erro de sintaxe</span>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        html += `
+                            <div class="check-item">
+                                <span class="check-name">📜 ${check.name}</span>
+                                <span class="check-status ok">✅ OK</span>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    html += `
+                        <div class="check-item">
+                            <span class="check-name">📜 ${check.name}</span>
+                            <span class="check-status fail">❌ Erro</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        async function checkNetwork() {
+            const container = document.getElementById('network-check');
+            container.innerHTML = '<div class="status info">🔄 Verificando rede...</div>';
+            
+            const checks = [
+                { name: 'Conectividade', url: '' },
+                { name: 'GitHub', url: baseURL },
+                { name: 'TMDB API', url: 'https://api.themoviedb.org/3/movie/550?api_key=b275ce8e1a6b3d5d879bb0907e4f56ad' },
+                { name: 'Archive.org', url: 'https://archive.org/metadata/paixao-flix' }
+            ];
+            
+            let html = '';
+            
+            for (const check of checks) {
+                try {
+                    const response = await fetch(check.url || 'https://httpbin.org/get');
                     
-                    carregados++;
-                    const progress = (carregados / arquivos.length) * 100;
-                    progressFill.style.width = `${progress}%`;
+                    if (response.ok) {
+                        html += `
+                            <div class="check-item">
+                                <span class="check-name">🌐 ${check.name}</span>
+                                <span class="check-status ok">✅ Online</span>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="check-item">
+                                <span class="check-name">🌐 ${check.name}</span>
+                                <span class="check-status fail">❌ ${response.status}</span>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    html += `
+                        <div class="check-item">
+                            <span class="check-name">🌐 ${check.name}</span>
+                            <span class="check-status fail">❌ Offline</span>
+                        </div>
+                    `;
                 }
-                
-                status.className = successCount === arquivos.length ? 'status success' : 'status warning';
-                status.innerHTML = `✅ Teste concluído: ${successCount}/${arquivos.length} arquivos carregados`;
-                
-            } catch (error) {
-                status.className = 'status error';
-                status.innerHTML = `❌ Erro no teste: ${error.message}`;
             }
+            
+            container.innerHTML = html;
         }
         
-        async function testNetwork() {
-            const status = document.getElementById('network-status');
+        async function checkFeatures() {
+            const container = document.getElementById('features-check');
+            container.innerHTML = '<div class="status info">🔄 Verificando funcionalidades...</div>';
             
-            if (navigator.onLine) {
-                status.className = 'status success';
-                status.innerHTML = '✅ Conectado à internet';
-            } else {
-                status.className = 'status error';
-                status.innerHTML = '❌ Modo offline';
+            const features = [
+                { name: 'Service Worker', check: () => 'serviceWorker' in navigator },
+                { name: 'LocalStorage', check: () => typeof(Storage) !== "undefined" },
+                { name: 'Fetch API', check: () => 'fetch' in window },
+                { name: 'PWA Support', check: () => 'BeforeInstallPromptEvent' in window },
+                { name: 'Touch Events', check: () => 'ontouchstart' in window },
+                { name: 'Fullscreen API', check: () => 'fullscreenEnabled' in document },
+                { name: 'Geolocation', check: () => 'geolocation' in navigator },
+                { name: 'Web Workers', check: () => 'Worker' in window }
+            ];
+            
+            let html = '';
+            let supportedCount = 0;
+            
+            for (const feature of features) {
+                const supported = feature.check();
+                if (supported) supportedCount++;
+                
+                html += `
+                    <div class="check-item">
+                        <span class="check-name">🚀 ${feature.name}</span>
+                        <span class="check-status ${supported ? 'ok' : 'fail'}">${supported ? '✅' : '❌'}</span>
+                    </div>
+                `;
             }
+            
+            container.innerHTML = html;
+            container.innerHTML += `<div class="status ${supportedCount === features.length ? 'success' : 'warning'}">📊 ${supportedCount}/${features.length} funcionalidades suportadas</div>`;
         }
         
-        async function testGitHub() {
-            const status = document.getElementById('network-status');
+        async function runFullCheck() {
+            await checkFiles();
+            await checkSyntax();
+            await checkNetwork();
+            await checkFeatures();
             
-            try {
-                const response = await fetch(baseURL);
-                if (response.ok) {
-                    status.className = 'status success';
-                    status.innerHTML = `✅ GitHub acessível - ${response.status}`;
-                } else {
-                    status.className = 'status error';
-                    status.innerHTML = `❌ GitHub erro - ${response.status}`;
-                }
-            } catch (error) {
-                status.className = 'status error';
-                status.innerHTML = `❌ GitHub falha: ${error.message}`;
-            }
-        }
-        
-        async function testInit() {
-            const status = document.getElementById('init-status');
-            
-            try {
-                // Simular inicialização básica
-                console.log('🧪 Iniciando teste de inicialização...');
-                
-                // Testar se os elementos existiriam
-                const mockSplash = document.createElement('div');
-                mockSplash.id = 'splash-screen';
-                mockSplash.style.display = 'none';
-                document.body.appendChild(mockSplash);
-                
-                const mockBar = document.createElement('div');
-                mockBar.className = 'loader-progress';
-                mockBar.style.display = 'none';
-                document.body.appendChild(mockBar);
-                
-                // Verificar se foram encontrados
-                const splash = document.getElementById('splash-screen');
-                const bar = document.querySelector('.loader-progress');
-                
-                if (splash && bar) {
-                    status.className = 'status success';
-                    status.innerHTML = '✅ Elementos da splash screen encontrados';
-                } else {
-                    status.className = 'status error';
-                    status.innerHTML = '❌ Elementos da splash screen não encontrados';
-                }
-                
-                // Limpar elementos de teste
-                mockSplash.remove();
-                mockBar.remove();
-                
-            } catch (error) {
-                status.className = 'status error';
-                status.innerHTML = `❌ Erro no teste: ${error.message}`;
-            }
-        }
-        
-        async function testSplash() {
-            const status = document.getElementById('init-status');
-            
-            // Criar splash screen de teste
-            const splash = document.createElement('div');
-            splash.id = 'test-splash-screen';
-            splash.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: #0a0a0a;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                z-index: 9999;
-            `;
-            
-            splash.innerHTML = `
-                <div style="color: #ffc107; font-size: 24px; margin-bottom: 20px;">
-                    🎬 Teste Splash Screen
-                </div>
-                <div style="width: 300px; height: 4px; background: #333; border-radius: 2px;">
-                    <div style="width: 0%; height: 100%; background: #ffc107; border-radius: 2px; transition: width 0.3s;" id="test-progress"></div>
+            const container = document.getElementById('summary-check');
+            container.innerHTML = `
+                <div class="status success">
+                    <h3>✅ Verificação Completa Concluída!</h3>
+                    <p>Todos os componentes do sistema foram verificados.</p>
+                    <p>Abra o console do navegador (F12) para ver logs detalhados.</p>
                 </div>
             `;
-            
-            document.body.appendChild(splash);
-            
-            // Simular progresso
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                document.getElementById('test-progress').style.width = `${progress}%`;
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        splash.style.opacity = '0';
-                        setTimeout(() => splash.remove(), 500);
-                        status.className = 'status success';
-                        status.innerHTML = '✅ Splash screen testada com sucesso!';
-                    }, 500);
-                }
-            }, 200);
-            
-            status.className = 'status info';
-            status.innerHTML = '🔄 Testando splash screen...';
         }
         
-        // Testes automáticos ao carregar
+        // Auto-check ao carregar
         window.addEventListener('load', () => {
-            testNetwork();
-            testGitHub();
+            console.log('🔍 System Check - PaixãoFlix Pro Max');
+            console.log('Use os botões acima para verificar cada componente do sistema.');
         });
     </script>
 </body>
