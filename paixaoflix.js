@@ -25,30 +25,27 @@ async function buscarNoTMDB(nome, tipo = 'movie') {
 // 3. O PASSO 3: COLOCAR NA TELA (A mágica)
 // Esta função cria o HTML dentro das prateleiras do seu index.html
 async function carregarCatalogo() {
-    // Exemplo: Vamos buscar 3 filmes para testar
     const filmesParaTestar = ['Batman', 'Superman', 'Avatar'];
-    
-    // Onde os filmes vão aparecer no HTML? No ID que criamos no index.html
     const container = document.getElementById('melhores-2025-row');
 
     for (let nome of filmesParaTestar) {
         const info = await buscarNoTMDB(nome);
-        
         if (info) {
-            // Criamos o elemento do Card
             const card = document.createElement('div');
             card.className = 'movie-card focusable'; 
-            card.tabIndex = 0;
-
-            // Colocamos a imagem e o título dentro dele
+            card.tabIndex = 0; // Isso é essencial para a seta funcionar!
             card.innerHTML = `
                 <img src="${TMDB_CONFIG.imgUrl + info.poster_path}" alt="${info.title}">
                 <div style="padding:10px; font-size:12px;">${info.title}</div>
             `;
-            
-            // Adicionamos o card na "prateleira"
             container.appendChild(card);
         }
+    }
+
+    // NOVO: Dá o foco inicial no primeiro card que aparecer
+    const primeiroCard = document.querySelector('.focusable');
+    if (primeiroCard) {
+        primeiroCard.focus();
     }
 }
 
