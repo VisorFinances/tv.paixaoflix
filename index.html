@@ -107,20 +107,36 @@
         .section-title { font-size: 1.5rem; margin-bottom: 15px; color: var(--text-dim); }
         .movie-row { display: flex; gap: 15px; overflow-x: hidden; padding: 10px 0; }
 
-        .movie-card {
-            min-width: 250px;
-            aspect-ratio: 16/9;
-            background: #1a1a1a;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
+        /* Estilo Disney+ Cards */
+.movie-card {
+    min-width: 200px;
+    aspect-ratio: 2/3; /* Formato vertical de poster */
+    background: #1a1a1a;
+    border-radius: 8px; /* Cantos arredondados */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid transparent; /* Borda invisível para não saltar quando focar */
+}
 
-        .movie-card:focus { transform: scale(1.1); z-index: 10; outline: 3px solid var(--hbo-accent); }
-        .movie-card img { width: 100%; height: 100%; object-fit: cover; }
+/* Efeito de Foco (Controle Remoto) Estilo Disney+ */
+.movie-card:focus {
+    transform: scale(1.08); /* Zoom suave */
+    border-color: #f9f9f9; /* Borda clara brilhante */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    outline: none;
+}
 
+/* Overlay sutil no card */
+.movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+        
         /* PLAYER OVERLAY */
         #video-player {
             position: fixed;
