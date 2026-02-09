@@ -31,7 +31,27 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
+    overflow-y: auto;
     scroll-behavior: smooth;
+    /* Remover barra de rolagem */
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE e Edge */
+}
+
+/* Remover barra de rolagem Chrome/Safari */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Cor amarelo/dourado para títulos */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffd700 !important;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.movie-title, .series-title, .channel-title {
+    color: #ffd700 !important;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
 }
 
 /* Splash Screen */
@@ -229,7 +249,7 @@ body {
 
 .seasonal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 15px;
     padding: 20px;
 }
@@ -554,9 +574,9 @@ body {
     flex: 0 0 auto;
     width: 200px;
     aspect-ratio: 16/9;
-    border-radius: 8px;
-    overflow: hidden;
     background: var(--bg-secondary);
+    border-radius: 12px;
+    overflow: hidden;
     cursor: pointer;
     transition: all var(--transition-fast);
     border: 2px solid transparent;
@@ -566,10 +586,10 @@ body {
 .movie-card-2-3 {
     flex: 0 0 auto;
     width: 200px;
-    aspect-ratio: 2/3;
-    border-radius: 8px;
-    overflow: hidden;
+    aspect-ratio: 16/9;
     background: var(--bg-secondary);
+    border-radius: 12px;
+    overflow: hidden;
     cursor: pointer;
     transition: all var(--transition-fast);
     border: 2px solid transparent;
@@ -808,7 +828,7 @@ body {
 
 .search-section-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 15px;
 }
 
@@ -1534,6 +1554,104 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Search Result Cards */
+.search-card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-card-content img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.search-card-info {
+    height: 30%;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.search-card-title {
+    color: #ffd700 !important;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.search-card-type,
+.search-card-rating,
+.search-card-duration {
+    color: #b3b3b3;
+    font-size: 10px;
+}
+
+.search-card-type {
+    color: #ffd700 !important;
+    font-weight: bold;
+}
+
+.search-result-item {
+    aspect-ratio: 16/9;
+}
+
+/* Canal Cards - Apenas logo sem fundo */
+.channel-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.channel-logo-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+.channel-logo-container img {
+    width: 80%;
+    height: auto;
+    max-height: 70%;
+    object-fit: contain;
+    background: transparent;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.channel-name {
+    color: #ffd700 !important;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 8px;
+    text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.channel-card:focus,
+.channel-card:hover {
+    background: rgba(255, 215, 0, 0.1) !important;
+    border: 2px solid #ffd700 !important;
+    transform: scale(1.05);
 }
 
 .movie-card,
