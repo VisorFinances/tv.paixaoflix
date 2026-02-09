@@ -55,48 +55,30 @@ document.addEventListener('DOMContentLoaded', carregarCatalogo);
 
 // SISTEMA DE NAVEGAÇÃO POR SETAS (D-PAD)
 document.addEventListener('keydown', function(e) {
-    // Busca todos os itens que podem ser focados
-    const itensFocaveis = document.querySelectorAll('.focusable');
-    let index = Array.from(itensFocaveis).indexOf(document.activeElement);
+    // 1. Pegar todos os elementos que podem ser focados
+    const itens = Array.from(document.querySelectorAll('.focusable'));
+    const atual = document.activeElement;
+    let proximo;
+
+    // 2. Lógica de Direção
+    const index = itens.indexOf(atual);
 
     if (e.key === 'ArrowRight') {
-        index = (index + 1 < itensFocaveis.length) ? index + 1 : index;
-    } 
-    else if (e.key === 'ArrowLeft') {
-        index = (index - 1 >= 0) ? index - 1 : index;
-    }
-    // Para subir e descer entre as prateleiras
-    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        // Lógica simplificada: procura o item mais próximo verticalmente
-        const currentRect = document.activeElement.getBoundingClientRect();
-        let closest = null;
-        let minDistance = Infinity;
-
-        itensFocaveis.forEach(item => {
-            if (item === document.activeElement) return;
-            const rect = item.getBoundingClientRect();
-            
-            // Verifica se está acima ou abaixo
-            const isVertical = e.key === 'ArrowDown' ? rect.top > currentRect.bottom : rect.bottom < currentRect.top;
-            
-            if (isVertical) {
-                const distance = Math.sqrt(Math.pow(rect.left - currentRect.left, 2) + Math.pow(rect.top - currentRect.top, 2));
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closest = item;
-                }
-            }
-        });
-        if (closest) closest.focus();
-        return; // Sai da função para não usar o index de lateral
-    }
-    else if (e.key === 'Enter') {
-        // Quando carregar no OK do comando
-        document.activeElement.click();
+        proximo = itens[index + 1];
+    } else if (e.key === 'ArrowLeft') {
+        proximo = itens[index - 1];
+    } else if (e.key === 'ArrowDown') {
+        // Pula para o item logo abaixo (baseado na posição na tela)
+        proximo = itens.find(el => el.getBoundingClientRect().top > atual.getBoundingClientRect().bottom);
+    } else if (e.key === 'ArrowUp') {
+        // Pula para o item logo acima
+        proximo = itens.reverse().find(el => el.getBoundingClientRect().bottom < atual.getBoundingClientRect().top);
+        itens.reverse(); // Volta a lista ao normal
     }
 
-    // Aplica o foco no novo item
-    if (itensFocaveis[index]) {
-        itensFocaveis[index].focus();
+    // 3. Executar o Foco
+    if (proximo) {
+        e.preventDefault(); // Impede a página de rolar sozinha
+        proximo.focus();
     }
 });
