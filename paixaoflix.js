@@ -51,19 +51,50 @@ class PaixaoFlixApp {
     }
     
     async init() {
-        await this.iniciarApp();
-        this.setupEventListeners();
-        this.loadAllData();
-        this.startHeroRotation();
-        this.updateDateTime();
-        this.updateFocusableElements();
-        this.checkAndCreateSeasonalSection();
-        setInterval(() => this.rotateHeroBanner(), 10000);
+        // Timeout de segurança para evitar travamento
+        const initTimeout = setTimeout(() => {
+            console.warn('⚠️ Timeout de segurança ativado - forçando inicialização');
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                splash.style.opacity = '0';
+                splash.style.visibility = 'hidden';
+            }
+        }, 10000); // 10 segundos máximo
+        
+        try {
+            await this.iniciarApp();
+            clearTimeout(initTimeout);
+            
+            this.setupEventListeners();
+            await this.loadData();
+            this.startHeroRotation();
+            this.updateDateTime();
+            this.updateFocusableElements();
+            this.checkAndCreateSeasonalSection();
+            setInterval(() => this.rotateHeroBanner(), 10000);
+            
+            console.log('✅ PaixãoFlix inicializado com sucesso!');
+        } catch (error) {
+            clearTimeout(initTimeout);
+            console.error('❌ Erro na inicialização:', error);
+            
+            // Forçar remoção da splash mesmo com erro
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                splash.style.opacity = '0';
+                splash.style.visibility = 'hidden';
+            }
+        }
     }
     
     async iniciarApp() {
         const splash = document.getElementById('splash-screen');
         const bar = document.querySelector('.loader-progress');
+        
+        if (!splash || !bar) {
+            console.warn('⚠️ Elementos da splash screen não encontrados');
+            return;
+        }
         
         // Lista de arquivos para carregar
         const arquivos = [
@@ -78,18 +109,54 @@ class PaixaoFlixApp {
         let carregados = 0;
 
         try {
-            for (const arquivo of arquivos) {
-                await fetch(this.baseURL + arquivo);
-                carregados++;
-                const progress = (carregados / arquivos.length) * 100;
-                bar.style.width = `${progress}%`;
-                
-                // Simular tempo mínimo para experiência visual
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
-
+            console.log('🚀 Iniciando carregamento dos arquivos...');
+            
+            // Processar arquivos em paralelo para maior velocidade
+            const promises = arquivos.map(async (arquivo, index) => {
+                try {
+                    console.log(`📁 Carregando: ${arquivo}`);
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout por arquivo
+                    
+                    const response = await fetch(this.baseURL + arquivo, {
+                        signal: controller.signal,
+                        cache: 'no-cache'
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    carregados++;
+                    const progress = (carregados / arquivos.length) * 100;
+                    bar.style.width = `${progress}%`;
+                    console.log(`✅ Arquivo carregado: ${arquivo} (${Math.round(progress)}%)`);
+                    
+                    return { arquivo, success: true };
+                    
+                } catch (fileError) {
+                    console.warn(`⚠️ Erro ao carregar ${arquivo}:`, fileError.message);
+                    // Continuar com os outros arquivos mesmo se um falhar
+                    carregados++;
+                    const progress = (carregados / arquivos.length) * 100;
+                    bar.style.width = `${progress}%`;
+                    
+                    return { arquivo, success: false, error: fileError.message };
+                }
+            });
+            
+            // Esperar todos os arquivos (com sucesso ou falha)
+            const results = await Promise.allSettled(promises);
+            
+            console.log('📊 Resultados do carregamento:', results);
+            
             // Delay suave para o usuário ver o 100%
             await new Promise(resolve => setTimeout(resolve, 500));
+            
+            console.log('✅ Todos os arquivos processados!');
             
             // Esconder splash screen
             splash.style.opacity = '0';
@@ -100,15 +167,18 @@ class PaixaoFlixApp {
                 const firstFocusable = document.querySelector('.focusable');
                 if (firstFocusable) {
                     firstFocusable.focus();
+                    console.log('🎯 Primeiro elemento focado');
                 }
             }, 100);
             
         } catch (error) {
-            console.error('Erro ao carregar arquivos:', error);
+            console.error('❌ Erro crítico no iniciarApp:', error);
+            
             // Mesmo com erro, esconder splash após 3 segundos
             setTimeout(() => {
                 splash.style.opacity = '0';
                 splash.style.visibility = 'hidden';
+                console.log('⚠️ Splash screen escondida por timeout de segurança');
             }, 3000);
         }
     }
