@@ -133,19 +133,40 @@
         .channel-item img { width: 45px; height: 45px; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; }
         
         @keyframes fadeIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
+
+        /* Estilo para os títulos das categorias */
+.category-title {
+    margin-left: 20px;
+    color: var(--disney-blue);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 30px;
+}
+
+/* Container para as categorias dinâmicas */
+#categories-page {
+    display: none; /* Inicia escondido */
+    padding-top: 100px;
+    margin-left: 80px;
+}
+    
     </style>
 </head>
 <body>
 
     <nav id="sidebar">
-        <a class="nav-item focusable" href="#"><i class="fas fa-home"></i><span>Início</span></a>
-        <a class="nav-item focusable" href="#"><i class="fas fa-search"></i><span>Busca</span></a>
-        <a class="nav-item focusable" href="#" onclick="carregarTvAoVivo()">
-            <i class="fas fa-satellite-dish"></i><span>TV ao Vivo</span>
-        </a>
-        <a class="nav-item focusable" href="#"><i class="fas fa-film"></i><span>Filmes</span></a>
-        <a class="nav-item focusable" href="#"><i class="fas fa-tv"></i><span>Séries</span></a>
-    </nav>
+    <a class="nav-item focusable" href="#" onclick="mostrarHome()"><i class="fas fa-home"></i><span>Início</span></a>
+    <a class="nav-item focusable" href="#"><i class="fas fa-search"></i><span>Busca</span></a>
+    <a class="nav-item focusable" href="#" onclick="carregarTvAoVivo()"><i class="fas fa-satellite-dish"></i><span>TV ao Vivo</span></a>
+    <a class="nav-item focusable" href="#" onclick="carregarSecao('movie')"><i class="fas fa-film"></i><span>Filmes</span></a>
+    <a class="nav-item focusable" href="#" onclick="carregarSecao('tv')"><i class="fas fa-tv"></i><span>Séries</span></a>
+</nav>
+
+<div id="categories-page">
+    <h1 id="section-title" style="margin-left: 20px; font-size: 2.5rem;">Filmes</h1>
+    <div id="categories-container"></div>
+</div>
 
     <main id="main-content">
         <section id="hero">
