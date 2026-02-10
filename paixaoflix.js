@@ -6,103 +6,125 @@ const TMDB_CONFIG = {
 };
 
 let player;
+let dadosFilmes = [];
 
-// 1. Busca no TMDB
-async function buscarNoTMDB(nome) {
-    const url = `${TMDB_CONFIG.baseUrl}/search/movie?api_key=${TMDB_CONFIG.apiKey}&query=${encodeURIComponent(nome)}&language=${TMDB_CONFIG.lang}`;
+// Lista Exata solicitada
+const CATEGORIAS_OFICIAIS = [
+    "Lançamento 2026", "Lançamento 2025", "Ação", "Aventura", "Comédia", 
+    "Drama", "Nacional", "Romance", "Religioso", "Ficção", "Anime", 
+    "Animação", "Clássicos", "Dorama", "Suspense", "Policial", 
+    "Crime", "Terror", "Documentários", "Faroeste", "Musical", "Adulto"
+];
+
+// --- 1. CARREGAMENTO DE DADOS ---
+
+async function carregarFilmes() {
     try {
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.results ? data.results[0] : null;
-    } catch (e) { return null; }
-}
-
-// 2. Página de Detalhes
-function abrirDetalhes(info) {
-    document.getElementById('det-title').innerText = info.title;
-    document.getElementById('det-overview').innerText = info.overview || "Sinopse não disponível.";
-    document.getElementById('det-rating').innerText = `⭐ ${info.vote_average.toFixed(1)}`;
-    document.getElementById('det-year').innerText = info.release_date ? info.release_date.split('-')[0] : "2025";
-    document.getElementById('det-poster').src = TMDB_CONFIG.imgUrl + info.poster_path;
-    const backdropUrl = info.backdrop_path ? `https://image.tmdb.org/t/p/original${info.backdrop_path}` : '';
-    document.getElementById('det-backdrop').style.backgroundImage = `url(${backdropUrl})`;
-    document.getElementById('movie-details').style.display = 'block';
-    setTimeout(() => document.getElementById('btn-play-now').focus(), 200);
-}
-
-function fecharDetalhes() {
-    document.getElementById('movie-details').style.display = 'none';
-    const card = document.querySelector('.movie-card');
-    if (card) card.focus();
-}
-
-// 3. Carregar Catálogo
-async function carregarCatalogo() {
-    const filmes = ['Batman', 'Superman', 'Avatar', 'Deadpool', 'Avengers'];
-    const container = document.getElementById('melhores-2025-row');
-    if(!container) return;
-    for (let nome of filmes) {
-        const info = await buscarNoTMDB(nome);
-        if (info) {
-            const card = document.createElement('div');
-            card.className = 'movie-card focusable'; 
-            card.tabIndex = 0; 
-            card.innerHTML = `<img src="${TMDB_CONFIG.imgUrl + info.poster_path}">`;
-            card.onclick = () => abrirDetalhes(info);
-            container.appendChild(card);
-        }
+        const resp = await fetch('/data/filmes.json');
+        dadosFilmes = await resp.json();
+        renderizarCategorias('movie');
+    } catch (e) {
+        console.error("Erro ao carregar filmes.json", e);
     }
-    setTimeout(() => {
-        const p = document.querySelector('.movie-card.focusable');
-        if (p) p.focus();
-    }, 1000);
 }
 
-// 4. Configurações do Player
-function iniciarPlayer(videoUrl, posterUrl) {
+function renderizarCategorias(tipo) {
+    document.getElementById('hero').style.display = 'none';
+    const page = document.getElementById('categories-page');
+    const container = document.getElementById('dynamic-rows') || document.getElementById('categories-container');
+    
+    page.style.display = 'block';
+    container.innerHTML = "";
+
+    CATEGORIAS_OFICIAIS.forEach(cat => {
+        // Filtra conteúdo: permite que o mesmo filme esteja em várias categorias
+        const filtrados = dadosFilmes.filter(f => {
+            const matchTipo = f.type === tipo;
+            const generoArray = Array.isArray(f.genero) ? f.genero : [f.genero];
+            const matchCat = generoArray.includes(cat) || 
+                           (f.year === "2026" && cat === "Lançamento 2026") ||
+                           (f.year === "2025" && cat === "Lançamento 2025");
+            return matchTipo && matchCat;
+        });
+
+        if (filtrados.length > 0) {
+            const rowWrapper = document.createElement('div');
+            rowWrapper.className = 'content-section';
+            rowWrapper.style.paddingLeft = "100px";
+            rowWrapper.innerHTML = `
+                <h2 class="category-title" style="margin: 20px 0 10px 0; color: #888;">${cat}</h2>
+                <div class="movie-row" id="row-${cat.replace(/\s+/g, '-')}"></div>
+            `;
+            container.appendChild(rowWrapper);
+            
+            const rowContent = rowWrapper.querySelector('.movie-row');
+            filtrados.forEach(f => {
+                const card = document.createElement('div');
+                card.className = "movie-card focusable";
+                card.tabIndex = 0;
+                card.innerHTML = `<img src="${f.poster}">`;
+                card.onclick = () => abrirDetalhes(f);
+                rowContent.appendChild(card);
+            });
+        }
+    });
+
+    setTimeout(() => {
+        const primeiro = page.querySelector('.focusable');
+        if (primeiro) primeiro.focus();
+    }, 300);
+}
+
+// --- 2. DETALHES E TRAILER ---
+
+function abrirDetalhes(filme) {
+    document.getElementById('det-title').innerText = filme.titulo;
+    document.getElementById('det-desc').innerText = filme.desc || filme.overview || "Sinopse não disponível.";
+    document.getElementById('det-poster').src = filme.poster;
+    document.getElementById('movie-details').style.display = 'block';
+
+    const btnTrailer = document.getElementById('btn-trailer');
+    if (filme.trailer && filme.trailer.trim() !== "") {
+        btnTrailer.style.display = "flex";
+        btnTrailer.onclick = () => window.open(filme.trailer, '_blank');
+    } else {
+        btnTrailer.style.display = "none";
+    }
+
+    document.getElementById('btn-play-video').onclick = () => iniciarPlayer(filme.url);
+    setTimeout(() => document.getElementById('btn-play-video').focus(), 200);
+}
+
+// --- 3. PLAYER E TV AO VIVO ---
+
+function iniciarPlayer(url) {
     const container = document.getElementById('video-player');
     container.style.display = 'block';
     if (player) player.destroy();
-
     player = new Clappr.Player({
-        source: videoUrl,
-        poster: posterUrl,
+        source: url,
         parentId: "#clappr-player",
         width: '100%', height: '100%',
-        autoPlay: true,
-        plugins: [LevelSelector],
-        playback: { hlsjsConfig: { enableWorker: true } }
+        autoPlay: true
     });
-
-    if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
 }
 
-function fecharPlayer() {
-    if (player) { player.destroy(); player = null; }
-    document.getElementById('video-player').style.display = 'none';
-    document.getElementById('live-channels-list').classList.remove('active');
-    if (document.exitFullscreen) document.exitFullscreen();
-}
-
-// 5. TV ao Vivo e M3U
 async function carregarTvAoVivo() {
-    const urlM3U = "/data/ativa_canais.m3u";
     const sidebar = document.getElementById('live-channels-list');
     const container = document.getElementById('channels-container');
-    
     try {
-        const resp = await fetch(urlM3U);
+        const resp = await fetch('/data/ativa_canais.m3u');
         const text = await resp.text();
         const canais = parseM3U(text);
-        container.innerHTML = "";
         
+        container.innerHTML = "";
         canais.forEach(canal => {
             const item = document.createElement('div');
-            item.className = 'channel-item focusable';
+            item.className = "channel-item focusable";
             item.tabIndex = 0;
-            item.innerHTML = `<img src="${canal.logo || ''}"><span>${canal.nome}</span>`;
+            item.innerHTML = `<img src="${canal.logo || ''}" style="width:40px"><span>${canal.nome}</span>`;
             item.onclick = () => {
-                iniciarPlayer(canal.url, "");
+                iniciarPlayer(canal.url);
                 sidebar.classList.remove('active');
             };
             container.appendChild(item);
@@ -113,8 +135,8 @@ async function carregarTvAoVivo() {
         setTimeout(() => {
             const first = container.querySelector('.channel-item');
             if (first) first.focus();
-        }, 500);
-    } catch (e) { console.error("Erro na lista", e); }
+        }, 300);
+    } catch (e) { console.error("Erro M3U", e); }
 }
 
 function parseM3U(texto) {
@@ -135,125 +157,68 @@ function parseM3U(texto) {
     return canais;
 }
 
-// 6. Controle de Teclas do Player (Seta Esquerda para Canais)
-function handlePlayerControls(e) {
-    if (!player || document.getElementById('video-player').style.display !== 'block') return;
+// --- 4. SISTEMA DE NAVEGAÇÃO E REGRAS DE SETAS ---
 
+document.addEventListener('keydown', (e) => {
     const sidebar = document.getElementById('live-channels-list');
+    const playerAberto = document.getElementById('video-player').style.display === 'block';
 
-    if (e.key === 'ArrowLeft') {
-        if (!sidebar.classList.contains('active')) {
+    // Regras de negócio do Player e Barra de Canais
+    if (playerAberto) {
+        if (e.key === 'ArrowLeft' && !sidebar.classList.contains('active')) {
             e.preventDefault();
             sidebar.classList.add('active');
-            setTimeout(() => {
-                const first = document.querySelector('.channel-item');
-                if (first) first.focus();
-            }, 100);
+            setTimeout(() => sidebar.querySelector('.channel-item').focus(), 100);
+            return;
         }
-    }
-
-    if (e.key === 'ArrowRight') {
-        if (sidebar.classList.contains('active')) {
+        if (e.key === 'ArrowRight' && sidebar.classList.contains('active')) {
             e.preventDefault();
             sidebar.classList.remove('active');
             document.getElementById('btn-close-player').focus();
-        } else {
-            player.seek(player.getCurrentTime() + 10);
+            return;
         }
     }
-}
 
-// 7. Navegação Geográfica com bloqueio de Player
-document.addEventListener('keydown', function(e) {
-    // Se o player estiver aberto, apenas os controles do player funcionam
-    if (document.getElementById('video-player').style.display === 'block') {
-        handlePlayerControls(e);
-        const atual = document.activeElement;
-        if (e.key === 'Enter' && atual) atual.click();
-        return; 
-    }
-
+    // Navegação Geográfica Geral
     const itens = Array.from(document.querySelectorAll('.focusable'));
     const atual = document.activeElement;
     if (e.key === 'Enter' && atual) { atual.click(); return; }
-    
-    const rectAtual = atual.getBoundingClientRect();
-    let proximo = null;
-    let menorD = Infinity;
 
-    itens.forEach(item => {
-        if (item === atual) return;
-        const r = item.getBoundingClientRect();
-        let ok = false;
-        if (e.key === 'ArrowRight') ok = r.left >= rectAtual.right - 10;
-        if (e.key === 'ArrowLeft')  ok = r.right <= rectAtual.left + 10;
-        if (e.key === 'ArrowDown')  ok = r.top >= rectAtual.bottom - 10;
-        if (e.key === 'ArrowUp')    ok = r.bottom <= rectAtual.top + 10;
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        const rectAtual = atual.getBoundingClientRect();
+        let proximo = null;
+        let menorD = Infinity;
 
-        if (ok) {
-            const d = Math.sqrt(Math.pow(r.left - rectAtual.left, 2) + Math.pow(r.top - rectAtual.top, 2));
-            if (d < menorD) { menorD = d; proximo = item; }
+        itens.forEach(item => {
+            if (item === atual) return;
+            const r = item.getBoundingClientRect();
+            let ok = false;
+            if (e.key === 'ArrowRight') ok = r.left >= rectAtual.right - 10;
+            if (e.key === 'ArrowLeft')  ok = r.right <= rectAtual.left + 10;
+            if (e.key === 'ArrowDown')  ok = r.top >= rectAtual.bottom - 10;
+            if (e.key === 'ArrowUp')    ok = r.bottom <= rectAtual.top + 10;
+
+            if (ok) {
+                const d = Math.sqrt(Math.pow(r.left - rectAtual.left, 2) + Math.pow(r.top - rectAtual.top, 2));
+                if (d < menorD) { menorD = d; proximo = item; }
+            }
+        });
+
+        if (proximo) {
+            e.preventDefault();
+            proximo.focus();
+            proximo.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-    });
-
-    if (proximo) { 
-        e.preventDefault(); 
-        proximo.focus(); 
-        proximo.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
     }
 });
 
-const CATEGORIAS_OFICIAIS = [
-    "Lançamento 2026", "Lançamento 2025", "Ação", "Aventura", "Comédia", 
-    "Drama", "Nacional", "Romance", "Religioso", "Ficção", "Anime", 
-    "Animação", "Clássicos", "Dorama", "Suspense", "Policial", 
-    "Crime", "Terror", "Documentários", "Faroeste", "Musical", "Adulto"
-];
-
-// Mapeamento de nomes para IDs do TMDB (apenas para exemplo, você usará seu identificador PaixãoFlix)
-const GENRE_IDS = { "Ação": 28, "Aventura": 12, "Comédia": 35, "Drama": 18, "Terror": 27 };
-
-function carregarSecao(tipo) {
-    // Esconde a Home e o Hero
-    document.getElementById('hero').style.display = 'none';
-    document.querySelector('.content-section').style.display = 'none';
-    
-    const page = document.getElementById('categories-page');
-    const container = document.getElementById('categories-container');
-    const title = document.getElementById('section-title');
-    
-    page.style.display = 'block';
-    title.innerText = tipo === 'movie' ? 'Filmes' : 'Séries';
-    container.innerHTML = ""; // Limpa categorias anteriores
-
-    // Cria cada categoria na ordem exata
-    CATEGORIAS_OFICIAIS.forEach(catNome => {
-        const rowWrapper = document.createElement('div');
-        rowWrapper.className = 'content-section';
-        rowWrapper.style.paddingLeft = "100px"; // Mantendo seu ajuste de zoom
-        
-        rowWrapper.innerHTML = `
-            <h2 class="category-title">${catNome}</h2>
-            <div class="movie-row" id="row-${catNome.replace(/\s+/g, '-')}">
-                </div>
-        `;
-        container.appendChild(rowWrapper);
-        
-        // Aqui você chamaria sua função de busca por categoria
-        // Exemplo: popularCategoria(tipo, catNome);
-    });
-    
-    // Foca no primeiro item disponível
-    setTimeout(() => {
-        const primeiroItem = page.querySelector('.focusable');
-        if(primeiroItem) primeiroItem.focus();
-    }, 500);
+function fecharDetalhes() { document.getElementById('movie-details').style.display = 'none'; }
+function fecharPlayer() { 
+    if(player) player.destroy(); 
+    document.getElementById('video-player').style.display = 'none'; 
+    document.getElementById('live-channels-list').classList.remove('active');
 }
 
-function mostrarHome() {
-    document.getElementById('hero').style.display = 'flex';
-    document.querySelector('.content-section').style.display = 'block';
-    document.getElementById('categories-page').style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', carregarCatalogo);
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializa a Home ou carregar algo padrão
+});
