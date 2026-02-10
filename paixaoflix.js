@@ -215,3 +215,58 @@ document.getElementById('btn-play-now').onclick = function() {
     const urlTeste = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"; 
     iniciarPlayer(urlTeste, backdrop);
 };
+
+// Função para carregar a TV ao Vivo
+function carregarTvAoVivo() {
+    const urlM3U = "/data/ativa_canais.m3u";
+    
+    // Mostra o container do player
+    document.getElementById('video-player').style.display = 'block';
+
+    // No caso de TV ao Vivo, passamos a URL da lista para o player
+    // Nota: O Clappr toca diretamente se for um link de stream. 
+    // Se for uma lista de vários canais, ele pegará o primeiro ou precisará de um parser.
+    iniciarPlayer(urlM3U, "https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/hero_bg.jpg");
+    
+    exibirFeedback("Carregando Canais ao Vivo...");
+}
+
+// Ajuste no iniciarPlayer para identificar se é Live (TV)
+function iniciarPlayer(videoUrl, posterUrl) {
+    const playerContainer = document.getElementById('video-player');
+    playerContainer.style.display = 'block';
+
+    // Destruir player anterior se existir
+    if (player) player.destroy();
+
+    player = new Clappr.Player({
+        source: videoUrl,
+        poster: posterUrl,
+        parentId: "#clappr-player",
+        width: '100%',
+        height: '100%',
+        autoPlay: true,
+        preload: 'auto',
+        // Configurações para TV ao Vivo (HLS)
+        playback: {
+            hlsjsConfig: {
+                enableWorker: true,
+            }
+        },
+        plugins: [LevelSelector, ChromecastPlugin],
+        // Otimização para troca de qualidade automática (Internet do usuário)
+        levelSelectorConfig: {
+            title: 'Qualidade',
+            labels: {
+                2: 'Full HD',
+                1: 'HD',
+                0: 'SD',
+            },
+        },
+    });
+
+    // Força tela cheia
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+    }
+}
