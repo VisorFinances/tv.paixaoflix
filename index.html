@@ -6,18 +6,13 @@
     <title>PaixãoFlix Pro Max</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     
     <style>
         :root {
-            /* Paleta HBO Max Official */
-            --hbo-purple: #1f003a;
-            --hbo-gradient: linear-gradient(45deg, #51009e, #1f003a);
             --hbo-bg: #000000;
-            --hbo-accent: #9d3dff;
+            --hbo-accent: #00e5ff; /* Azul Neon Disney+ para foco */
             --text-main: #ffffff;
-            --text-dim: #b3b3b3;
-            --font-main: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-main: 'Inter', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
@@ -27,244 +22,92 @@
             color: var(--text-main);
             font-family: var(--font-main);
             overflow-x: hidden;
-            user-select: none;
         }
 
-        /* BARRA LATERAL (SMART TV STYLE) */
+        /* BARRA LATERAL */
         #sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 80px;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-            z-index: 1000;
-            transition: width 0.3s;
+            position: fixed; left: 0; top: 0; bottom: 0; width: 80px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 20px; z-index: 1000; transition: width 0.3s;
         }
-
-        #sidebar:hover, #sidebar.active { width: 220px; background: black; }
-
+        #sidebar:hover { width: 220px; }
         .nav-item {
-            width: 100%;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            color: var(--text-dim);
-            text-decoration: none;
-            cursor: pointer;
-            border-left: 4px solid transparent;
+            width: 100%; padding: 20px; display: flex; align-items: center;
+            color: #b3b3b3; text-decoration: none; border-left: 4px solid transparent;
         }
-
         .nav-item i { font-size: 1.5rem; min-width: 40px; text-align: center; }
-        .nav-item span { margin-left: 20px; opacity: 0; transition: 0.3s; white-space: nowrap; }
+        .nav-item span { margin-left: 20px; opacity: 0; white-space: nowrap; }
         #sidebar:hover span { opacity: 1; }
 
-        .nav-item.active, .nav-item:focus {
-            color: white;
-            background: rgba(157, 61, 255, 0.2);
-            border-left-color: var(--hbo-accent);
+        /* FOCO GERAL (Disney+ Style) */
+        .focusable:focus {
+            outline: none;
+            border: 4px solid var(--hbo-accent) !important;
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+            z-index: 100;
+            background: rgba(255,255,255,0.1);
         }
 
-        /* CONTEÚDO PRINCIPAL */
-        #main-content { margin-left: 80px; padding: 0; transition: margin 0.3s; }
+        /* CONTEÚDO */
+        #main-content { margin-left: 80px; padding: 0; }
 
-        /* HERO SECTION */
         #hero {
-            height: 80vh;
-            width: 100%;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: flex-end;
-            padding: 60px;
-            background-image: linear-gradient(to top, var(--hbo-bg), transparent 50%), url('https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/hero_bg.jpg');
+            height: 70vh; width: 100%;
+            background: linear-gradient(to top, #000, transparent), url('https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/hero_bg.jpg');
+            background-size: cover; background-position: center;
+            display: flex; align-items: flex-end; padding: 60px;
         }
 
-        .hero-info h1 { font-size: 4rem; margin-bottom: 10px; }
         .hero-btns { display: flex; gap: 15px; margin-top: 20px; }
-
-        .btn {
-            padding: 12px 30px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1rem;
-        }
+        .btn { padding: 12px 30px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; }
         .btn-white { background: white; color: black; }
         .btn-gray { background: rgba(255,255,255,0.2); color: white; }
-        .btn:focus { transform: scale(1.1); outline: 3px solid white; }
 
-        /* LINHAS DE CONTEÚDO */
+        /* FILEIRAS DE FILMES */
         .content-section { padding: 20px 0 20px 60px; }
-        .section-title { font-size: 1.5rem; margin-bottom: 15px; color: var(--text-dim); }
-        .movie-row {
-    display: flex; /* Isso coloca um filme do lado do outro */
-    overflow-x: auto; /* Permite que a linha cresça para o lado */
-    padding: 20px;
-    gap: 15px;
-}
-
-        /* Estilo Disney+ Cards */
-/* --- ESTILO DOS CARDS (DISNEY+) --- */
-.movie-row {
-    display: flex; 
-    flex-direction: row; /* Garante que fiquem lado a lado */
-    overflow-x: auto; 
-    padding: 20px;
-    gap: 20px;
-    min-height: 350px;
-    align-items: center;
-}
-
-.movie-card {
-    min-width: 200px;
-    max-width: 200px;
-    aspect-ratio: 2/3;
-    background: #1a1a1a;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    position: relative;
-    border: 4px solid transparent; /* Reserva o espaço da borda */
-}
-
-/* --- DESTAQUE DE FOCO (ONDE VOCÊ VÊ A NAVEGAÇÃO) --- */
-.movie-card:focus, .nav-item:focus, .btn:focus {
-    outline: none;
-    border-color: #00e5ff !important; /* Azul Neon para você enxergar o erro */
-    transform: scale(1.15); /* Aumenta bem o card */
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
-    z-index: 999;
-}
-
-/* Isso garante que qualquer item selecionado brilhe */
-.focusable:focus {
-    outline: none;
-    border: 4px solid #00e5ff !important; /* Azul Neon Disney+ */
-    transform: scale(1.1);
-    box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
-    background-color: rgba(255, 255, 255, 0.1);
-    z-index: 100;
-}
-        
-/* Overlay sutil no card */
-.movie-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 5px;
-}
-        
-        /* PLAYER OVERLAY */
-        #video-player {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: black;
-            z-index: 2000;
-            display: none;
-        }
-        #video-player.active { display: block; }
-
-        /* BUSCA POR VOZ ANIMATION */
-        #voice-search-btn.recording {
-            background: #ea4335;
-            animation: pulse-red 1.5s infinite;
-        }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(234, 67, 53, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(234, 67, 53, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(234, 67, 53, 0); }
+        .movie-row { 
+            display: flex; gap: 20px; padding: 20px 0; 
+            overflow-x: hidden; /* O JS controla o scroll */
         }
 
-        /* PARENTAL MODAL */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 3000; visibility: hidden;
+        .movie-card {
+            min-width: 200px; max-width: 200px; aspect-ratio: 2/3;
+            background: #1a1a1a; border-radius: 12px;
+            transition: all 0.3s ease; overflow: hidden;
+            border: 4px solid transparent;
         }
-        .modal.active { visibility: visible; }
-        .modal-card { background: #1a1a1a; padding: 40px; border-radius: 8px; text-align: center; max-width: 400px; }
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <nav id="sidebar">
-        <a class="nav-item focusable active" data-page="home"><i class="fas fa-home"></i><span>Início</span></a>
-        <a class="nav-item focusable" data-page="search"><i class="fas fa-search"></i><span>Busca</span></a>
-        <a class="nav-item focusable" data-page="cinema"><i class="fas fa-film"></i><span>Filmes</span></a>
-        <a class="nav-item focusable" data-page="series"><i class="fas fa-tv"></i><span>Séries</span></a>
-        <a class="nav-item focusable" data-page="live"><i class="fas fa-broadcast-tower"></i><span>Canais</span></a>
-        <a class="nav-item focusable" data-page="kids"><i class="fas fa-child"></i><span>Kids</span></a>
-        <a class="nav-item focusable" style="margin-top: auto;" onclick="app.showSettings()"><i class="fas fa-cog"></i><span>Configurações</span></a>
+        <a class="nav-item focusable" href="#"><i class="fas fa-home"></i><span>Início</span></a>
+        <a class="nav-item focusable" href="#"><i class="fas fa-search"></i><span>Busca</span></a>
+        <a class="nav-item focusable" href="#"><i class="fas fa-film"></i><span>Filmes</span></a>
+        <a class="nav-item focusable" href="#"><i class="fas fa-tv"></i><span>Séries</span></a>
     </nav>
 
     <main id="main-content">
         <section id="hero">
             <div class="hero-info">
-                <img src="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logo_white.png" height="50">
-                <h1>PaixãoFlix Original</h1>
-                <p>O melhor do cinema e das séries exclusivas, organizado para sua Smart TV.</p>
+                <h1>PaixãoFlix Pro</h1>
                 <div class="hero-btns">
-                    <button class="btn btn-white focusable" onclick="app.playFeatured()"><i class="fas fa-play"></i> Assistir Agora</button>
-                    <button class="btn btn-gray focusable" onclick="app.showFeaturedInfo()"><i class="fas fa-info-circle"></i> Mais Informações</button>
+                    <button class="btn btn-white focusable">Assistir Agora</button>
+                    <button class="btn btn-gray focusable">Mais Info</button>
                 </div>
             </div>
         </section>
 
-        <div class="content-section" id="continue-section">
-            <h2 class="section-title">Continuar Assistindo</h2>
-            <div class="movie-row" id="continue-watching-row"></div>
-        </div>
-
         <div class="content-section">
-            <h2 class="section-title">Melhores de 2025</h2>
-            <div class="movie-row" id="melhores-2025-row"></div>
-        </div>
-
-        <div class="content-section">
-            <h2 class="section-title">Séries Favoritas (PaixãoFlix)</h2>
-            <div class="movie-row" id="prepare-pipoca-row"></div>
+            <h2 style="margin-left: 20px;">Melhores de 2025</h2>
+            <div class="movie-row" id="melhores-2025-row">
+                </div>
         </div>
     </main>
 
-    <div id="search-overlay" class="modal">
-        <div class="modal-card" style="max-width: 80%;">
-            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 30px;">
-                <input type="text" id="search-input" placeholder="Filme, Ano ou Gênero..." 
-                       style="flex:1; padding: 15px; background: #333; border: none; color: white; font-size: 1.5rem;">
-                <button id="voice-search-btn" class="focusable" onclick="app.startVoiceSearch()" 
-                        style="width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;">
-                    <i class="fas fa-microphone"></i>
-                </button>
-            </div>
-            <div class="movie-row" id="search-grid" style="flex-wrap: wrap; justify-content: center;"></div>
-        </div>
-    </div>
-
-    <div id="video-player">
-        <div id="clappr-player" style="width: 100%; height: 100%;"></div>
-        <button onclick="app.closePlayer()" style="position: absolute; top: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer;">
-            <i class="fas fa-arrow-left"></i> Voltar
-        </button>
-    </div>
-
     <script src="paixaoflix.js"></script>
-    <script>
-        // Injeção do Favicon Dinâmico conforme solicitado
-        const link = document.createElement('link');
-        link.type = 'image/png';
-        link.rel = 'shortcut icon';
-        link.href = 'https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logo192.png';
-        document.getElementsByTagName('head')[0].appendChild(link);
-    </script>
 </body>
 </html>
