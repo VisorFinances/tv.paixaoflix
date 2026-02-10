@@ -15,36 +15,35 @@ async function buscarNoTMDB(nome) {
     } catch (e) { return null; }
 }
 
-// 2. Carrega os Filmes na Tela
-// Função para abrir a tela de detalhes
+// 2. Página de Detalhes
 function abrirDetalhes(info) {
     document.getElementById('det-title').innerText = info.title;
     document.getElementById('det-overview').innerText = info.overview || "Sinopse não disponível.";
     document.getElementById('det-rating').innerText = `⭐ ${info.vote_average.toFixed(1)}`;
-    document.getElementById('det-year').innerText = info.release_date.split('-')[0];
+    document.getElementById('det-year').innerText = info.release_date ? info.release_date.split('-')[0] : "2025";
     document.getElementById('det-poster').src = TMDB_CONFIG.imgUrl + info.poster_path;
     document.getElementById('det-backdrop').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${info.backdrop_path})`;
 
     const pane = document.getElementById('movie-details');
     pane.style.display = 'block';
     
-    // Foca no botão de Play automaticamente
     setTimeout(() => {
-        document.getElementById('btn-play-now').focus();
-    }, 100);
+        const playBtn = document.getElementById('btn-play-now');
+        if (playBtn) playBtn.focus();
+    }, 200);
 }
 
 function fecharDetalhes() {
     document.getElementById('movie-details').style.display = 'none';
-    // Volta o foco para o catálogo
-    document.querySelector('.movie-card').focus();
+    const primeiraCapa = document.querySelector('.movie-card');
+    if (primeiraCapa) primeiraCapa.focus();
 }
 
-// Atualize a criação do card dentro do seu loop:
-// Onde você cria o card, adicione o evento de clique:
+// 3. Carregar Catálogo
 async function carregarCatalogo() {
     const filmes = ['Batman', 'Superman', 'Avatar', 'Deadpool', 'Avengers'];
     const container = document.getElementById('melhores-2025-row');
+    if(!container) return;
 
     for (let nome of filmes) {
         const info = await buscarNoTMDB(nome);
@@ -54,31 +53,30 @@ async function carregarCatalogo() {
             card.tabIndex = 0; 
             card.innerHTML = `<img src="${TMDB_CONFIG.imgUrl + info.poster_path}">`;
             
-            // QUANDO CLICAR OU DAR ENTER NO CARD
+            // Evento de clique para mouse e gatilho para o Enter
             card.onclick = () => abrirDetalhes(info);
             
             container.appendChild(card);
         }
     }
-}
-
-// Adicione suporte ao botão ENTER na navegação keydown:
-// No final do seu evento 'keydown', adicione:
-if (e.key === 'Enter') {
-    atual.click();
-}    
-    // Tenta focar automaticamente no primeiro item
+    
+    // Foco inicial
     setTimeout(() => {
-        const primeiro = document.querySelector('.focusable');
+        const primeiro = document.querySelector('.movie-card.focusable');
         if (primeiro) primeiro.focus();
     }, 1000);
 }
 
-// 3. Sistema de Navegação Geográfica (Disney+ Style)
+// 4. Sistema de Navegação Geográfica
 document.addEventListener('keydown', function(e) {
     const itens = Array.from(document.querySelectorAll('.focusable'));
     const atual = document.activeElement;
     
+    if (e.key === 'Enter') {
+        if (atual) atual.click();
+        return;
+    }
+
     if (!itens.includes(atual)) {
         if (itens.length > 0) itens[0].focus();
         return;
