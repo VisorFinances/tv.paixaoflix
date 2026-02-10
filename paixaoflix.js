@@ -7,6 +7,7 @@ const TMDB_CONFIG = {
 
 let player;
 
+// 1. Busca no TMDB
 async function buscarNoTMDB(nome) {
     const url = `${TMDB_CONFIG.baseUrl}/search/movie?api_key=${TMDB_CONFIG.apiKey}&query=${encodeURIComponent(nome)}&language=${TMDB_CONFIG.lang}`;
     try {
@@ -16,6 +17,7 @@ async function buscarNoTMDB(nome) {
     } catch (e) { return null; }
 }
 
+// 2. Página de Detalhes
 function abrirDetalhes(info) {
     document.getElementById('det-title').innerText = info.title;
     document.getElementById('det-overview').innerText = info.overview || "Sinopse não disponível.";
@@ -34,6 +36,7 @@ function fecharDetalhes() {
     if (card) card.focus();
 }
 
+// 3. Carregar Catálogo
 async function carregarCatalogo() {
     const filmes = ['Batman', 'Superman', 'Avatar', 'Deadpool', 'Avengers'];
     const container = document.getElementById('melhores-2025-row');
@@ -55,6 +58,7 @@ async function carregarCatalogo() {
     }, 1000);
 }
 
+// 4. Configurações do Player
 function iniciarPlayer(videoUrl, posterUrl) {
     const container = document.getElementById('video-player');
     container.style.display = 'block';
@@ -71,7 +75,6 @@ function iniciarPlayer(videoUrl, posterUrl) {
     });
 
     if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-    document.addEventListener('keydown', handlePlayerControls);
 }
 
 function fecharPlayer() {
@@ -81,6 +84,7 @@ function fecharPlayer() {
     if (document.exitFullscreen) document.exitFullscreen();
 }
 
+// 5. TV ao Vivo e M3U
 async function carregarTvAoVivo() {
     const urlM3U = "/data/ativa_canais.m3u";
     const sidebar = document.getElementById('live-channels-list');
@@ -106,7 +110,10 @@ async function carregarTvAoVivo() {
 
         document.getElementById('video-player').style.display = 'block';
         sidebar.classList.add('active');
-        setTimeout(() => container.firstChild.focus(), 500);
+        setTimeout(() => {
+            const first = container.querySelector('.channel-item');
+            if (first) first.focus();
+        }, 500);
     } catch (e) { console.error("Erro na lista", e); }
 }
 
@@ -128,22 +135,44 @@ function parseM3U(texto) {
     return canais;
 }
 
+// 6. Controle de Teclas do Player (Seta Esquerda para Canais)
 function handlePlayerControls(e) {
-    if (!player) return;
-    if (e.key === 'ArrowRight') player.seek(player.getCurrentTime() + 10);
+    if (!player || document.getElementById('video-player').style.display !== 'block') return;
+
+    const sidebar = document.getElementById('live-channels-list');
+
     if (e.key === 'ArrowLeft') {
-        const sidebar = document.getElementById('live-channels-list');
-        if (sidebar.style.display !== 'none') {
-             sidebar.classList.add('active');
-             document.querySelector('.channel-item').focus();
+        if (!sidebar.classList.contains('active')) {
+            e.preventDefault();
+            sidebar.classList.add('active');
+            setTimeout(() => {
+                const first = document.querySelector('.channel-item');
+                if (first) first.focus();
+            }, 100);
+        }
+    }
+
+    if (e.key === 'ArrowRight') {
+        if (sidebar.classList.contains('active')) {
+            e.preventDefault();
+            sidebar.classList.remove('active');
+            document.getElementById('btn-close-player').focus();
         } else {
-             player.seek(player.getCurrentTime() - 10);
+            player.seek(player.getCurrentTime() + 10);
         }
     }
 }
 
-// Navegação Geográfica
+// 7. Navegação Geográfica com bloqueio de Player
 document.addEventListener('keydown', function(e) {
+    // Se o player estiver aberto, apenas os controles do player funcionam
+    if (document.getElementById('video-player').style.display === 'block') {
+        handlePlayerControls(e);
+        const atual = document.activeElement;
+        if (e.key === 'Enter' && atual) atual.click();
+        return; 
+    }
+
     const itens = Array.from(document.querySelectorAll('.focusable'));
     const atual = document.activeElement;
     if (e.key === 'Enter' && atual) { atual.click(); return; }
@@ -167,7 +196,11 @@ document.addEventListener('keydown', function(e) {
         }
     });
 
-    if (proximo) { e.preventDefault(); proximo.focus(); proximo.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    if (proximo) { 
+        e.preventDefault(); 
+        proximo.focus(); 
+        proximo.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+    }
 });
 
 document.addEventListener('DOMContentLoaded', carregarCatalogo);
