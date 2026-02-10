@@ -203,4 +203,57 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+const CATEGORIAS_OFICIAIS = [
+    "Lançamento 2026", "Lançamento 2025", "Ação", "Aventura", "Comédia", 
+    "Drama", "Nacional", "Romance", "Religioso", "Ficção", "Anime", 
+    "Animação", "Clássicos", "Dorama", "Suspense", "Policial", 
+    "Crime", "Terror", "Documentários", "Faroeste", "Musical", "Adulto"
+];
+
+// Mapeamento de nomes para IDs do TMDB (apenas para exemplo, você usará seu identificador PaixãoFlix)
+const GENRE_IDS = { "Ação": 28, "Aventura": 12, "Comédia": 35, "Drama": 18, "Terror": 27 };
+
+function carregarSecao(tipo) {
+    // Esconde a Home e o Hero
+    document.getElementById('hero').style.display = 'none';
+    document.querySelector('.content-section').style.display = 'none';
+    
+    const page = document.getElementById('categories-page');
+    const container = document.getElementById('categories-container');
+    const title = document.getElementById('section-title');
+    
+    page.style.display = 'block';
+    title.innerText = tipo === 'movie' ? 'Filmes' : 'Séries';
+    container.innerHTML = ""; // Limpa categorias anteriores
+
+    // Cria cada categoria na ordem exata
+    CATEGORIAS_OFICIAIS.forEach(catNome => {
+        const rowWrapper = document.createElement('div');
+        rowWrapper.className = 'content-section';
+        rowWrapper.style.paddingLeft = "100px"; // Mantendo seu ajuste de zoom
+        
+        rowWrapper.innerHTML = `
+            <h2 class="category-title">${catNome}</h2>
+            <div class="movie-row" id="row-${catNome.replace(/\s+/g, '-')}">
+                </div>
+        `;
+        container.appendChild(rowWrapper);
+        
+        // Aqui você chamaria sua função de busca por categoria
+        // Exemplo: popularCategoria(tipo, catNome);
+    });
+    
+    // Foca no primeiro item disponível
+    setTimeout(() => {
+        const primeiroItem = page.querySelector('.focusable');
+        if(primeiroItem) primeiroItem.focus();
+    }, 500);
+}
+
+function mostrarHome() {
+    document.getElementById('hero').style.display = 'flex';
+    document.querySelector('.content-section').style.display = 'block';
+    document.getElementById('categories-page').style.display = 'none';
+}
+
 document.addEventListener('DOMContentLoaded', carregarCatalogo);
