@@ -22,7 +22,10 @@ function abrirDetalhes(info) {
     document.getElementById('det-rating').innerText = `⭐ ${info.vote_average.toFixed(1)}`;
     document.getElementById('det-year').innerText = info.release_date ? info.release_date.split('-')[0] : "2025";
     document.getElementById('det-poster').src = TMDB_CONFIG.imgUrl + info.poster_path;
-    document.getElementById('det-backdrop').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${info.backdrop_path})`;
+    
+    // USANDO 'original' para a imagem não ficar embaçada ou invisível
+    const backdropUrl = info.backdrop_path ? `https://image.tmdb.org/t/p/original${info.backdrop_path}` : '';
+    document.getElementById('det-backdrop').style.backgroundImage = `url(${backdropUrl})`;
 
     const pane = document.getElementById('movie-details');
     pane.style.display = 'block';
@@ -32,7 +35,6 @@ function abrirDetalhes(info) {
         if (playBtn) playBtn.focus();
     }, 200);
 }
-
 function fecharDetalhes() {
     document.getElementById('movie-details').style.display = 'none';
     const primeiraCapa = document.querySelector('.movie-card');
