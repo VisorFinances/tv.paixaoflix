@@ -41,32 +41,45 @@ async function carregarCatalogo() {
 document.addEventListener('keydown', function(e) {
     const itens = Array.from(document.querySelectorAll('.focusable'));
     const atual = document.activeElement;
-    let index = itens.indexOf(atual);
-
-    if (index === -1) {
-        if (itens[0]) itens[0].focus();
+    
+    // Se nada estiver focado, foca no primeiro item disponível
+    if (!itens.includes(atual)) {
+        if (itens.length > 0) itens[0].focus();
         return;
     }
 
-    let proximo;
+    const rectAtual = atual.getBoundingClientRect();
+    let proximo = null;
+    let menorDistancia = Infinity;
 
-    if (e.key === 'ArrowRight') proximo = itens[index + 1];
-    if (e.key === 'ArrowLeft') proximo = itens[index - 1];
-    
-    // Navegação Vertical (pular de linha)
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        const rectAtual = atual.getBoundingClientRect();
-        proximo = itens.find(el => {
-            const rectEl = el.getBoundingClientRect();
-            return e.key === 'ArrowDown' ? rectEl.top > rectAtual.bottom : rectEl.bottom < rectAtual.top;
-        });
-    }
+    itens.forEach(item => {
+        if (item === atual) return;
+        const rectItem = item.getBoundingClientRect();
+
+        // Lógica de direção: verifica se o item está na direção da seta
+        let isDirecaoCorreta = false;
+        if (e.key === 'ArrowRight') isDirecaoCorreta = rectItem.left >= rectAtual.right - 10;
+        if (e.key === 'ArrowLeft')  isDirecaoCorreta = rectItem.right <= rectAtual.left + 10;
+        if (e.key === 'ArrowDown')  isDirecaoCorreta = rectItem.top >= rectAtual.bottom - 10;
+        if (e.key === 'ArrowUp')    isDirecaoCorreta = rectItem.bottom <= rectAtual.top + 10;
+
+        if (isDirecaoCorreta) {
+            // Calcula a distância entre o item atual e o candidato
+            const distancia = Math.sqrt(
+                Math.pow(rectItem.left - rectAtual.left, 2) + 
+                Math.pow(rectItem.top - rectAtual.top, 2)
+            );
+            if (distancia < menorDistancia) {
+                menorDistancia = distancia;
+                proximo = item;
+            }
+        }
+    });
 
     if (proximo) {
-        e.preventDefault(); // Mata o scroll da página
+        e.preventDefault();
         proximo.focus();
         proximo.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     }
 });
-
 document.addEventListener('DOMContentLoaded', carregarCatalogo);
