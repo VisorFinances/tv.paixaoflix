@@ -16,10 +16,35 @@ async function buscarNoTMDB(nome) {
 }
 
 // 2. Carrega os Filmes na Tela
+// Função para abrir a tela de detalhes
+function abrirDetalhes(info) {
+    document.getElementById('det-title').innerText = info.title;
+    document.getElementById('det-overview').innerText = info.overview || "Sinopse não disponível.";
+    document.getElementById('det-rating').innerText = `⭐ ${info.vote_average.toFixed(1)}`;
+    document.getElementById('det-year').innerText = info.release_date.split('-')[0];
+    document.getElementById('det-poster').src = TMDB_CONFIG.imgUrl + info.poster_path;
+    document.getElementById('det-backdrop').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${info.backdrop_path})`;
+
+    const pane = document.getElementById('movie-details');
+    pane.style.display = 'block';
+    
+    // Foca no botão de Play automaticamente
+    setTimeout(() => {
+        document.getElementById('btn-play-now').focus();
+    }, 100);
+}
+
+function fecharDetalhes() {
+    document.getElementById('movie-details').style.display = 'none';
+    // Volta o foco para o catálogo
+    document.querySelector('.movie-card').focus();
+}
+
+// Atualize a criação do card dentro do seu loop:
+// Onde você cria o card, adicione o evento de clique:
 async function carregarCatalogo() {
     const filmes = ['Batman', 'Superman', 'Avatar', 'Deadpool', 'Avengers'];
     const container = document.getElementById('melhores-2025-row');
-    if(!container) return;
 
     for (let nome of filmes) {
         const info = await buscarNoTMDB(nome);
@@ -27,11 +52,21 @@ async function carregarCatalogo() {
             const card = document.createElement('div');
             card.className = 'movie-card focusable'; 
             card.tabIndex = 0; 
-            card.innerHTML = `<img src="${TMDB_CONFIG.imgUrl + info.poster_path}" alt="${info.title}">`;
+            card.innerHTML = `<img src="${TMDB_CONFIG.imgUrl + info.poster_path}">`;
+            
+            // QUANDO CLICAR OU DAR ENTER NO CARD
+            card.onclick = () => abrirDetalhes(info);
+            
             container.appendChild(card);
         }
     }
-    
+}
+
+// Adicione suporte ao botão ENTER na navegação keydown:
+// No final do seu evento 'keydown', adicione:
+if (e.key === 'Enter') {
+    atual.click();
+}    
     // Tenta focar automaticamente no primeiro item
     setTimeout(() => {
         const primeiro = document.querySelector('.focusable');
