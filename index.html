@@ -109,5 +109,29 @@
     </main>
 
     <script src="paixaoflix.js"></script>
+
+ <div id="movie-details" class="details-pane">
+    <div class="details-backdrop" id="det-backdrop"></div>
+    <div class="details-content">
+        <img id="det-poster" src="" alt="">
+        <div class="details-text">
+            <h1 id="det-title">Título do Filme</h1>
+            <div class="details-meta">
+                <span id="det-year">2025</span> • 
+                <span id="det-rating">⭐ 8.5</span>
+            </div>
+            <p id="det-overview">Sinopse do filme aqui...</p>
+            <div class="details-btns">
+                <button class="btn btn-white focusable" id="btn-play-now">
+                    <i class="fas fa-play"></i> Assistir Agora
+                </button>
+                <button class="btn btn-gray focusable" onclick="fecharDetalhes()">
+                    <i class="fas fa-times"></i> Voltar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>   
+
 </body>
 </html>
