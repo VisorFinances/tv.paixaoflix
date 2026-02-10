@@ -79,6 +79,35 @@
             border: 4px solid transparent;
         }
         .movie-card img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ESTILO DA PÁGINA DE DETALHES */
+.details-pane {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: 2000;
+    display: none; /* Escondido por padrão */
+    color: white; animation: fadeIn 0.5s ease;
+}
+
+.details-backdrop {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover; background-position: center top;
+    opacity: 0.4; filter: blur(5px);
+}
+
+.details-content {
+    position: relative; z-index: 2; display: flex;
+    padding: 8% 10%; align-items: center; gap: 50px;
+    height: 100%; background: linear-gradient(to right, black 30%, transparent);
+}
+
+#det-poster { width: 300px; border-radius: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+.details-text { max-width: 600px; }
+.details-text h1 { font-size: 3.5rem; margin-bottom: 15px; }
+.details-meta { margin-bottom: 20px; font-weight: bold; color: var(--hbo-accent); }
+.details-btns { display: flex; gap: 20px; margin-top: 30px; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
     </style>
 </head>
 <body>
