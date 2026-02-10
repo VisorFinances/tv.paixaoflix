@@ -7,212 +7,132 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --disney-bg: radial-gradient(circle at top, #1a1d29, #090b13);
+            --bg-deep: #05070a;
+            --bg-accent: #0f111a;
             --disney-blue: #00e5ff;
+            --glass: rgba(255, 255, 255, 0.05);
             --text-main: #f9f9f9;
+            --shadow-3d: 0 4px 0 #0097a7, 0 8px 15px rgba(0,0,0,0.4);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        /* REMOVER BARRAS DE ROLAGEM MANTENDO O SCROLL */
+        * { margin: 0; padding: 0; box-sizing: border-box; scrollbar-width: none; -ms-overflow-style: none; }
+        *::-webkit-scrollbar { display: none; }
 
         body {
-            background: var(--disney-bg);
-            background-attachment: fixed;
+            background: var(--bg-deep);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            min-height: 100vh;
         }
 
-        /* BARRA LATERAL AJUSTADA */
+        /* BARRA LATERAL PROFISSIONAL */
         #sidebar {
             position: fixed; left: 0; top: 0; bottom: 0; width: 80px;
-            background: rgba(9, 11, 19, 0.9);
-            display: flex; flex-direction: column; align-items: flex-start;
-            padding-top: 20px; z-index: 1000; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
+            background: var(--bg-accent);
+            display: flex; flex-direction: column; z-index: 1000;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
-        /* Largura dinâmica: Ícone(80px) + Texto + 5px */
-        #sidebar:hover { width: 195px; background: #090b13; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
-        
+        #sidebar:hover { width: 220px; }
         .nav-item {
-            width: 100%; padding: 20px 28px; display: flex; align-items: center;
-            color: #a8a9ad; text-decoration: none; border-left: 4px solid transparent;
-            transition: 0.2s;
+            width: 100%; padding: 22px 28px; display: flex; align-items: center;
+            color: #888; text-decoration: none; transition: 0.3s;
         }
-        .nav-item i { font-size: 1.5rem; min-width: 30px; text-align: center; }
-        .nav-item span { margin-left: 20px; opacity: 0; white-space: nowrap; transition: 0.3s; font-weight: 500; }
+        .nav-item i { font-size: 1.4rem; min-width: 30px; }
+        .nav-item span { margin-left: 20px; opacity: 0; transition: 0.3s; }
         #sidebar:hover span { opacity: 1; }
 
-        /* FOCO ELEGANTE (GLOW STYLE) */
+        /* BOTÕES 3D PROFISSIONAIS */
+        .btn-3d {
+            padding: 12px 25px; border-radius: 6px; border: none; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; text-transform: uppercase;
+            background: var(--disney-blue); color: #000;
+            box-shadow: var(--shadow-3d);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-3d:active { transform: translateY(4px); box-shadow: none; }
+        .btn-3d:focus { outline: 3px solid #fff; }
+
+        /* FOCO ELEGANTE */
         .focusable:focus {
-            outline: none;
-            border: 2px solid #fff !important;
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 40px rgba(0, 229, 255, 0.2);
+            outline: none; transform: scale(1.08);
+            box-shadow: 0 0 0 4px #fff, 0 15px 30px rgba(0,0,0,0.8);
             z-index: 100;
-            background: rgba(255, 255, 255, 0.1);
         }
 
-        #main-content { margin-left: 80px; }
-
-        #hero {
-            height: 75vh; width: 100%;
-            background: linear-gradient(to top, #090b13, transparent 50%), url('https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/hero_bg.jpg');
-            background-size: cover; background-position: center;
-            display: flex; align-items: flex-end; padding: 60px;
-        }
-        .hero-info h1 { font-size: 3.5rem; margin-bottom: 10px; }
-        .hero-btns { display: flex; gap: 15px; margin-top: 20px; }
-        
-        .btn { 
-            padding: 12px 30px; border-radius: 4px; font-weight: bold; border: none; 
-            cursor: pointer; transition: 0.3s; font-size: 1rem; text-transform: uppercase;
-        }
-        .btn-white { background: #f9f9f9; color: #000; }
-        .btn-gray { background: rgba(0,0,0,0.6); color: #f9f9f9; border: 1px solid #f9f9f9; }
-
-        /* Espaço aumentado para 100px para o zoom não cortar atrás da sidebar */
-        .content-section { padding: 40px 0 20px 100px; }
-        .movie-row { display: flex; gap: 20px; padding: 20px 0; overflow-x: hidden; }
-        
-        .movie-card {
-            min-width: 200px; max-width: 200px; aspect-ratio: 2/3;
-            background: #2a2d37; border-radius: 8px;
-            transition: 0.3s; overflow: hidden; border: 3px solid transparent;
-        }
-        .movie-card img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* DETALHES */
-        .details-pane {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #090b13; z-index: 2000; display: none;
-            animation: fadeIn 0.4s ease;
-        }
-        .details-backdrop {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center 20%; opacity: 0.6;
-        }
-        .details-pane::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to right, #090b13 30%, transparent 70%), linear-gradient(to top, #090b13 10%, transparent 50%);
-            z-index: 1;
-        }
-        .details-content {
-            position: relative; z-index: 2; display: flex; padding: 5% 8%; align-items: center; gap: 50px; height: 100%;
-        }
-        #det-poster { width: 320px; border-radius: 10px; box-shadow: 0 0 40px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.2); }
-        .details-text h1 { font-size: 3.8rem; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
-        .details-text p { font-size: 1.2rem; line-height: 1.6; color: #f9f9f9; opacity: 0.9; margin-bottom: 30px; }
-        .details-btns { display: flex; gap: 20px; }
-
-        /* PLAYER & CANAIS */
-        #video-player { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 3000; display: none; }
-        #clappr-player video { object-fit: cover !important; width: 100% !important; height: 100% !important; }
-        
-        #btn-close-player {
-            position: absolute; top: 30px; right: 30px; z-index: 3100;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 12px 25px; border-radius: 50px;
-            cursor: pointer; font-weight: bold; transition: 0.3s;
-        }
-
+        /* TV AO VIVO - BARRA LATERAL */
         .channels-sidebar {
-            position: absolute; left: 0; top: 0; width: 320px; height: 100%;
-            background: rgba(9, 11, 19, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            z-index: 3005; transform: translateX(-100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute; left: 0; top: 0; width: 350px; height: 100%;
+            background: rgba(5, 7, 10, 0.95); backdrop-filter: blur(20px);
+            z-index: 3005; transform: translateX(-100%); transition: 0.4s;
+            border-right: 1px solid var(--disney-blue);
         }
         .channels-sidebar.active { transform: translateX(0); }
-        .sidebar-header { padding: 40px 20px 20px; font-weight: bold; font-size: 1.3rem; color: var(--disney-blue); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        #channels-container { height: calc(100% - 100px); overflow-y: auto; padding: 15px; }
-        
         .channel-item {
-            padding: 12px; border-radius: 8px; margin-bottom: 8px; cursor: pointer;
-            display: flex; align-items: center; gap: 15px; transition: 0.2s; border: 2px solid transparent;
+            padding: 15px; margin: 10px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; gap: 15px; background: var(--glass);
+            border: 2px solid transparent; transition: 0.2s;
         }
-        .channel-item img { width: 45px; height: 45px; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
+        .channel-item:focus { border-color: var(--disney-blue); background: rgba(0, 229, 255, 0.1); }
 
-        /* Estilo para os títulos das categorias */
-.category-title {
-    margin-left: 20px;
-    color: var(--disney-blue);
-    font-size: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 30px;
-}
-
-/* Container para as categorias dinâmicas */
-#categories-page {
-    display: none; /* Inicia escondido */
-    padding-top: 100px;
-    margin-left: 80px;
-}
-    
+        /* LAYOUT FILMES */
+        #categories-page { display: none; padding: 40px 0 40px 100px; }
+        .movie-row { display: flex; gap: 20px; padding: 20px 0; overflow-x: auto; }
+        .movie-card { min-width: 180px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; background: #111; }
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <nav id="sidebar">
-    <a class="nav-item focusable" href="#" onclick="mostrarHome()"><i class="fas fa-home"></i><span>Início</span></a>
-    <a class="nav-item focusable" href="#"><i class="fas fa-search"></i><span>Busca</span></a>
-    <a class="nav-item focusable" href="#" onclick="carregarTvAoVivo()"><i class="fas fa-satellite-dish"></i><span>TV ao Vivo</span></a>
-    <a class="nav-item focusable" href="#" onclick="carregarSecao('movie')"><i class="fas fa-film"></i><span>Filmes</span></a>
-    <a class="nav-item focusable" href="#" onclick="carregarSecao('tv')"><i class="fas fa-tv"></i><span>Séries</span></a>
-</nav>
-
-<div id="categories-page">
-    <h1 id="section-title" style="margin-left: 20px; font-size: 2.5rem;">Filmes</h1>
-    <div id="categories-container"></div>
-</div>
+        <a class="nav-item focusable" href="#" onclick="window.location.reload()"><i class="fas fa-home"></i><span>Início</span></a>
+        <a class="nav-item focusable" href="#" onclick="carregarFilmes()"><i class="fas fa-film"></i><span>Filmes</span></a>
+        <a class="nav-item focusable" href="#" onclick="carregarTvAoVivo()"><i class="fas fa-satellite-dish"></i><span>TV ao Vivo</span></a>
+    </nav>
 
     <main id="main-content">
-        <section id="hero">
+        <section id="hero" style="height: 70vh; padding: 100px; display: flex; align-items: flex-end;">
             <div class="hero-info">
-                <h1>PaixãoFlix Pro</h1>
-                <div class="hero-btns">
-                    <button class="btn btn-white focusable">Assistir Agora</button>
-                    <button class="btn btn-gray focusable">Mais Info</button>
-                </div>
+                <h1 style="font-size: 4rem;">PaixãoFlix</h1>
+                <p style="max-width: 600px; margin: 20px 0;">Sua plataforma profissional de streaming.</p>
+                <button class="btn-3d focusable"><i class="fas fa-play"></i> Assistir Agora</button>
             </div>
         </section>
-        <div class="content-section">
-            <h2 style="margin-left: 20px; color: #a8a9ad;">Melhores de 2025</h2>
-            <div class="movie-row" id="melhores-2025-row"></div>
-        </div>
     </main>
 
-    <div id="movie-details" class="details-pane">
-        <div class="details-backdrop" id="det-backdrop"></div>
-        <div class="details-content">
-            <img id="det-poster" src="" alt="">
-            <div class="details-text">
-                <h1 id="det-title">Título</h1>
-                <div class="details-meta">
-                    <span id="det-year">2025</span> • <span id="det-rating">⭐ 8.5</span>
-                </div>
-                <p id="det-overview">Carregando sinopse...</p>
-                <div class="details-btns">
-                    <button class="btn btn-white focusable" id="btn-play-now"><i class="fas fa-play"></i> Assistir</button>
-                    <button class="btn btn-gray focusable" onclick="fecharDetalhes()"><i class="fas fa-arrow-left"></i> Voltar</button>
+    <div id="categories-page">
+        <h1 id="page-title">Filmes</h1>
+        <div id="dynamic-rows"></div>
+    </div>
+
+    <div id="video-player" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:3000; background:#000;">
+        <div id="clappr-player" style="width:100%; height:100%;"></div>
+        
+        <div id="live-channels-list" class="channels-sidebar">
+            <h2 style="padding: 20px; color: var(--disney-blue);">Canais Live</h2>
+            <div id="channels-container"></div>
+        </div>
+        
+        <button id="btn-close-player" class="btn-3d focusable" onclick="fecharPlayer()" style="position:absolute; top:30px; right:30px; z-index:4000;">SAIR</button>
+    </div>
+
+    <div id="movie-details" class="details-pane" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:2000; background: var(--bg-deep);">
+        <div id="det-content" style="padding: 100px; display: flex; gap: 50px;">
+            <img id="det-poster" style="width: 300px; border-radius: 10px;">
+            <div class="det-info">
+                <h1 id="det-title" style="font-size: 3.5rem;"></h1>
+                <p id="det-desc" style="margin: 20px 0; font-size: 1.2rem;"></p>
+                <div class="det-btns" style="display:flex; gap:15px;">
+                    <button id="btn-play-video" class="btn-3d focusable"><i class="fas fa-play"></i> Assistir</button>
+                    <button id="btn-trailer" class="btn-3d focusable" style="background:#444; color:#fff; box-shadow: 0 4px 0 #222;"><i class="fas fa-video"></i> Trailer</button>
+                    <button class="btn-3d focusable" onclick="fecharDetalhes()" style="background:#666; color:#fff; box-shadow: 0 4px 0 #333;">Voltar</button>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div id="video-player">
-        <div id="clappr-player"></div>
-        <div id="live-channels-list" class="channels-sidebar">
-            <div class="sidebar-header">CANAIS DISPONÍVEIS</div>
-            <div id="channels-container"></div>
-        </div>
-        <button id="btn-close-player" class="focusable" onclick="fecharPlayer()">SAIR</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
     <script src="paixaoflix.js"></script>
 </body>
 </html>
