@@ -1,0 +1,17 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal1.png" group-title="Entretenimento",Canal 1
+https://example.com/canal1.m3u8
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal2.png" group-title="Filmes",Canal 2
+https://example.com/canal2.m3u8
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal3.png" group-title="Séries",Canal 3
+https://example.com/canal3.m3u8
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal4.png" group-title="Documentários",Canal 4
+https://example.com/canal4.m3u8
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal5.png" group-title="Esportes",Canal 5
+https://example.com/canal5.m3u8
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal6.png" group-title="Notícias",Canal 6
+https://example.com/canal6.m3u8
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal7.png" group-title="Música",Canal 7
+https://example.com/canal7.m3u8
+#EXTINF:-1 tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/logos/canal8.png" group-title="Kids",Canal 8
+https://example.com/canal8.m3u8

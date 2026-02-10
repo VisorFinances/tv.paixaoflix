@@ -1,0 +1,294 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --paixaoflix-primary: #0a0a0a;
+  --paixaoflix-secondary: #1a1a1a;
+  --paixaoflix-tertiary: #2a2a2a;
+  --paixaoflix-accent: #ffc107;
+  --paixaoflix-accent-hover: #ff6b6b;
+  --paixaoflix-text: #ffffff;
+  --paixaoflix-text-secondary: #b3b3b3;
+  --paixaoflix-border: #333333;
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--paixaoflix-primary);
+  color: var(--paixaoflix-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paixaoflix-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--paixaoflix-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--paixaoflix-accent-hover);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--paixaoflix-accent);
+  color: var(--paixaoflix-primary);
+}
+
+/* Focus Styles */
+.focus-visible:focus {
+  outline: 2px solid var(--paixaoflix-accent);
+  outline-offset: 2px;
+}
+
+/* Video Player Styles */
+.video-player {
+  position: relative;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.video-player video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.video-controls {
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  backdrop-filter: blur(10px);
+}
+
+/* Video Card Styles */
+.video-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--paixaoflix-secondary);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.video-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+  z-index: 10;
+}
+
+.video-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.video-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Loading States */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--paixaoflix-accent);
+  color: var(--paixaoflix-primary);
+}
+
+.btn-primary:hover {
+  background: var(--paixaoflix-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--paixaoflix-text);
+  border: 2px solid var(--paixaoflix-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--paixaoflix-accent);
+  color: var(--paixaoflix-accent);
+}
+
+/* Input Styles */
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--paixaoflix-secondary);
+  border: 2px solid var(--paixaoflix-border);
+  border-radius: 6px;
+  color: var(--paixaoflix-text);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--paixaoflix-accent);
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+}
+
+.input::placeholder {
+  color: var(--paixaoflix-text-secondary);
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--paixaoflix-secondary);
+  border-radius: 12px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Toast Styles */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--paixaoflix-secondary);
+  border: 1px solid var(--paixaoflix-border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .video-card {
+    border-radius: 4px;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .modal-content {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+  
+  .toast {
+    right: 1rem;
+    left: 1rem;
+    bottom: 1rem;
+  }
+}
+
+/* TV Specific Styles */
+@media (min-width: 1920px) {
+  .video-card {
+    border-radius: 12px;
+  }
+  
+  .btn {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .video-player,
+  .video-controls,
+  .btn {
+    display: none !important;
+  }
+}
