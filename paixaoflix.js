@@ -118,3 +118,100 @@ document.addEventListener('keydown', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', carregarCatalogo);
+
+// Configuração do Player
+let player;
+
+function iniciarPlayer(videoUrl, posterUrl) {
+    const playerContainer = document.getElementById('video-player');
+    playerContainer.style.display = 'block';
+
+    player = new Clappr.Player({
+        source: videoUrl,
+        poster: posterUrl,
+        parentId: "#clappr-player",
+        width: '100%',
+        height: '100%',
+        autoPlay: true,
+        preload: 'auto',
+        allowUserInteraction: true,
+        chromecast: true,
+        // Suporte a MKV/MP4 e Qualidade Adaptativa (HLS)
+        plugins: [LevelSelector, ChromecastPlugin],
+        levelSelectorConfig: {
+            title: 'Qualidade',
+            labels: {
+                2: '720p',
+                1: '480p',
+                0: '360p',
+            },
+            labelCallback: function(level, label) {
+                return label; // Automático por padrão
+            }
+        },
+        playback: {
+            playInline: true,
+            recycleVideo: true,
+            externalTracks: [
+                // Aqui entrariam as legendas dinâmicas se houver
+                {kind: 'subtitles', label: 'Português', src: 'legenda.vtt', srclang: 'pt'}
+            ],
+        }
+    });
+
+    // Forçar Fullscreen ao iniciar
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) elem.requestFullscreen();
+
+    // Mapeamento de Teclas para o Controle Remoto (Avançar/Voltar)
+    document.addEventListener('keydown', handlePlayerControls);
+    
+    // Focar no botão de sair para facilitar
+    setTimeout(() => document.getElementById('btn-close-player').focus(), 2000);
+}
+
+function handlePlayerControls(e) {
+    if (!player) return;
+
+    const tempoAtual = player.getCurrentTime();
+
+    switch(e.key) {
+        case 'ArrowRight': // Avançar 10s (padrão)
+            player.seek(tempoAtual + 10);
+            exibirFeedback("Avançar +10s");
+            break;
+        case 'ArrowLeft': // Voltar 10s
+            player.seek(tempoAtual - 10);
+            exibirFeedback("Voltar -10s");
+            break;
+        case 'f': // Tecla F para Picture-in-Picture (Mini Tela)
+            const videoTag = document.querySelector('#clappr-player video');
+            if (videoTag && document.pictureInPictureEnabled) {
+                videoTag.requestPictureInPicture();
+            }
+            break;
+        case 'Enter': // Play/Pause
+            player.getPlaybackType() === 'live' ? null : (player.isPlaying() ? player.pause() : player.play());
+            break;
+    }
+}
+
+function fecharPlayer() {
+    if (player) {
+        player.destroy();
+        player = null;
+    }
+    document.getElementById('video-player').style.display = 'none';
+    if (document.exitFullscreen) document.exitFullscreen();
+    document.removeEventListener('keydown', handlePlayerControls);
+}
+
+// Vincula o botão "Assistir" da página de detalhes
+document.getElementById('btn-play-now').onclick = function() {
+    const filmeNome = document.getElementById('det-title').innerText;
+    const backdrop = document.getElementById('det-backdrop').style.backgroundImage.slice(5, -2);
+    
+    // Exemplo de URL - Aqui você integrará com sua lógica PaixãoFlix
+    const urlTeste = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"; 
+    iniciarPlayer(urlTeste, backdrop);
+};
