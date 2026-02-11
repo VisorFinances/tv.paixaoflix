@@ -278,6 +278,82 @@ function carregarPagina(pageName, content = '') {
   }
 }
 
+function performSearch() {
+  const searchInput = document.getElementById('searchInput');
+  const query = searchInput.value.trim().toLowerCase();
+  
+  if (!query) {
+    document.getElementById('searchResults').innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+        <div style="font-size:4rem;margin-bottom:20px;">🔍</div>
+        <h3 style="margin-bottom:10px;">Digite algo para pesquisar</h3>
+        <p>Use o campo acima para encontrar filmes, séries ou canais.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Mostrar loading
+  document.getElementById('searchResults').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+    </div>
+  `;
+  
+  // Carregar todos os dados e filtrar
+  Promise.all([
+    fetchJSON('/data/cinema.json'),
+    fetchJSON('/data/séries.json'),
+    fetchJSON('/data/filmeskids.json'),
+    fetchJSON('/data/sérieskids.json'),
+    fetchM3U('/data/canaisaovivo.m3u'),
+    fetchM3U('/data/canaiskids.m3u')
+  ]).then(([cinema, series, filmesKids, seriesKids, canais, canaisKids]) => {
+    const allContent = [
+      ...(cinema || []),
+      ...(series || []),
+      ...(filmesKids || []),
+      ...(seriesKids || []),
+      ...(canais || []),
+      ...(canaisKids || [])
+    ];
+    
+    // Filtrar resultados
+    const results = allContent.filter(item => {
+      const title = (item.title || item.name || '').toLowerCase();
+      const description = (item.description || '').toLowerCase();
+      const genre = (item.genero || '').toLowerCase();
+      
+      return title.includes(query) || 
+             description.includes(query) || 
+             genre.includes(query);
+    });
+    
+    // Renderizar resultados
+    if (results.length === 0) {
+      document.getElementById('searchResults').innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+          <div style="font-size:4rem;margin-bottom:20px;">😔</div>
+          <h3 style="margin-bottom:10px;">Nenhum resultado encontrado</h3>
+          <p>Tente buscar com outros termos ou verifique a ortografia.</p>
+        </div>
+      `;
+    } else {
+      renderContentGrid('searchResults', results);
+    }
+    
+  }).catch(error => {
+    console.error('❌ Erro na pesquisa:', error);
+    document.getElementById('searchResults').innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+        <div style="font-size:4rem;margin-bottom:20px;">⚠️</div>
+        <h3 style="margin-bottom:10px;">Erro na pesquisa</h3>
+        <p>Não foi possível realizar a busca. Tente novamente.</p>
+      </div>
+    `;
+  });
+}
+
 function loadSearchPage() {
   console.log('🔍 Carregando página de pesquisa...');
   app.innerHTML = `
@@ -412,6 +488,8 @@ function loadHomePage() {
 
 async function loadHomeSections() {
   try {
+    console.log('📦 Carregando dados das seções...');
+    
     // Carregar todos os conteúdos
     const [cinema, series, filmesKids, seriesKids] = await Promise.all([
       fetchJSON('/data/cinema.json'),
@@ -420,12 +498,16 @@ async function loadHomeSections() {
       fetchJSON('/data/sérieskids.json')
     ]);
     
+    console.log('📊 Dados carregados:', { cinema: cinema?.length, series: series?.length, filmesKids: filmesKids?.length, seriesKids: seriesKids?.length });
+    
     const allContent = [
       ...(cinema || []),
       ...(series || []),
       ...(filmesKids || []),
       ...(seriesKids || [])
     ];
+    
+    console.log('📺 Total de conteúdo:', allContent.length);
     
     // Carregar banner principal
     loadHeroBanner(allContent);
@@ -440,20 +522,38 @@ async function loadHomeSections() {
     renderContentGrid('loveStories', allContent.filter(item => item.genero?.includes('Romance')).slice(0, 6));
     renderContentGrid('novelas', allContent.filter(item => item.genero?.includes('Drama')).slice(0, 6));
     
+    console.log('✅ Seções carregadas com sucesso!');
+    
   } catch (error) {
     console.error('❌ Erro ao carregar seções:', error);
+    
+    // Mostrar mensagem de erro em todas as seções
+    const sections = ['continueWatching', 'trendingNow', 'saturdayNight', 'kidsLove', 'marathonReady', 'nostalgia', 'loveStories', 'novelas'];
+    sections.forEach(sectionId => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.innerHTML = '<p style="color:var(--cinza);text-align:center;">Erro ao carregar conteúdo.</p>';
+      }
+    });
   }
 }
 
 function loadHeroBanner(content) {
+  console.log('🎬 Carregando banner principal...');
   const heroContent = content[0]; // Primeiro item como destaque
   if (heroContent) {
     const heroBackdrop = document.getElementById('heroBackdrop');
     if (heroBackdrop) {
-      heroBackdrop.style.backgroundImage = `url(${heroContent.poster || 'https://picsum.photos/1920/1080?random=hero'})`;
+      const posterUrl = heroContent.poster || 'https://picsum.photos/1920/1080?random=hero';
+      heroBackdrop.style.backgroundImage = `url(${posterUrl})`;
       heroBackdrop.style.backgroundSize = 'cover';
       heroBackdrop.style.backgroundPosition = 'center';
+      console.log('🖼️ Banner carregado com:', posterUrl);
+    } else {
+      console.log('⚠️ Elemento heroBackdrop não encontrado');
     }
+  } else {
+    console.log('⚠️ Nenhum conteúdo para o banner');
   }
 }
 
