@@ -85,11 +85,11 @@ button{
 </nav>
 
 <!-- ======================================================
- BLOCO: HEADER (NÃO ALTERAR)
+BLOCO: HEADER (NÃO ALTERAR)
 ====================================================== -->
 <header id="header">
   <div style="display:flex;align-items:center;gap:20px;">
-    <h1 style="color:var(--gold);font-size:24px;font-weight:bold;margin:0;">🎬 PaixãoFlix</h1>
+    <h1 style="color:var(--amarelo);font-size:24px;font-weight:bold;margin:0;">🎬 PaixãoFlix</h1>
   </div>
   <div style="display:flex;align-items:center;gap:15px;">
     <button class="btn-3d" onclick="toggleFullscreen()">📺 Tela Cheia</button>
@@ -113,12 +113,7 @@ BLOCO: BUSCA GLOBAL (NÃO ALTERAR)
 BLOCO: CONTEÚDO PRINCIPAL (NÃO ALTERAR)
 ====================================================== -->
 <main id="app">
-  <div id="homeContent" class="page-content">
-    <div style="padding:30px;">
-      <h2 style="color:var(--gold);margin-bottom:20px;">🎬 Bem-vindo ao PaixãoFlix</h2>
-      <div class="content-grid" id="featuredContent">
-        <!-- Conteúdo em destaque será carregado aqui -->
-      </div>
+  <!-- Conteúdo dinâmico será inserido aqui -->
     </div>
   </div>
 </main>
@@ -206,12 +201,6 @@ BLOCO: CLAPPR PLAYER SETUP
   left:90px;
   width:calc(100% - 90px);
   height:calc(100% - 60px);
-  overflow-y:auto;
-}
-</style>
-
-<!-- ======================================================
- BLOCO: SCRIPT BASE (NÃO ALTERAR)
 ====================================================== -->
 <script>
 // Configuração global
@@ -283,26 +272,159 @@ function carregarPagina(pageName, content = '') {
 }
 
 function loadHomePage() {
+  console.log('🏠 Carregando página inicial...');
   app.innerHTML = `
-    <div style="padding:30px;">
-      <h2 style="color:var(--gold);margin-bottom:20px;">🎬 Bem-vindo ao PaixãoFlix</h2>
-      <div class="content-grid" id="featuredContent">
-        <div class="loading">
-          <div class="spinner"></div>
+    <div style="padding:30px;overflow-y:auto;height:100%;">
+      <!-- Banner Principal -->
+      <div class="hero-banner" id="heroBanner">
+        <div class="hero-content">
+          <h1 class="hero-title">Bem-vindo ao PaixãoFlix</h1>
+          <p class="hero-description">Descubra os melhores filmes, séries e canais ao vivo em um só lugar</p>
+          <div class="hero-buttons">
+            <button class="btn-hero btn-play" onclick="playRandomContent()">▶️ Assistir Agora</button>
+            <button class="btn-hero btn-info" onclick="showMoreInfo()">ℹ️ Mais Informações</button>
+          </div>
         </div>
+        <div class="hero-backdrop" id="heroBackdrop"></div>
+      </div>
+      
+      <!-- Seções de Conteúdo -->
+      <div class="content-sections">
+        <section class="content-section">
+          <h2 class="section-title">🎬 Continuar Assistindo</h2>
+          <div class="content-grid" id="continueWatching">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">🔥 Não fique de fora, venha ver!</h2>
+          <div class="content-grid" id="trendingNow">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">� Sábado a noite merece</h2>
+          <div class="content-grid" id="saturdayNight">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">🧸 As crianças amam</h2>
+          <div class="content-grid" id="kidsLove">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">🍿 Prepare a pipoca e venha maratonar</h2>
+          <div class="content-grid" id="marathonReady">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">💝 Nostalgia que aquecem o coração</h2>
+          <div class="content-grid" id="nostalgia">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">❤️ Grandes histórias de amor</h2>
+          <div class="content-grid" id="loveStories">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">📺 Novela sempre vai bem</h2>
+          <div class="content-grid" id="novelas">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   `;
-  loadFeaturedContent();
+  
+  // Carregar conteúdo para cada seção
+  loadHomeSections();
 }
 
-async function loadFeaturedContent() {
+async function loadHomeSections() {
   try {
-    // Carregar conteúdo em destaque de múltiplas fontes
-    const [cinema, series] = await Promise.all([
+    // Carregar todos os conteúdos
+    const [cinema, series, filmesKids, seriesKids] = await Promise.all([
       fetchJSON('/data/cinema.json'),
-      fetchJSON('/data/séries.json')
+      fetchJSON('/data/séries.json'),
+      fetchJSON('/data/filmeskids.json'),
+      fetchJSON('/data/sérieskids.json')
     ]);
+    
+    const allContent = [
+      ...(cinema || []),
+      ...(series || []),
+      ...(filmesKids || []),
+      ...(seriesKids || [])
+    ];
+    
+    // Carregar banner principal
+    loadHeroBanner(allContent);
+    
+    // Distribuir conteúdo nas seções
+    renderContentGrid('continueWatching', allContent.slice(0, 6));
+    renderContentGrid('trendingNow', allContent.slice(6, 12));
+    renderContentGrid('saturdayNight', allContent.filter(item => item.genero?.includes('Comédia') || item.genero?.includes('Ação')).slice(0, 6));
+    renderContentGrid('kidsLove', filmesKids?.slice(0, 6) || []);
+    renderContentGrid('marathonReady', series?.slice(0, 6) || []);
+    renderContentGrid('nostalgia', allContent.filter(item => item.year && item.year < 2010).slice(0, 6));
+    renderContentGrid('loveStories', allContent.filter(item => item.genero?.includes('Romance')).slice(0, 6));
+    renderContentGrid('novelas', allContent.filter(item => item.genero?.includes('Drama')).slice(0, 6));
+    
+  } catch (error) {
+    console.error('❌ Erro ao carregar seções:', error);
+  }
+}
+
+function loadHeroBanner(content) {
+  const heroContent = content[0]; // Primeiro item como destaque
+  if (heroContent) {
+    const heroBackdrop = document.getElementById('heroBackdrop');
+    if (heroBackdrop) {
+      heroBackdrop.style.backgroundImage = `url(${heroContent.poster || 'https://picsum.photos/1920/1080?random=hero'})`;
+      heroBackdrop.style.backgroundSize = 'cover';
+      heroBackdrop.style.backgroundPosition = 'center';
+    }
+  }
+}
+
+function playRandomContent() {
+  // Implementar reprodução aleatória
+  console.log('🎲 Reproduzindo conteúdo aleatório...');
+}
+
+function showMoreInfo() {
+  // Implementar mais informações
+  console.log('ℹ️ Mostrando mais informações...');
+}
     
     const featured = [...(cinema || []), ...(series || [])].slice(0, 12);
     renderContentGrid('featuredContent', featured);
@@ -1104,6 +1226,125 @@ document.addEventListener("DOMContentLoaded", ()=>{
 .btn-3d:active{
   transform:translateY(4px);
   box-shadow:0 2px 0 var(--accent-hover), 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Hero Banner */
+.hero-banner{
+  position:relative;
+  height:70vh;
+  min-height:400px;
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:40px;
+  background:linear-gradient(135deg, var(--bg2), var(--bg));
+}
+
+.hero-backdrop{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+  filter:brightness(0.4);
+  z-index:1;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:60px;
+  color:white;
+}
+
+.hero-title{
+  font-size:3.5rem;
+  font-weight:bold;
+  margin-bottom:20px;
+  text-shadow:2px 2px 4px rgba(0,0,0,0.8);
+  max-width:600px;
+}
+
+.hero-description{
+  font-size:1.2rem;
+  margin-bottom:30px;
+  line-height:1.6;
+  max-width:500px;
+  opacity:0.9;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.btn-hero{
+  padding:15px 30px;
+  border:none;
+  border-radius:var(--radius);
+  font-size:1.1rem;
+  font-weight:bold;
+  cursor:pointer;
+  transition:var(--transition);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.btn-play{
+  background:var(--amarelo);
+  color:var(--bg);
+}
+
+.btn-play:hover{
+  background:var(--azul);
+  color:white;
+  transform:scale(1.05);
+}
+
+.btn-info{
+  background:rgba(255,255,255,0.2);
+  color:white;
+  border:2px solid rgba(255,255,255,0.5);
+}
+
+.btn-info:hover{
+  background:rgba(255,255,255,0.3);
+  transform:scale(1.05);
+}
+
+/* Content Sections */
+.content-sections{
+  display:flex;
+  flex-direction:column;
+  gap:40px;
+}
+
+.content-section{
+  margin-bottom:20px;
+}
+
+.section-title{
+  color:var(--amarelo);
+  font-size:1.8rem;
+  font-weight:bold;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.section-title::before{
+  content:'';
+  height:3px;
+  width:40px;
+  background:var(--amarelo);
+  border-radius:2px;
 }
 
 /* Loading spinner */
