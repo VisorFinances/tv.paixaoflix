@@ -54,6 +54,10 @@ button{
     <i class="icon icon-home"></i>
     <span>Início</span>
   </div>
+  <div class="sidebar-item" data-page="search">
+    <i class="icon icon-search"></i>
+    <span>🔍 Pesquisar</span>
+  </div>
   <div class="sidebar-item" data-page="canaisaovivo">
     <i class="icon icon-tv"></i>
     <span>Canais ao Vivo</span>
@@ -262,6 +266,9 @@ function carregarPagina(pageName, content = '') {
     case 'serieskids':
       loadSeriesKids();
       break;
+    case 'search':
+      loadSearchPage();
+      break;
     case 'minha_lista':
       loadMinhaLista();
       break;
@@ -269,6 +276,40 @@ function carregarPagina(pageName, content = '') {
       console.log('⚠️ Página não encontrada:', pageName);
       loadHomePage();
   }
+}
+
+function loadSearchPage() {
+  console.log('🔍 Carregando página de pesquisa...');
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--amarelo);margin-bottom:20px;">🔍 Pesquisar Conteúdo</h2>
+      <div style="display:flex;gap:15px;margin-bottom:30px;">
+        <input type="text" id="searchInput" placeholder="Digite o nome do filme, série ou canal..." 
+               style="flex:1;padding:15px;border-radius:var(--radius);border:2px solid var(--bg2);background:var(--bg);color:var(--texto);font-size:16px;">
+        <button onclick="performSearch()" class="btn-3d">🔍 Buscar</button>
+      </div>
+      <div class="content-grid" id="searchResults">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+          <div style="font-size:4rem;margin-bottom:20px;">🔍</div>
+          <h3 style="margin-bottom:10px;">Comece a pesquisar</h3>
+          <p>Digite o nome de um filme, série ou canal para encontrar seu conteúdo favorito.</p>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Focar no campo de busca
+  setTimeout(() => {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+    }
+  }, 100);
 }
 
 function loadHomePage() {
