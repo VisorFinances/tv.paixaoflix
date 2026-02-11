@@ -225,12 +225,14 @@ const playerTitle = document.getElementById("playerTitle");
 // Funções de navegação
 function carregarPagina(pageName, content = '') {
   currentPage = pageName;
+  console.log('🚀 Carregando página:', pageName);
   
   // Atualizar menu ativo
   document.querySelectorAll('.sidebar-item').forEach(item => {
     item.classList.remove('active');
     if (item.dataset.page === pageName) {
       item.classList.add('active');
+      console.log('✅ Menu ativo:', item.querySelector('span').textContent);
     }
   });
   
@@ -261,6 +263,7 @@ function carregarPagina(pageName, content = '') {
       loadMinhaLista();
       break;
     default:
+      console.log('⚠️ Página não encontrada:', pageName);
       loadHomePage();
   }
 }
@@ -361,6 +364,7 @@ async function loadCanaisKids() {
 }
 
 async function loadCinema() {
+  console.log('🎬 Carregando Cinema...');
   app.innerHTML = `
     <div style="padding:30px;">
       <h2 style="color:var(--gold);margin-bottom:20px;">🎬 Cinema</h2>
@@ -373,14 +377,21 @@ async function loadCinema() {
   `;
   
   try {
+    console.log('📂 Buscando arquivo: /data/cinema.json');
     const movies = await fetchJSON('/data/cinema.json');
+    console.log('✅ Filmes carregados:', movies?.length || 0, 'itens');
     renderContentGrid('cinemaContent', movies);
   } catch (error) {
-    document.getElementById('cinemaContent').innerHTML = '<p>Erro ao carregar filmes.</p>';
+    console.error('❌ Erro ao carregar cinema:', error);
+    const contentEl = document.getElementById('cinemaContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar filmes. Tente novamente.</p>';
+    }
   }
 }
 
 async function loadFilmesKids() {
+  console.log('🧸 Carregando Filmes Kids...');
   app.innerHTML = `
     <div style="padding:30px;">
       <h2 style="color:var(--gold);margin-bottom:20px;">🧸 Filmes Kids</h2>
@@ -393,14 +404,21 @@ async function loadFilmesKids() {
   `;
   
   try {
+    console.log('📂 Buscando arquivo: /data/filmeskids.json');
     const movies = await fetchJSON('/data/filmeskids.json');
+    console.log('✅ Filmes kids carregados:', movies?.length || 0, 'itens');
     renderContentGrid('filmesKidsContent', movies);
   } catch (error) {
-    document.getElementById('filmesKidsContent').innerHTML = '<p>Erro ao carregar filmes kids.</p>';
+    console.error('❌ Erro ao carregar filmes kids:', error);
+    const contentEl = document.getElementById('filmesKidsContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar filmes kids. Tente novamente.</p>';
+    }
   }
 }
 
 async function loadSeries() {
+  console.log('📺 Carregando Séries...');
   app.innerHTML = `
     <div style="padding:30px;">
       <h2 style="color:var(--gold);margin-bottom:20px;">📺 Séries</h2>
@@ -413,14 +431,21 @@ async function loadSeries() {
   `;
   
   try {
+    console.log('📂 Buscando arquivo: /data/séries.json');
     const series = await fetchJSON('/data/séries.json');
+    console.log('✅ Séries carregadas:', series?.length || 0, 'itens');
     renderContentGrid('seriesContent', series);
   } catch (error) {
-    document.getElementById('seriesContent').innerHTML = '<p>Erro ao carregar séries.</p>';
+    console.error('❌ Erro ao carregar séries:', error);
+    const contentEl = document.getElementById('seriesContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar séries. Tente novamente.</p>';
+    }
   }
 }
 
 async function loadSeriesKids() {
+  console.log('🧸 Carregando Séries Kids...');
   app.innerHTML = `
     <div style="padding:30px;">
       <h2 style="color:var(--gold);margin-bottom:20px;">🧸 Séries Kids</h2>
@@ -433,14 +458,21 @@ async function loadSeriesKids() {
   `;
   
   try {
+    console.log('📂 Buscando arquivo: /data/sérieskids.json');
     const series = await fetchJSON('/data/sérieskids.json');
+    console.log('✅ Séries kids carregadas:', series?.length || 0, 'itens');
     renderContentGrid('seriesKidsContent', series);
   } catch (error) {
-    document.getElementById('seriesKidsContent').innerHTML = '<p>Erro ao carregar séries kids.</p>';
+    console.error('❌ Erro ao carregar séries kids:', error);
+    const contentEl = document.getElementById('seriesKidsContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar séries kids. Tente novamente.</p>';
+    }
   }
 }
 
 async function loadMinhaLista() {
+  console.log('❤️ Carregando Minha Lista...');
   app.innerHTML = `
     <div style="padding:30px;">
       <h2 style="color:var(--gold);margin-bottom:20px;">❤️ Minha Lista</h2>
@@ -453,10 +485,16 @@ async function loadMinhaLista() {
   `;
   
   try {
+    console.log('📂 Buscando arquivo: /data/minha_lista.json');
     const myList = await fetchJSON('/data/minha_lista.json');
+    console.log('✅ Minha lista carregada:', myList?.length || 0, 'itens');
     renderContentGrid('minhaListaContent', myList);
   } catch (error) {
-    document.getElementById('minhaListaContent').innerHTML = '<p>Erro ao carregar sua lista.</p>';
+    console.error('❌ Erro ao carregar minha lista:', error);
+    const contentEl = document.getElementById('minhaListaContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar sua lista. Tente novamente.</p>';
+    }
   }
 }
 
@@ -674,9 +712,13 @@ function showSettings() {
 document.getElementById("exitPlayer").onclick = sairPlayer;
 
 // Navegação por menu
-document.querySelectorAll('.sidebar-item').forEach(item => {
-  item.addEventListener('click', function() {
-    carregarPagina(this.dataset.page);
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const page = this.dataset.page;
+      console.log('🎯 Navegando para:', page);
+      carregarPagina(page);
+    });
   });
 });
 
