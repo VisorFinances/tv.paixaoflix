@@ -578,20 +578,25 @@ function showMoreInfo() {
 
 function renderContentGrid(containerId, items) {
   const container = document.getElementById(containerId);
-  if (!container) return;
-  
-  if (!items || items.length === 0) {
-    container.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">Nenhum conteúdo encontrado.</p>';
+  if (!container) {
+    console.log('⚠️ Container não encontrado:', containerId);
     return;
   }
   
+  if (!items || items.length === 0) {
+    container.innerHTML = '<p style="color:var(--cinza);text-align:center;">Nenhum conteúdo encontrado.</p>';
+    return;
+  }
+  
+  console.log('📺 Renderizando', items.length, 'itens em', containerId);
+  
   container.innerHTML = items.map(item => `
-    <div class="content-card" onclick="playContent('${item.type}', '${item.identificador_archive || item.url || item.tmdb_id}')">
-      <img src="${item.poster || 'https://picsum.photos/180/270?random=1'}" 
-           alt="${item.titulo}" class="poster" 
-           onerror="this.src='https://picsum.photos/180/270?random=2'">
+    <div class="content-card" onclick="playContent('${item.type || 'movie'}', '${item.url || item.identificador_archive || item.tmdb_id || ''}')">
+      <img src="${item.poster || 'https://picsum.photos/180/270?random=' + Math.random()}" 
+           alt="${item.titulo || item.title || 'Sem título'}" class="poster" 
+           onerror="this.src='https://picsum.photos/180/270?random=' + Math.random()">
       <div class="info">
-        <div class="titulo">${item.titulo}</div>
+        <div class="titulo">${item.titulo || item.title || 'Sem título'}</div>
         <div class="meta">
           <span>${item.year || 'N/A'}</span>
           <span>⭐ ${item.rating || 'N/A'}</span>
@@ -777,9 +782,17 @@ async function loadMinhaLista() {
 
 // Funções utilitárias
 async function fetchJSON(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return await response.json();
+  try {
+    console.log('📦 Buscando JSON:', url);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const data = await response.json();
+    console.log('✅ JSON carregado:', data?.length || 'sem dados');
+    return data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar JSON:', url, error);
+    return [];
+  }
 }
 
 async function fetchText(url) {
