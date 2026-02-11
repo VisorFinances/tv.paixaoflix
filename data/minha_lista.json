@@ -1,0 +1,34 @@
+[
+  {
+    "titulo": "Uma Vida de Insecto",
+    "tmdb_id": "9487",
+    "url": "https://ia800606.us.archive.org/11/items/paixaoflix_a_bugs_life-pronto/A%20Bugs%20Life_Paix%C3%A3oFlix.mp4",
+    "genero": ["Animação"],
+    "year": "1998",
+    "rating": "7.0",
+    "poster": "https://media.themoviedb.org/t/p/w300_and_h450_face/dKTJe3KGA2BHdHl9USjjCWZ3U5a.jpg",
+    "type": "movie",
+    "adicionado_em": "2024-01-15"
+  },
+  {
+    "titulo": "Um Maluco no Pedaço - 1ª Temporada",
+    "identificador_archive": "um-maluco-no-pedaco-s01-paixaoflix",
+    "genero": "Comédia",
+    "year": "1990",
+    "rating": "7.9",
+    "poster": "https://4.bp.blogspot.com/-jMSNnNx8hJE/WNNLVASgffI/AAAAAAAABRI/sLCgpG8tp4UvtwNXI3Yo3TR-eFyKgYpZgCLcB/s1600/um_maluco_no_pedaco_torrent.jpg",
+    "type": "serie",
+    "adicionado_em": "2024-01-14"
+  },
+  {
+    "titulo": "Toy Story",
+    "tmdb_id": "862",
+    "url": "https://example.com/toy-story.mp4",
+    "genero": ["Animação", "Aventura", "Comédia"],
+    "year": "1995",
+    "rating": "8.3",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/wPhKi4mMCHQ3N5BWvk7n2gopriW.jpg",
+    "type": "movie",
+    "adicionado_em": "2024-01-13"
+  }
+]

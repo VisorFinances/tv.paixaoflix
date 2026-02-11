@@ -1,0 +1,33 @@
+#EXTM3U
+########## ABERTOS ##########
+#EXTINF:-1 tvg-id="Globo.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/globo.jpg" group-title="ABERTOS",Globo RJ PaixãoFlix
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52814
+
+#EXTINF:-1 tvg-id="SBT.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/sbt.jpg" group-title="ABERTOS",SBT HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52815
+
+#EXTINF:-1 tvg-id="Record.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/record.jpg" group-title="ABERTOS",Record TV HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52816
+
+#EXTINF:-1 tvg-id="Band.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/band.jpg" group-title="ABERTOS",Band TV HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52817
+
+########## FILMES ##########
+#EXTINF:-1 tvg-id="HBO.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/hbo.jpg" group-title="FILMES",HBO HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52818
+
+#EXTINF:-1 tvg-id="Telecine.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/telecine.jpg" group-title="FILMES",Telecine Premium
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52819
+
+#EXTINF:-1 tvg-id="MaxPrime.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/max.jpg" group-title="FILMES",MaxPrime HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52820
+
+########## SÉRIES ##########
+#EXTINF:-1 tvg-id="Sony.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/sony.jpg" group-title="SÉRIES",Sony Channel HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52821
+
+#EXTINF:-1 tvg-id="Warner.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/warner.jpg" group-title="SÉRIES",Warner Channel HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52822
+
+#EXTINF:-1 tvg-id="FX.br" tvg-logo="https://raw.githubusercontent.com/VisorFinances/lista-paixaoflix/refs/heads/main/fx.jpg" group-title="SÉRIES",FX HD
+http://vip.sibfungold.org:8080/bagio19821/GwDQuo6pwf@!Nnmd2ao70N/52823
