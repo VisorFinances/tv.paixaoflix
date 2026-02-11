@@ -134,11 +134,22 @@ BLOCO: PLAYER (NÃO ALTERAR)
     </button>
   </div>
   <div class="player-content">
-    <video id="player" controls autoplay crossorigin="anonymous">
-      Seu navegador não suporta o elemento de vídeo.
-    </video>
+    <div id="player" style="width:100%;height:100%;max-width:1200px;max-height:70vh;border-radius:var(--radius);box-shadow:var(--shadow);"></div>
   </div>
 </div>
+
+<!-- ======================================================
+BLOCO: CLAPPR PLAYER SETUP
+====================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/@clappr/core@0.4.33/dist/clappr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@0.3.2/dist/hlsjs-playback.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/level-selector-plugin@0.3.1/dist/level-selector-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/stats-plugin@0.2.2/dist/stats-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/audio-track-plugin@0.2.1/dist/audio-track-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/click-to-play-plugin@0.1.0/dist/click-to-play-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/playback-rate-plugin@0.2.0/dist/playback-rate-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/vr-plugin@0.1.0/dist/vr-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
 
 <!-- ======================================================
  BLOCO: ESTILO BASE DE BOTÕES (NÃO ALTERAR)
@@ -218,9 +229,12 @@ let playerInstance = null;
 
 // Elementos DOM
 const app = document.getElementById("app");
-const player = document.getElementById("player");
+const playerContainer = document.getElementById("player");
 const overlay = document.getElementById("playerOverlay");
 const playerTitle = document.getElementById("playerTitle");
+
+// Variável global do player Clappr
+let clapprPlayer = null;
 
 // Funções de navegação
 function carregarPagina(pageName, content = '') {
@@ -310,9 +324,9 @@ function renderContentGrid(containerId, items) {
   
   container.innerHTML = items.map(item => `
     <div class="content-card" onclick="playContent('${item.type}', '${item.identificador_archive || item.url || item.tmdb_id}')">
-      <img src="${item.poster || 'https://via.placeholder.com/180x270/1a1a2e/ffffff?text=Sem+Poster'}" 
+      <img src="${item.poster || 'https://picsum.photos/180/270?random=1'}" 
            alt="${item.titulo}" class="poster" 
-           onerror="this.src='https://via.placeholder.com/180x270/1a1a2e/ffffff?text=Erro'">
+           onerror="this.src='https://picsum.photos/180/270?random=2'">
       <div class="info">
         <div class="titulo">${item.titulo}</div>
         <div class="meta">
@@ -539,8 +553,9 @@ function parseM3U(m3uContent) {
 function renderCanaisList(channels, title = 'Canais ao Vivo') {
   const channelsHtml = channels.map(channel => `
     <div class="content-card" onclick="playChannel('${channel.url}', '${channel.title}')">
-      <img src="${channel.logo || 'https://via.placeholder.com/180x270/1a1a2e/ffffff?text=TV'}" 
-           alt="${channel.title}" class="poster">
+      <img src="${channel.logo || 'https://picsum.photos/180/270?random=3'}" 
+           alt="${channel.title}" class="poster"
+           onerror="this.src='https://picsum.photos/180/270?random=4'">
       <div class="info">
         <div class="titulo">${channel.title}</div>
         <div class="meta">
@@ -561,21 +576,103 @@ function renderCanaisList(channels, title = 'Canais ao Vivo') {
   `;
 }
 
-// Player avançado
+// Player avançado com Clappr
 function abrirPlayer(url, title = 'PaixãoFlix Player') {
   overlay.style.display = "flex";
   playerTitle.textContent = title;
-  player.src = url;
-  player.play();
   
-  // Configurar player para streaming
-  player.crossOrigin = "anonymous";
-  player.preload = "auto";
+  // Destruir player anterior se existir
+  if (clapprPlayer) {
+    clapprPlayer.destroy();
+    clapprPlayer = null;
+  }
   
-  // Adicionar listeners para qualidade adaptativa
-  player.addEventListener('error', handlePlayerError);
-  player.addEventListener('loadstart', handlePlayerLoadStart);
-  player.addEventListener('canplay', handlePlayerCanPlay);
+  // Criar novo player Clappr
+  clapprPlayer = new Clappr.Player({
+    source: url,
+    parentId: '#player',
+    width: '100%',
+    height: '100%',
+    autoPlay: true,
+    mute: false,
+    loop: false,
+    playbackNotSupportedMessage: 'Este formato não é suportado. Tente outro conteúdo.',
+    watermark: '',
+    position: 'top-left',
+    mediacontrol: {
+      seekbar: '#007bff',
+      buttons: '#ffffff'
+    },
+    plugins: {
+      'level_selector': {
+        title: 'Qualidade',
+        labels: {
+          0: 'Auto',
+          1: 'Baixa',
+          2: 'Média', 
+          3: 'Alta',
+          4: 'HD',
+          5: 'Full HD'
+        }
+      },
+      'stats': {
+        onStats: (stats) => {
+          console.log('📊 Stats:', stats);
+        }
+      },
+      'audio_track': {
+        defaultTrack: 'pt',
+        title: 'Áudio'
+      },
+      'click_to_play': {
+        text: 'Clique para reproduzir',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)'
+      },
+      'playback_rate': {
+        playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        defaultRate: 1,
+        title: 'Velocidade'
+      }
+    },
+    hlsjsConfig: {
+      enableWorker: true,
+      lowLatencyMode: true,
+      backBufferLength: 90,
+      maxBufferLength: 600,
+      maxMaxBufferLength: 1200,
+      maxBufferSize: 60 * 1000 * 1000,
+      maxBufferHole: 0.5
+    },
+    events: {
+      onReady: () => {
+        console.log('🎬 Player Clappr pronto!');
+      },
+      onPlay: () => {
+        console.log('▶️ Reproduzindo...');
+      },
+      onPause: () => {
+        console.log('⏸️ Pausado');
+      },
+      onEnded: () => {
+        console.log('🏁 Reprodução finalizada');
+      },
+      onError: (e) => {
+        console.error('❌ Erro no player:', e);
+        alert('Erro ao reproduzir: ' + (e.message || 'Erro desconhecido'));
+      },
+      onTimeUpdate: (e) => {
+        // Atualizar progresso se necessário
+      },
+      onBuffering: () => {
+        console.log('⏳ Carregando...');
+      },
+      onBufferFull: () => {
+        console.log('✅ Buffer completo');
+      }
+    }
+  });
+  
+  console.log('🎬 Player Clappr inicializado com URL:', url);
 }
 
 function playContent(type, identifier) {
@@ -610,24 +707,15 @@ function playChannel(url, title) {
   abrirPlayer(url, title);
 }
 
-function handlePlayerError(e) {
-  console.error('Erro no player:', e);
-  const errorText = player.error ? player.error.message : 'Erro desconhecido';
-  alert(`Erro ao reproduzir: ${errorText}`);
-}
-
-function handlePlayerLoadStart() {
-  console.log('Carregando mídia...');
-}
-
-function handlePlayerCanPlay() {
-  console.log('Mídia pronta para reprodução');
-}
-
 function sairPlayer() {
-  player.pause();
-  player.src = '';
+  // Destruir player Clappr se existir
+  if (clapprPlayer) {
+    clapprPlayer.destroy();
+    clapprPlayer = null;
+  }
+  
   overlay.style.display = "none";
+  console.log('🚪 Player fechado');
 }
 
 // Busca
@@ -668,8 +756,9 @@ async function searchGlobalContent(query) {
           <div class="content-grid" id="searchResults">
             ${results.map(item => `
               <div class="content-card" onclick="playContent('${item.type}', '${item.identificador_archive || item.url || item.tmdb_id}')">
-                <img src="${item.poster || 'https://via.placeholder.com/180x270/1a1a2e/ffffff?text=Sem+Poster'}" 
-                     alt="${item.titulo}" class="poster">
+                <img src="${item.poster || 'https://picsum.photos/180/270?random=5'}" 
+                     alt="${item.titulo}" class="poster"
+                     onerror="this.src='https://picsum.photos/180/270?random=6'">
                 <div class="info">
                   <div class="titulo">${item.titulo}</div>
                   <div class="meta">
@@ -709,7 +798,19 @@ function showSettings() {
 }
 
 // Event listeners
-document.getElementById("exitPlayer").onclick = sairPlayer;
+document.addEventListener('DOMContentLoaded', function() {
+  const exitPlayerBtn = document.getElementById("exitPlayer");
+  if (exitPlayerBtn) {
+    exitPlayerBtn.onclick = sairPlayer;
+  }
+  
+  // Adicionar listener para fechar player com ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.style.display === 'flex') {
+      sairPlayer();
+    }
+  });
+});
 
 // Navegação por menu
 document.addEventListener('DOMContentLoaded', function() {
@@ -731,9 +832,6 @@ document.getElementById('searchInput').addEventListener('keypress', function(e) 
 
 // Atalhos de teclado
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && overlay.style.display === 'flex') {
-    sairPlayer();
-  }
   if (e.key === 'f' && e.ctrlKey) {
     e.preventDefault();
     document.getElementById('searchInput').focus();
