@@ -334,121 +334,273 @@ async function renderHomeSections() {
         const continueWatchingData = getContinueWatching();
         const favoritesList = getFavorites();
         
-        let html = '';
+        // Limpar todos os carrosseis
+        clearAllCarousels();
         
         // 1. Continuar Assistindo
         if (continueWatchingData.length > 0) {
-            html += createSection('Continuar Assistindo', continueWatchingData, 'continue-watching');
+            renderContinueWatchingSection(continueWatchingData, movies);
+        } else {
+            hideSection('continue-watching-section');
         }
         
         // 2. Minha Lista
         if (favoritesList.length > 0) {
             const favoriteMovies = movies.filter(movie => favoritesList.includes(movie.titulo));
             if (favoriteMovies.length > 0) {
-                html += createSection('Minha Lista', favoriteMovies, 'favorites');
+                renderMyListSection(favoriteMovies);
+            } else {
+                hideSection('my-list-section');
             }
+        } else {
+            hideSection('my-list-section');
         }
         
-        // 3. Sábado a noite merece (Ação/Comédia)
-        const sabadoNoite = movies.filter(movie => 
-            movie.genero.includes('Ação') || movie.genero.includes('Comédia')
-        ).slice(0, 8);
+        // 3. Não deixe de ver essa seleção (aleatórios)
+        const featuredMovies = getRandomMovies(movies, 8);
+        if (featuredMovies.length > 0) {
+            renderFeaturedSection(featuredMovies);
+        } else {
+            hideSection('featured-section');
+        }
+        
+        // 4. Sábado a noite merece (Ação/Aventura)
+        const sabadoNoite = movies.filter(movie => {
+            const genres = Array.isArray(movie.genero) ? movie.genero : [movie.genero];
+            return genres.includes('Ação') || genres.includes('Aventura');
+        });
         if (sabadoNoite.length > 0) {
-            html += createSection('Sábado a noite merece', sabadoNoite, 'sabado-noite');
+            renderSaturdayNightSection(sabadoNoite);
+        } else {
+            hideSection('saturday-night-section');
         }
         
-        // 4. As crianças amam (Animação/Kids)
-        const criancasAmam = movies.filter(movie => 
-            movie.genero.includes('Animação') || movie.genero.includes('Kids')
-        ).slice(0, 8);
+        // 5. As crianças amam (Animação/Kids)
+        const criancasAmam = movies.filter(movie => {
+            const genres = Array.isArray(movie.genero) ? movie.genero : [movie.genero];
+            return genres.includes('Animação') || genres.includes('Kids');
+        });
         if (criancasAmam.length > 0) {
-            html += createSection('As crianças amam', criancasAmam, 'kids');
+            renderKidsSection(criancasAmam);
+        } else {
+            hideSection('kids-section');
         }
         
-        // 5. Romances para inspirações
-        const romances = movies.filter(movie => 
-            movie.genero.includes('Romance')
-        ).slice(0, 8);
+        // 6. Romances para se inspirar
+        const romances = movies.filter(movie => {
+            const genres = Array.isArray(movie.genero) ? movie.genero : [movie.genero];
+            return genres.includes('Romance');
+        });
         if (romances.length > 0) {
-            html += createSection('Histórias que aceleram o coração: sinta a paixão em cada cena.', romances, 'romances');
+            renderRomanceSection(romances);
+        } else {
+            hideSection('romance-section');
         }
         
-        // 6. Nostalgias que aquecem o coração (antes de 2010)
-        const nostalgias = movies.filter(movie => 
-            parseInt(movie.year) < 2010
-        ).slice(0, 8);
+        // 7. Nostalgias que aquecem o coração (antes de 2010)
+        const nostalgias = movies.filter(movie => parseInt(movie.year) < 2010);
         if (nostalgias.length > 0) {
-            html += createSection('Nostalgias que aquecem o coração', nostalgias, 'nostalgias', true);
+            renderNostalgiaSection(nostalgias);
+        } else {
+            hideSection('nostalgia-section');
         }
         
-        // 7. Os melhores de 2025
-        const melhores2025 = movies.filter(movie => 
-            movie.year === '2025'
-        ).slice(0, 8);
+        // 8. Os melhores de 2025
+        const melhores2025 = movies.filter(movie => movie.year === '2025');
         if (melhores2025.length > 0) {
-            html += createSection('Os melhores de 2025', melhores2025, 'melhores-2025');
+            renderBest2025Section(melhores2025);
+        } else {
+            hideSection('best-2025-section');
         }
         
-        // 8. Prepare a pipoca (Séries)
-        const series = movies.filter(movie => movie.type === 'series').slice(0, 8);
+        // 9. Prepare a pipoca e venha maratonar (Séries)
+        const series = movies.filter(movie => movie.type === 'series');
         if (series.length > 0) {
-            html += createSection('Prepare a pipoca e venha maratonar', series, 'series');
+            renderSeriesSection(series);
+        } else {
+            hideSection('series-section');
         }
         
-        // 9. Novela é sempre bom
-        const novelas = movies.filter(movie => 
-            movie.genero.includes('Novela')
-        ).slice(0, 8);
+        // 10. Novela é sempre bom
+        const novelas = movies.filter(movie => {
+            const genres = Array.isArray(movie.genero) ? movie.genero : [movie.genero];
+            return genres.includes('Novela') || movie.categoria === 'Novela';
+        });
         if (novelas.length > 0) {
-            html += createSection('Novela é sempre bom', novelas, 'novelas');
+            renderNovelaSection(novelas);
+        } else {
+            hideSection('novela-section');
         }
-        
-        elements.contentRows.innerHTML = html;
         
     } catch (error) {
         console.error('Erro ao renderizar seções:', error);
-        elements.contentRows.innerHTML = '<p>Erro ao carregar conteúdo.</p>';
     }
 }
 
-function createSection(title, movies, sectionId, isNostalgia = false) {
-    const nostalgiaClass = isNostalgia ? 'nostalgia-card' : '';
+function clearAllCarousels() {
+    const carousels = [
+        'continue-watching-carousel',
+        'my-list-carousel',
+        'featured-carousel',
+        'saturday-night-carousel',
+        'kids-carousel',
+        'romance-carousel',
+        'nostalgia-carousel',
+        'best-2025-carousel',
+        'series-carousel',
+        'novela-carousel'
+    ];
     
-    let moviesHtml = movies.map(movie => {
-        const progressData = getContinueWatching().find(item => item.movieId === movie.titulo);
-        const progressBar = progressData ? 
-            `<div class="continue-watching-progress" style="width: ${progressData.progress}%"></div>` : '';
-        
-        const cardClass = isNostalgia ? 'card-movie nostalgia-card' : 'card-movie';
-        
-        return `
-            <div class="${cardClass}" tabindex="0" onclick="showDetailsPage(${JSON.stringify(movie).replace(/"/g, '&quot;')})">
-                <img class="card-poster" src="${movie.poster}" alt="${movie.titulo}">
-                ${progressBar}
-                <div class="card-info">
-                    <h3 class="card-title">${movie.titulo}</h3>
-                    <div class="card-meta">
-                        <span class="card-year">${movie.year}</span>
-                        <span class="card-rating">⭐ ${movie.rating}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
+    carousels.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.innerHTML = '';
+        }
+    });
+}
+
+function hideSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.style.display = 'none';
+    }
+}
+
+function renderContinueWatchingSection(continueData, movies) {
+    const carousel = document.getElementById('continue-watching-carousel');
+    if (!carousel) return;
     
-    return `
-        <div class="content-row" id="${sectionId}">
-            <div class="section-header">
-                <div>
-                    <h2 class="section-title">${title}</h2>
-                    ${sectionId === 'romances' ? '<p class="section-subtitle">sinta a paixão em cada cena</p>' : ''}
-                </div>
-            </div>
-            <div class="row-content">
-                ${moviesHtml}
+    continueData.slice(0, 3).forEach(item => {
+        const movie = movies.find(m => m.titulo === item.movieId);
+        if (movie) {
+            const card = createMovieCard(movie, true, item.progress);
+            carousel.appendChild(card);
+        }
+    });
+}
+
+function renderMyListSection(movies) {
+    const carousel = document.getElementById('my-list-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function renderFeaturedSection(movies) {
+    const carousel = document.getElementById('featured-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function renderSaturdayNightSection(movies) {
+    const carousel = document.getElementById('saturday-night-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function renderKidsSection(movies) {
+    const carousel = document.getElementById('kids-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function renderRomanceSection(movies) {
+    const carousel = document.getElementById('romance-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function renderNostalgiaSection(movies) {
+    const carousel = document.getElementById('nostalgia-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie, false, 0, true); // nostalgia = true
+        carousel.appendChild(card);
+    });
+}
+
+function renderBest2025Section(movies) {
+    const carousel = document.getElementById('best-2025-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function renderSeriesSection(movies) {
+    const carousel = document.getElementById('series-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function renderNovelaSection(movies) {
+    const carousel = document.getElementById('novela-carousel');
+    if (!carousel) return;
+    
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        carousel.appendChild(card);
+    });
+}
+
+function createMovieCard(movie, hasProgress = false, progress = 0, isNostalgia = false) {
+    const card = document.createElement('div');
+    const cardClass = isNostalgia ? 'card-movie nostalgia-card' : 'card-movie';
+    card.className = cardClass;
+    card.tabIndex = 0;
+    
+    const progressBar = hasProgress ? 
+        `<div class="continue-watching-progress" style="width: ${progress}%"></div>` : '';
+    
+    card.innerHTML = `
+        <img class="card-poster" src="${movie.poster}" alt="${movie.titulo}">
+        ${progressBar}
+        <div class="card-info">
+            <h3 class="card-title">${movie.titulo}</h3>
+            <div class="card-meta">
+                <span class="card-year">${movie.year}</span>
+                <span class="card-rating">⭐ ${movie.rating}</span>
             </div>
         </div>
     `;
+    
+    card.addEventListener('click', () => showDetailsPage(movie));
+    card.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') showDetailsPage(movie);
+    });
+    
+    return card;
+}
+
+function getRandomMovies(movies, count) {
+    const shuffled = [...movies].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
 }
 
 // ===== HERO BANNER =====
