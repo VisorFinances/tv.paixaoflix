@@ -21,6 +21,13 @@
     --card-scale-hover: 1.05;
     --card-scale-focus: 1.08;
     
+    /* Cards Horizontais 16:9 */
+    --card-horizontal-aspect-ratio: 16/9; /* 400x225 padrão */
+    --card-horizontal-width: 400px;
+    --card-horizontal-height: 225px;
+    --card-horizontal-scale-hover: 1.03;
+    --card-horizontal-scale-focus: 1.05;
+    
     /* Gradientes */
     --hero-gradient: linear-gradient(135deg, #0c111b 0%, #1a1f2e 50%, #2a3441 100%);
     --card-gradient: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
@@ -472,6 +479,42 @@ body {
     }
 }
 
+/* Grades responsivas para Cards Horizontais 16:9 */
+.row-content-horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-horizontal-width), 1fr));
+    gap: var(--spacing-md);
+    justify-items: center;
+}
+
+@media (max-width: 1400px) {
+    .row-content-horizontal {
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 1200px) {
+    .row-content-horizontal {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 768px) {
+    .row-content-horizontal {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .row-content-horizontal {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-sm);
+    }
+}
+
 /* ===== CARDS ===== */
 .card-movie {
     position: relative;
@@ -570,6 +613,198 @@ body {
 
 .card-movie:hover .card-poster {
     transform: scale(1.1);
+}
+
+/* ===== CARDS HORIZONTAIS 16:9 ===== */
+.card-horizontal {
+    position: relative;
+    background: var(--secondary-bg);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    aspect-ratio: var(--card-horizontal-aspect-ratio);
+    width: var(--card-horizontal-width);
+    height: var(--card-horizontal-height);
+    border: 2px solid transparent;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+}
+
+.card-horizontal:hover {
+    transform: scale(var(--card-horizontal-scale-hover));
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(0, 99, 229, 0.3);
+    z-index: 10;
+}
+
+.card-horizontal:focus {
+    outline: none;
+    transform: scale(var(--card-horizontal-scale-focus));
+    border: 3px solid var(--accent-color);
+    box-shadow: 0px 15px 25px -10px rgba(0, 0, 0, 0.6), 
+                0 0 0 3px rgba(0, 99, 229, 0.3);
+    transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 100;
+}
+
+/* Efeito de Reflexo para Cards Horizontais */
+.card-horizontal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.05) 30%,
+        rgba(255,255,255,0.15) 50%,
+        rgba(255,255,255,0.05) 70%,
+        transparent 100%
+    );
+    transform: translateY(-100%);
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.card-horizontal:hover::before,
+.card-horizontal:focus::before {
+    transform: translateY(100%);
+}
+
+/* Efeito de Brilho no Focus para Cards Horizontais */
+.card-horizontal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--focus-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: 2;
+    pointer-events: none;
+    border-radius: var(--border-radius-md);
+}
+
+.card-horizontal:focus::after {
+    opacity: 0.15;
+    animation: cardHorizontalGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes cardHorizontalGlow {
+    0% {
+        opacity: 0.1;
+    }
+    100% {
+        opacity: 0.2;
+    }
+}
+
+.card-horizontal-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+}
+
+.card-horizontal:hover .card-horizontal-thumbnail {
+    transform: scale(1.05);
+}
+
+/* Cards Horizontais com Texto */
+.card-horizontal-with-text {
+    display: flex;
+    align-items: stretch;
+    aspect-ratio: var(--card-horizontal-aspect-ratio);
+    width: var(--card-horizontal-width);
+    height: var(--card-horizontal-height);
+    background: var(--secondary-bg);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    border: 2px solid transparent;
+    box-shadow: var(--shadow-md);
+}
+
+.card-horizontal-with-text:hover {
+    transform: scale(var(--card-horizontal-scale-hover));
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(0, 99, 229, 0.3);
+    z-index: 10;
+}
+
+.card-horizontal-with-text:focus {
+    outline: none;
+    transform: scale(var(--card-horizontal-scale-focus));
+    border: 3px solid var(--accent-color);
+    box-shadow: 0px 15px 25px -10px rgba(0, 0, 0, 0.6), 
+                0 0 0 3px rgba(0, 99, 229, 0.3);
+    transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 100;
+}
+
+.card-horizontal-thumbnail-container {
+    width: 40%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-horizontal-thumbnail-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+}
+
+.card-horizontal-with-text:hover .card-horizontal-thumbnail-container img {
+    transform: scale(1.05);
+}
+
+.card-horizontal-content {
+    width: 60%;
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-horizontal-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2; /* Propriedade padrão para compatibilidade */
+    -webkit-box-orient: vertical;
+}
+
+.card-horizontal-meta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.card-horizontal-duration {
+    background: rgba(0, 99, 229, 0.2);
+    color: var(--accent-color);
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 
 .card-info {
