@@ -161,9 +161,12 @@ body {
 .hero-banner {
     position: relative;
     width: 100%;
-    height: 60vh; /* Reduzido para permitir rolagem */
+    max-width: 1920px;
+    height: 0;
+    padding-bottom: 56.25%; /* Proporção 16:9 (9/16 = 0.5625) */
     overflow: hidden;
     background: #000;
+    margin: 0 auto;
 }
 
 .hero-backdrop {
@@ -226,8 +229,9 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     padding: 0 var(--spacing-xl);
-    max-width: 1400px;
+    max-width: 1920px;
     margin: 0 auto;
 }
 
@@ -1845,6 +1849,16 @@ body {
     
     .hero-title {
         font-size: 2rem;
+    }
+    
+    .hero-banner {
+        padding-bottom: 56.25%; /* Mantém 16:9 */
+        max-width: 100%;
+    }
+    
+    .hero-logo {
+        max-width: 90%;
+        max-height: 60%;
     }
     
     .hero-description {
