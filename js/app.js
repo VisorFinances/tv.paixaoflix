@@ -9,11 +9,14 @@ let continueWatching = [];
 const elements = {
     // Hero
     heroBanner: document.getElementById('heroBanner'),
-    heroTitle: document.getElementById('heroTitle'),
+    heroLogo: document.getElementById('heroLogo'),
+    heroYear: document.getElementById('heroYear'),
+    heroRating: document.getElementById('heroRating'),
+    heroGenre: document.getElementById('heroGenre'),
     heroDescription: document.getElementById('heroDescription'),
     heroBackdrop: document.getElementById('heroBackdrop'),
     playBtn: document.getElementById('playBtn'),
-    infoBtn: document.getElementById('infoBtn'),
+    trailerBtn: document.getElementById('trailerBtn'),
     
     // Content
     contentRows: document.getElementById('contentRows'),
@@ -231,14 +234,20 @@ function updateHeroBanner() {
             // Selecionar filme aleatório para o hero banner
             const featuredMovie = movies[Math.floor(Math.random() * movies.length)];
             
-            // Configurar proporção baseada na largura da tela
-            setupHeroAspectRatio();
+            // Atualizar conteúdo do hero com nova estrutura
+            // Logo do título
+            elements.heroLogo.src = featuredMovie.logo_titulo || featuredMovie.poster;
+            elements.heroLogo.alt = featuredMovie.titulo;
             
-            // Atualizar conteúdo do hero
-            elements.heroTitle.textContent = featuredMovie.titulo;
+            // Informações
+            elements.heroYear.textContent = featuredMovie.year;
+            elements.heroRating.textContent = featuredMovie.rating;
+            elements.heroGenre.textContent = Array.isArray(featuredMovie.genero) 
+                ? featuredMovie.genero[0] 
+                : featuredMovie.genero;
             elements.heroDescription.textContent = featuredMovie.desc;
             
-            // Configurar backdrop com fallback para poster
+            // Backdrop
             const backdropUrl = featuredMovie.backdrop || featuredMovie.poster;
             elements.heroBackdrop.style.backgroundImage = `url(${backdropUrl})`;
             
@@ -250,10 +259,12 @@ function updateHeroBanner() {
             
             // Configurar botões
             elements.playBtn.onclick = () => playMovie(featuredMovie);
-            elements.infoBtn.onclick = () => showMovieDetails(featuredMovie);
+            elements.trailerBtn.onclick = () => showTrailerModal(featuredMovie);
             
             // Adicionar classe para animação de entrada
             elements.heroBanner.classList.add('hero-loaded');
+            
+            console.log('🎬 Hero Banner atualizado:', featuredMovie.titulo);
         }
     });
 }
@@ -316,14 +327,14 @@ function hideDetailsModal() {
     currentMovie = null;
 }
 
-function showTrailerModal(trailerUrl) {
-    if (!trailerUrl) {
+function showTrailerModal(movie) {
+    if (!movie || !movie.trailer) {
         alert('Trailer não disponível');
         return;
     }
     
     // Converter URL do YouTube para embed
-    const embedUrl = convertToEmbedUrl(trailerUrl);
+    const embedUrl = convertToEmbedUrl(movie.trailer);
     elements.trailerPlayer.src = embedUrl;
     elements.trailerModal.classList.add('active');
 }

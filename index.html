@@ -74,21 +74,35 @@
     <main class="main-content">
         <!-- Hero Banner -->
         <section class="hero-banner" id="heroBanner">
+            <div class="hero-backdrop" id="heroBackdrop"></div>
             <div class="hero-content">
-                <h1 class="hero-title" id="heroTitle">Carregando...</h1>
-                <p class="hero-description" id="heroDescription">Carregando...</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" id="playBtn">
-                        <span class="btn-icon">▶</span>
-                        Assistir
-                    </button>
-                    <button class="btn btn-secondary" id="infoBtn">
-                        <span class="btn-icon">ℹ</span>
-                        Mais Informações
-                    </button>
+                <!-- Logo do Título -->
+                <img class="hero-logo" id="heroLogo" src="" alt="">
+                
+                <!-- Informações do Conteúdo -->
+                <div class="hero-info">
+                    <div class="hero-meta">
+                        <span class="hero-year" id="heroYear"></span>
+                        <span class="hero-rating" id="heroRating"></span>
+                        <span class="hero-genre" id="heroGenre"></span>
+                    </div>
+                    <p class="hero-description" id="heroDescription"></p>
+                    <div class="hero-buttons">
+                        <button class="hero-btn-primary" id="playBtn">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            ASSISTIR
+                        </button>
+                        <button class="hero-btn-secondary" id="trailerBtn">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10 16.5l6-4.5-6-4.5v9zM12 3C6.48 3 2 7.47 2 13s4.48 10 10 10 10-4.48 10-10S17.52 3 12 3zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8z"/>
+                            </svg>
+                            TRAILER
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="hero-backdrop" id="heroBackdrop"></div>
         </section>
 
         <!-- Brands Section -->

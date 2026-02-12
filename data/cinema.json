@@ -1,6 +1,7 @@
 [
     {
         "titulo": "Uma Vida de Insecto",
+        "logo_titulo": "https://media.themoviedb.org/t/p/w500_and_h282_face/dKTJe3KGA2BHdHl9USjjCWZ3U5a.jpg",
         "tmdb_id": "9487",
         "url": "https://ia800606.us.archive.org/11/items/paixaoflix_a_bugs_life-pronto/A%20Bugs%20Life_Paix%C3%A3oFlix.mp4",
         "trailer": "https://youtu.be/mE35XQFxbeo",
@@ -14,6 +15,7 @@
     },
     {
         "titulo": "Percy Jackson e o Mar de Monstros",
+        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/izLw6mf5coAJZV6n9wDfbYWXXHW.jpg",
         "url": "https://ia600301.us.archive.org/28/items/percy-jackson-e-o-mar-de-monstros-paixaoflix/CONV_Percy%20Jackson%20e%20o%20Mar%20de%20Monstros.mp4",
         "genero": "Aventura",
         "year": "2013",
@@ -25,6 +27,7 @@
     },
     {
         "titulo": "Vingadores: Ultimato",
+        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
         "tmdb_id": "299536",
         "url": "https://example.com/vingadores-ultimato.mp4",
         "genero": ["Ação", "Aventura", "Ficção"],
@@ -37,6 +40,7 @@
     },
     {
         "titulo": "O Rei Leão",
+        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/sKFlSR0VWTGmvTViE5W7YwNJM9.jpg",
         "tmdb_id": "8587",
         "url": "https://example.com/rei-leao.mp4",
         "genero": ["Animação", "Drama", "Família"],
@@ -49,6 +53,7 @@
     },
     {
         "titulo": "Matrix",
+        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/f89U3ADr1Oi3Q9LmY7GTZs3BjYM.jpg",
         "tmdb_id": "603",
         "url": "https://example.com/matrix.mp4",
         "genero": ["Ação", "Ficção"],
