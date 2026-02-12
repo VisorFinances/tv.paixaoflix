@@ -1,0 +1,57 @@
+[
+  {
+    "titulo": "Toy Story",
+    "tmdb_id": "862",
+    "url": "https://example.com/toy-story.mp4",
+    "genero": ["Animação", "Aventura", "Comédia"],
+    "year": "1995",
+    "rating": "8.3",
+    "desc": "Um cowboy de brinquedo chamado Woody se sente ameaçado quando um novo astronauta de brinquedo, Buzz Lightyear, se torna o favorito de seu dono. Woody e Buzz acabam perdidos e precisam trabalhar juntos para voltar para casa.",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/wPhKi4mMCHQ3N5BWvk7n2gopriW.jpg",
+    "type": "movie"
+  },
+  {
+    "titulo": "Procurando Nemo",
+    "tmdb_id": "12",
+    "url": "https://example.com/procurando-nemo.mp4",
+    "genero": ["Animação", "Aventura", "Comédia"],
+    "year": "2003",
+    "rating": "8.2",
+    "desc": "Um peixe-palhaço overprotective embarca em uma jornada épica para resgatar seu filho Nemo, que foi capturado e levado para Sydney. Durante a viagem, ele faz amigos improváveis e aprende lições valiosas sobre confiança e coragem.",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/eI8IEzlZgPb3mAwJfoY2f5cBxf.jpg",
+    "type": "movie"
+  },
+  {
+    "titulo": "Frozen - Uma Aventura Congelante",
+    "tmdb_id": "109445",
+    "url": "https://example.com/frozen.mp4",
+    "genero": ["Animação", "Aventura", "Musical"],
+    "year": "2013",
+    "rating": "7.5",
+    "desc": "Quando a jovem Elsa acidentalmente usa seu poder de gelo para amaldiçoar seu reino em um inverno eterno, ela se isola. Sua irmã Anna parte em uma jornada para encontrar Elsa e quebrar a maldição, com a ajuda de um montanhês, sua rena e um boneco de neve mágico.",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/1pZfkzzQioL6l3K2LQjtYpLBD2R.jpg",
+    "type": "movie"
+  },
+  {
+    "titulo": "Moana - Um Mar de Aventuras",
+    "tmdb_id": "354912",
+    "url": "https://example.com/moana.mp4",
+    "genero": ["Animação", "Aventura", "Comédia"],
+    "year": "2016",
+    "rating": "7.6",
+    "desc": "Em uma antiga Oceania, a jovem navegadora Moana parte em uma jornada para encontrar o semideus Maui e salvar seu povo. Ela enfrenta monstros marinhos e descobre sua verdadeira identidade como exploradora.",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/44ZHuOiuqS8JahNQD9vBivKzdja.jpg",
+    "type": "movie"
+  },
+  {
+    "titulo": "Os Incríveis",
+    "tmdb_id": "9806",
+    "url": "https://example.com/incriveis.mp4",
+    "genero": ["Animação", "Ação", "Aventura"],
+    "year": "2004",
+    "rating": "8.0",
+    "desc": "Uma família de super-heróis tenta viver uma vida suburbana normal, mas é forçada a voltar à ação para salvar o mundo. Bob Parr (Sr. Incrível) e sua família enfrentam um vilão perigoso que quer eliminar todos os super-heróis.",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/2yCNUP2vB79W8ZyOvz77FAPpYm2.jpg",
+    "type": "movie"
+  }
+]

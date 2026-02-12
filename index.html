@@ -139,3 +139,1552 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+=======
+<meta charset="UTF-8">
+<title>PaixãoFlix</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ======================================================
+ BLOCO: VARIÁVEIS GLOBAIS (NÃO ALTERAR)
+====================================================== -->
+<style>
+:root{
+  --bg:#0b0b0f;
+  --bg2:#14141a;
+  --texto:#ffffff;
+  --amarelo:#ffcc00; /* pipoca do logotipo */
+  --azul:#0a2cff;
+  --cinza:#999;
+  --radius:8px;
+  --transition:0.25s ease;
+}
+</style>
+
+<!-- ======================================================
+ BLOCO: RESET E BASE (NÃO ALTERAR)
+====================================================== -->
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+body{
+  background:var(--bg);
+  color:var(--texto);
+  font-family:Arial, Helvetica, sans-serif;
+  overflow:hidden;
+}
+button{
+  cursor:pointer;
+  border:none;
+  outline:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ======================================================
+ BLOCO: SIDEBAR (NÃO ALTERAR)
+====================================================== -->
+<nav id="sidebar">
+  <div class="sidebar-item active" data-page="home">
+    <i class="icon icon-home"></i>
+    <span>Início</span>
+  </div>
+  <div class="sidebar-item" data-page="search">
+    <i class="icon icon-search"></i>
+    <span>🔍 Pesquisar</span>
+  </div>
+  <div class="sidebar-item" data-page="canaisaovivo">
+    <i class="icon icon-tv"></i>
+    <span>Canais ao Vivo</span>
+  </div>
+  <div class="sidebar-item" data-page="canaiskids">
+    <i class="icon icon-child"></i>
+    <span>Canais Kids</span>
+  </div>
+  <div class="sidebar-item" data-page="cinema">
+    <i class="icon icon-film"></i>
+    <span>Cinema</span>
+  </div>
+  <div class="sidebar-item" data-page="filmeskids">
+    <i class="icon icon-child"></i>
+    <span>Filmes Kids</span>
+  </div>
+  <div class="sidebar-item" data-page="series">
+    <i class="icon icon-series"></i>
+    <span>Séries</span>
+  </div>
+  <div class="sidebar-item" data-page="serieskids">
+    <i class="icon icon-child"></i>
+    <span>Séries Kids</span>
+  </div>
+  <div class="sidebar-item" data-page="minha_lista">
+    <i class="icon icon-list"></i>
+    <span>Minha Lista</span>
+  </div>
+</nav>
+
+<!-- ======================================================
+BLOCO: HEADER (NÃO ALTERAR)
+====================================================== -->
+<header id="header">
+  <div style="display:flex;align-items:center;gap:20px;">
+    <h1 style="color:var(--amarelo);font-size:24px;font-weight:bold;margin:0;">🎬 PaixãoFlix</h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:15px;">
+    <button class="btn-3d" onclick="toggleFullscreen()">📺 Tela Cheia</button>
+    <button class="btn-3d" onclick="showSettings()">⚙️ Config</button>
+  </div>
+</header>
+
+<!-- ======================================================
+BLOCO: BUSCA GLOBAL (NÃO ALTERAR)
+====================================================== -->
+<div id="buscaGlobal">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 Buscar filmes, séries, canais..." />
+    <button onclick="performSearch()">
+      <i class="icon icon-search"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ======================================================
+BLOCO: CONTEÚDO PRINCIPAL (NÃO ALTERAR)
+====================================================== -->
+<main id="app">
+  <!-- Conteúdo dinâmico será inserido aqui -->
+    </div>
+  </div>
+</main>
+
+<!-- ======================================================
+BLOCO: PLAYER (NÃO ALTERAR)
+====================================================== -->
+<div id="playerOverlay" style="display:none;">
+  <div class="player-header">
+    <h3 id="playerTitle" style="color:white;margin:0;">PaixãoFlix Player</h3>
+    <button class="btn-3d" onclick="sairPlayer()">
+      <i class="icon icon-close"></i> Sair
+    </button>
+  </div>
+  <div class="player-content">
+    <div id="player" style="width:100%;height:100%;max-width:1200px;max-height:70vh;border-radius:var(--radius);box-shadow:var(--shadow);"></div>
+  </div>
+</div>
+
+<!-- ======================================================
+BLOCO: CLAPPR PLAYER SETUP
+====================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/@clappr/core@0.4.33/dist/clappr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@0.3.2/dist/hlsjs-playback.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/level-selector-plugin@0.3.1/dist/level-selector-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/stats-plugin@0.2.2/dist/stats-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/audio-track-plugin@0.2.1/dist/audio-track-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/click-to-play-plugin@0.1.0/dist/click-to-play-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/playback-rate-plugin@0.2.0/dist/playback-rate-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/vr-plugin@0.1.0/dist/vr-plugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
+
+<!-- ======================================================
+ BLOCO: ESTILO BASE DE BOTÕES (NÃO ALTERAR)
+====================================================== -->
+<style>
+.btn{
+  background:#222;
+  color:#fff;
+  padding:12px 22px;
+  border-radius:var(--radius);
+  box-shadow:0 4px 0 var(--amarelo);
+  transition:var(--transition);
+}
+.btn:active{
+  transform:translateY(4px);
+  box-shadow:none;
+}
+.btn:focus{
+  outline:2px solid var(--amarelo);
+}
+</style>
+
+<!-- ======================================================
+ BLOCO: LAYOUT BASE (NÃO ALTERAR)
+====================================================== -->
+<style>
+#sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:90px;
+  height:100vh;
+  background:#000;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+#header{
+  position:fixed;
+  top:0;
+  left:90px;
+  height:60px;
+  width:calc(100% - 90px);
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#app{
+  position:absolute;
+  top:60px;
+  left:90px;
+  width:calc(100% - 90px);
+  height:calc(100% - 60px);
+====================================================== -->
+<script>
+// Configuração global
+const CONFIG = {
+  TMDB_API_KEY: 'b275ce8e1a6b3d5d879bb0907e4f56ad',
+  TMDB_BASE_URL: 'https://api.themoviedb.org/3',
+  ARCHIVE_BASE_URL: 'https://archive.org',
+  DATA_BASE_URL: '/data'
+};
+
+// Estado da aplicação
+let currentPage = 'home';
+let searchQuery = '';
+let playerInstance = null;
+
+// Elementos DOM
+const app = document.getElementById("app");
+const playerContainer = document.getElementById("player");
+const overlay = document.getElementById("playerOverlay");
+const playerTitle = document.getElementById("playerTitle");
+
+// Variável global do player Clappr
+let clapprPlayer = null;
+
+// Funções de navegação
+function carregarPagina(pageName, content = '') {
+  currentPage = pageName;
+  console.log('🚀 Carregando página:', pageName);
+  
+  // Atualizar menu ativo
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.classList.remove('active');
+    if (item.dataset.page === pageName) {
+      item.classList.add('active');
+      console.log('✅ Menu ativo:', item.querySelector('span').textContent);
+    }
+  });
+  
+  // Carregar conteúdo da página
+  switch(pageName) {
+    case 'home':
+      loadHomePage();
+      break;
+    case 'canaisaovivo':
+      loadCanaisAoVivo();
+      break;
+    case 'canaiskids':
+      loadCanaisKids();
+      break;
+    case 'cinema':
+      loadCinema();
+      break;
+    case 'filmeskids':
+      loadFilmesKids();
+      break;
+    case 'series':
+      loadSeries();
+      break;
+    case 'serieskids':
+      loadSeriesKids();
+      break;
+    case 'search':
+      loadSearchPage();
+      break;
+    case 'minha_lista':
+      loadMinhaLista();
+      break;
+    default:
+      console.log('⚠️ Página não encontrada:', pageName);
+      loadHomePage();
+  }
+}
+
+function performSearch() {
+  const searchInput = document.getElementById('searchInput');
+  const query = searchInput.value.trim().toLowerCase();
+  
+  if (!query) {
+    document.getElementById('searchResults').innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+        <div style="font-size:4rem;margin-bottom:20px;">🔍</div>
+        <h3 style="margin-bottom:10px;">Digite algo para pesquisar</h3>
+        <p>Use o campo acima para encontrar filmes, séries ou canais.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Mostrar loading
+  document.getElementById('searchResults').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+    </div>
+  `;
+  
+  // Carregar todos os dados e filtrar
+  Promise.all([
+    fetchJSON('/data/cinema.json'),
+    fetchJSON('/data/séries.json'),
+    fetchJSON('/data/filmeskids.json'),
+    fetchJSON('/data/sérieskids.json'),
+    fetchM3U('/data/canaisaovivo.m3u'),
+    fetchM3U('/data/canaiskids.m3u')
+  ]).then(([cinema, series, filmesKids, seriesKids, canais, canaisKids]) => {
+    const allContent = [
+      ...(cinema || []),
+      ...(series || []),
+      ...(filmesKids || []),
+      ...(seriesKids || []),
+      ...(canais || []),
+      ...(canaisKids || [])
+    ];
+    
+    // Filtrar resultados
+    const results = allContent.filter(item => {
+      const title = (item.title || item.name || '').toLowerCase();
+      const description = (item.description || '').toLowerCase();
+      const genre = (item.genero || '').toLowerCase();
+      
+      return title.includes(query) || 
+             description.includes(query) || 
+             genre.includes(query);
+    });
+    
+    // Renderizar resultados
+    if (results.length === 0) {
+      document.getElementById('searchResults').innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+          <div style="font-size:4rem;margin-bottom:20px;">😔</div>
+          <h3 style="margin-bottom:10px;">Nenhum resultado encontrado</h3>
+          <p>Tente buscar com outros termos ou verifique a ortografia.</p>
+        </div>
+      `;
+    } else {
+      renderContentGrid('searchResults', results);
+    }
+    
+  }).catch(error => {
+    console.error('❌ Erro na pesquisa:', error);
+    document.getElementById('searchResults').innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+        <div style="font-size:4rem;margin-bottom:20px;">⚠️</div>
+        <h3 style="margin-bottom:10px;">Erro na pesquisa</h3>
+        <p>Não foi possível realizar a busca. Tente novamente.</p>
+      </div>
+    `;
+  });
+}
+
+function loadSearchPage() {
+  console.log('🔍 Carregando página de pesquisa...');
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--amarelo);margin-bottom:20px;">🔍 Pesquisar Conteúdo</h2>
+      <div style="display:flex;gap:15px;margin-bottom:30px;">
+        <input type="text" id="searchInput" placeholder="Digite o nome do filme, série ou canal..." 
+               style="flex:1;padding:15px;border-radius:var(--radius);border:2px solid var(--bg2);background:var(--bg);color:var(--texto);font-size:16px;">
+        <button onclick="performSearch()" class="btn-3d">🔍 Buscar</button>
+      </div>
+      <div class="content-grid" id="searchResults">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza);">
+          <div style="font-size:4rem;margin-bottom:20px;">🔍</div>
+          <h3 style="margin-bottom:10px;">Comece a pesquisar</h3>
+          <p>Digite o nome de um filme, série ou canal para encontrar seu conteúdo favorito.</p>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Focar no campo de busca
+  setTimeout(() => {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+    }
+  }, 100);
+}
+
+function loadHomePage() {
+  console.log('🏠 Carregando página inicial...');
+  app.innerHTML = `
+    <div style="padding:30px;overflow-y:auto;height:100%;">
+      <!-- Banner Principal -->
+      <div class="hero-banner" id="heroBanner">
+        <div class="hero-content">
+          <h1 class="hero-title">Bem-vindo ao PaixãoFlix</h1>
+          <p class="hero-description">Descubra os melhores filmes, séries e canais ao vivo em um só lugar</p>
+          <div class="hero-buttons">
+            <button class="btn-hero btn-play" onclick="playRandomContent()">▶️ Assistir Agora</button>
+            <button class="btn-hero btn-info" onclick="showMoreInfo()">ℹ️ Mais Informações</button>
+          </div>
+        </div>
+        <div class="hero-backdrop" id="heroBackdrop"></div>
+      </div>
+      
+      <!-- Seções de Conteúdo -->
+      <div class="content-sections">
+        <section class="content-section">
+          <h2 class="section-title">🎬 Continuar Assistindo</h2>
+          <div class="content-grid" id="continueWatching">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">🔥 Não fique de fora, venha ver!</h2>
+          <div class="content-grid" id="trendingNow">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">� Sábado a noite merece</h2>
+          <div class="content-grid" id="saturdayNight">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">🧸 As crianças amam</h2>
+          <div class="content-grid" id="kidsLove">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">🍿 Prepare a pipoca e venha maratonar</h2>
+          <div class="content-grid" id="marathonReady">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">💝 Nostalgia que aquecem o coração</h2>
+          <div class="content-grid" id="nostalgia">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">❤️ Grandes histórias de amor</h2>
+          <div class="content-grid" id="loveStories">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="content-section">
+          <h2 class="section-title">📺 Novela sempre vai bem</h2>
+          <div class="content-grid" id="novelas">
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  `;
+  
+  // Carregar conteúdo para cada seção
+  loadHomeSections();
+}
+
+async function loadHomeSections() {
+  try {
+    console.log('📦 Carregando dados das seções...');
+    
+    // Carregar todos os conteúdos
+    const [cinema, series, filmesKids, seriesKids] = await Promise.all([
+      fetchJSON('/data/cinema.json'),
+      fetchJSON('/data/séries.json'),
+      fetchJSON('/data/filmeskids.json'),
+      fetchJSON('/data/sérieskids.json')
+    ]);
+    
+    console.log('📊 Dados carregados:', { cinema: cinema?.length, series: series?.length, filmesKids: filmesKids?.length, seriesKids: seriesKids?.length });
+    
+    const allContent = [
+      ...(cinema || []),
+      ...(series || []),
+      ...(filmesKids || []),
+      ...(seriesKids || [])
+    ];
+    
+    console.log('📺 Total de conteúdo:', allContent.length);
+    
+    // Carregar banner principal
+    loadHeroBanner(allContent);
+    
+    // Distribuir conteúdo nas seções
+    renderContentGrid('continueWatching', allContent.slice(0, 6));
+    renderContentGrid('trendingNow', allContent.slice(6, 12));
+    renderContentGrid('saturdayNight', allContent.filter(item => item.genero?.includes('Comédia') || item.genero?.includes('Ação')).slice(0, 6));
+    renderContentGrid('kidsLove', filmesKids?.slice(0, 6) || []);
+    renderContentGrid('marathonReady', series?.slice(0, 6) || []);
+    renderContentGrid('nostalgia', allContent.filter(item => item.year && item.year < 2010).slice(0, 6));
+    renderContentGrid('loveStories', allContent.filter(item => item.genero?.includes('Romance')).slice(0, 6));
+    renderContentGrid('novelas', allContent.filter(item => item.genero?.includes('Drama')).slice(0, 6));
+    
+    console.log('✅ Seções carregadas com sucesso!');
+    
+  } catch (error) {
+    console.error('❌ Erro ao carregar seções:', error);
+    
+    // Mostrar mensagem de erro em todas as seções
+    const sections = ['continueWatching', 'trendingNow', 'saturdayNight', 'kidsLove', 'marathonReady', 'nostalgia', 'loveStories', 'novelas'];
+    sections.forEach(sectionId => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.innerHTML = '<p style="color:var(--cinza);text-align:center;">Erro ao carregar conteúdo.</p>';
+      }
+    });
+  }
+}
+
+function loadHeroBanner(content) {
+  console.log('🎬 Carregando banner principal...');
+  const heroContent = content[0]; // Primeiro item como destaque
+  if (heroContent) {
+    const heroBackdrop = document.getElementById('heroBackdrop');
+    if (heroBackdrop) {
+      const posterUrl = heroContent.poster || 'https://picsum.photos/1920/1080?random=hero';
+      heroBackdrop.style.backgroundImage = `url(${posterUrl})`;
+      heroBackdrop.style.backgroundSize = 'cover';
+      heroBackdrop.style.backgroundPosition = 'center';
+      console.log('🖼️ Banner carregado com:', posterUrl);
+    } else {
+      console.log('⚠️ Elemento heroBackdrop não encontrado');
+    }
+  } else {
+    console.log('⚠️ Nenhum conteúdo para o banner');
+  }
+}
+
+function playRandomContent() {
+  // Implementar reprodução aleatória
+  console.log('🎲 Reproduzindo conteúdo aleatório...');
+}
+
+function showMoreInfo() {
+  // Implementar mais informações
+  console.log('ℹ️ Mostrando mais informações...');
+}
+    
+    const featured = [...(cinema || []), ...(series || [])].slice(0, 12);
+    renderContentGrid('featuredContent', featured);
+  } catch (error) {
+    console.error('Erro ao carregar conteúdo em destaque:', error);
+    document.getElementById('featuredContent').innerHTML = 
+      '<p style="color:var(--text-secondary);text-align:center;">Erro ao carregar conteúdo. Tente novamente.</p>';
+  }
+}
+
+function renderContentGrid(containerId, items) {
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.log('⚠️ Container não encontrado:', containerId);
+    return;
+  }
+  
+  if (!items || items.length === 0) {
+    container.innerHTML = '<p style="color:var(--cinza);text-align:center;">Nenhum conteúdo encontrado.</p>';
+    return;
+  }
+  
+  console.log('📺 Renderizando', items.length, 'itens em', containerId);
+  
+  container.innerHTML = items.map(item => `
+    <div class="content-card" onclick="playContent('${item.type || 'movie'}', '${item.url || item.identificador_archive || item.tmdb_id || ''}')">
+      <img src="${item.poster || 'https://picsum.photos/180/270?random=' + Math.random()}" 
+           alt="${item.titulo || item.title || 'Sem título'}" class="poster" 
+           onerror="this.src='https://picsum.photos/180/270?random=' + Math.random()">
+      <div class="info">
+        <div class="titulo">${item.titulo || item.title || 'Sem título'}</div>
+        <div class="meta">
+          <span>${item.year || 'N/A'}</span>
+          <span>⭐ ${item.rating || 'N/A'}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Funções específicas para cada página
+async function loadCanaisAoVivo() {
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">📺 Canais ao Vivo</h2>
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    const m3uContent = await fetchText('/data/canaisaovivo.m3u');
+    const channels = parseM3U(m3uContent);
+    renderCanaisList(channels);
+  } catch (error) {
+    app.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">Erro ao carregar canais.</p>';
+  }
+}
+
+async function loadCanaisKids() {
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">🧸 Canais Kids</h2>
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    const m3uContent = await fetchText('/data/canaiskids.m3u');
+    const channels = parseM3U(m3uContent);
+    renderCanaisList(channels, 'Canais Kids');
+  } catch (error) {
+    app.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">Erro ao carregar canais kids.</p>';
+  }
+}
+
+async function loadCinema() {
+  console.log('🎬 Carregando Cinema...');
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">🎬 Cinema</h2>
+      <div class="content-grid" id="cinemaContent">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    console.log('📂 Buscando arquivo: /data/cinema.json');
+    const movies = await fetchJSON('/data/cinema.json');
+    console.log('✅ Filmes carregados:', movies?.length || 0, 'itens');
+    renderContentGrid('cinemaContent', movies);
+  } catch (error) {
+    console.error('❌ Erro ao carregar cinema:', error);
+    const contentEl = document.getElementById('cinemaContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar filmes. Tente novamente.</p>';
+    }
+  }
+}
+
+async function loadFilmesKids() {
+  console.log('🧸 Carregando Filmes Kids...');
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">🧸 Filmes Kids</h2>
+      <div class="content-grid" id="filmesKidsContent">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    console.log('📂 Buscando arquivo: /data/filmeskids.json');
+    const movies = await fetchJSON('/data/filmeskids.json');
+    console.log('✅ Filmes kids carregados:', movies?.length || 0, 'itens');
+    renderContentGrid('filmesKidsContent', movies);
+  } catch (error) {
+    console.error('❌ Erro ao carregar filmes kids:', error);
+    const contentEl = document.getElementById('filmesKidsContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar filmes kids. Tente novamente.</p>';
+    }
+  }
+}
+
+async function loadSeries() {
+  console.log('📺 Carregando Séries...');
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">📺 Séries</h2>
+      <div class="content-grid" id="seriesContent">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    console.log('📂 Buscando arquivo: /data/séries.json');
+    const series = await fetchJSON('/data/séries.json');
+    console.log('✅ Séries carregadas:', series?.length || 0, 'itens');
+    renderContentGrid('seriesContent', series);
+  } catch (error) {
+    console.error('❌ Erro ao carregar séries:', error);
+    const contentEl = document.getElementById('seriesContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar séries. Tente novamente.</p>';
+    }
+  }
+}
+
+async function loadSeriesKids() {
+  console.log('🧸 Carregando Séries Kids...');
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">🧸 Séries Kids</h2>
+      <div class="content-grid" id="seriesKidsContent">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    console.log('📂 Buscando arquivo: /data/sérieskids.json');
+    const series = await fetchJSON('/data/sérieskids.json');
+    console.log('✅ Séries kids carregadas:', series?.length || 0, 'itens');
+    renderContentGrid('seriesKidsContent', series);
+  } catch (error) {
+    console.error('❌ Erro ao carregar séries kids:', error);
+    const contentEl = document.getElementById('seriesKidsContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar séries kids. Tente novamente.</p>';
+    }
+  }
+}
+
+async function loadMinhaLista() {
+  console.log('❤️ Carregando Minha Lista...');
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">❤️ Minha Lista</h2>
+      <div class="content-grid" id="minhaListaContent">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    console.log('📂 Buscando arquivo: /data/minha_lista.json');
+    const myList = await fetchJSON('/data/minha_lista.json');
+    console.log('✅ Minha lista carregada:', myList?.length || 0, 'itens');
+    renderContentGrid('minhaListaContent', myList);
+  } catch (error) {
+    console.error('❌ Erro ao carregar minha lista:', error);
+    const contentEl = document.getElementById('minhaListaContent');
+    if (contentEl) {
+      contentEl.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">❌ Erro ao carregar sua lista. Tente novamente.</p>';
+    }
+  }
+}
+
+// Funções utilitárias
+async function fetchJSON(url) {
+  try {
+    console.log('📦 Buscando JSON:', url);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const data = await response.json();
+    console.log('✅ JSON carregado:', data?.length || 'sem dados');
+    return data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar JSON:', url, error);
+    return [];
+  }
+}
+
+async function fetchText(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return await response.text();
+}
+
+function parseM3U(m3uContent) {
+  const lines = m3uContent.split('\n');
+  const channels = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.startsWith('#EXTINF:')) {
+      const titleMatch = line.match(/,(.+)$/);
+      const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+      const groupMatch = line.match(/group-title="([^"]+)"/);
+      
+      if (titleMatch && lines[i + 1]) {
+        channels.push({
+          title: titleMatch[1],
+          logo: logoMatch ? logoMatch[1] : '',
+          group: groupMatch ? groupMatch[1] : '',
+          url: lines[i + 1].trim()
+        });
+      }
+    }
+  }
+  
+  return channels;
+}
+
+function renderCanaisList(channels, title = 'Canais ao Vivo') {
+  const channelsHtml = channels.map(channel => `
+    <div class="content-card" onclick="playChannel('${channel.url}', '${channel.title}')">
+      <img src="${channel.logo || 'https://picsum.photos/180/270?random=3'}" 
+           alt="${channel.title}" class="poster"
+           onerror="this.src='https://picsum.photos/180/270?random=4'">
+      <div class="info">
+        <div class="titulo">${channel.title}</div>
+        <div class="meta">
+          <span>${channel.group}</span>
+          <span>🔴 AO VIVO</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">📺 ${title}</h2>
+      <div class="content-grid">
+        ${channelsHtml}
+      </div>
+    </div>
+  `;
+}
+
+// Player avançado com Clappr
+function abrirPlayer(url, title = 'PaixãoFlix Player') {
+  overlay.style.display = "flex";
+  playerTitle.textContent = title;
+  
+  // Destruir player anterior se existir
+  if (clapprPlayer) {
+    clapprPlayer.destroy();
+    clapprPlayer = null;
+  }
+  
+  // Criar novo player Clappr
+  clapprPlayer = new Clappr.Player({
+    source: url,
+    parentId: '#player',
+    width: '100%',
+    height: '100%',
+    autoPlay: true,
+    mute: false,
+    loop: false,
+    playbackNotSupportedMessage: 'Este formato não é suportado. Tente outro conteúdo.',
+    watermark: '',
+    position: 'top-left',
+    mediacontrol: {
+      seekbar: '#007bff',
+      buttons: '#ffffff'
+    },
+    plugins: {
+      'level_selector': {
+        title: 'Qualidade',
+        labels: {
+          0: 'Auto',
+          1: 'Baixa',
+          2: 'Média', 
+          3: 'Alta',
+          4: 'HD',
+          5: 'Full HD'
+        }
+      },
+      'stats': {
+        onStats: (stats) => {
+          console.log('📊 Stats:', stats);
+        }
+      },
+      'audio_track': {
+        defaultTrack: 'pt',
+        title: 'Áudio'
+      },
+      'click_to_play': {
+        text: 'Clique para reproduzir',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)'
+      },
+      'playback_rate': {
+        playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        defaultRate: 1,
+        title: 'Velocidade'
+      }
+    },
+    hlsjsConfig: {
+      enableWorker: true,
+      lowLatencyMode: true,
+      backBufferLength: 90,
+      maxBufferLength: 600,
+      maxMaxBufferLength: 1200,
+      maxBufferSize: 60 * 1000 * 1000,
+      maxBufferHole: 0.5
+    },
+    events: {
+      onReady: () => {
+        console.log('🎬 Player Clappr pronto!');
+      },
+      onPlay: () => {
+        console.log('▶️ Reproduzindo...');
+      },
+      onPause: () => {
+        console.log('⏸️ Pausado');
+      },
+      onEnded: () => {
+        console.log('🏁 Reprodução finalizada');
+      },
+      onError: (e) => {
+        console.error('❌ Erro no player:', e);
+        alert('Erro ao reproduzir: ' + (e.message || 'Erro desconhecido'));
+      },
+      onTimeUpdate: (e) => {
+        // Atualizar progresso se necessário
+      },
+      onBuffering: () => {
+        console.log('⏳ Carregando...');
+      },
+      onBufferFull: () => {
+        console.log('✅ Buffer completo');
+      }
+    }
+  });
+  
+  console.log('🎬 Player Clappr inicializado com URL:', url);
+}
+
+function playContent(type, identifier) {
+  if (type === 'movie' && identifier.startsWith('http')) {
+    // URL direta para filme
+    abrirPlayer(identifier, 'Filme - PaixãoFlix');
+  } else if (identifier) {
+    // Identificador do archive.org
+    const archiveUrl = `https://archive.org/metadata/${identifier}`;
+    fetch(archiveUrl)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.files) {
+          // Encontrar o arquivo de vídeo principal
+          const videoFile = Object.values(data.files).find(file => 
+            file.format && (file.format.includes('mp4') || file.format.includes('MPEG4'))
+          );
+          if (videoFile) {
+            const videoUrl = `https://archive.org/download/${identifier}/${videoFile.name}`;
+            abrirPlayer(videoUrl, data.metadata?.title || 'PaixãoFlix');
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao carregar do archive.org:', error);
+        alert('Erro ao carregar conteúdo. Tente novamente.');
+      });
+  }
+}
+
+function playChannel(url, title) {
+  abrirPlayer(url, title);
+}
+
+function sairPlayer() {
+  // Destruir player Clappr se existir
+  if (clapprPlayer) {
+    clapprPlayer.destroy();
+    clapprPlayer = null;
+  }
+  
+  overlay.style.display = "none";
+  console.log('🚪 Player fechado');
+}
+
+// Busca
+function performSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) return;
+  
+  searchQuery = query;
+  app.innerHTML = `
+    <div style="padding:30px;">
+      <h2 style="color:var(--gold);margin-bottom:20px;">🔍 Resultados para: "${query}"</h2>
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  `;
+  
+  // Implementar busca global
+  searchGlobalContent(query);
+}
+
+async function searchGlobalContent(query) {
+  try {
+    const [cinema, series] = await Promise.all([
+      fetchJSON('/data/cinema.json'),
+      fetchJSON('/data/séries.json')
+    ]);
+    
+    const allContent = [...(cinema || []), ...(series || [])];
+    const results = allContent.filter(item => 
+      item.titulo && item.titulo.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    if (results.length > 0) {
+      app.innerHTML = `
+        <div style="padding:30px;">
+          <h2 style="color:var(--gold);margin-bottom:20px;">🔍 Resultados para: "${query}" (${results.length})</h2>
+          <div class="content-grid" id="searchResults">
+            ${results.map(item => `
+              <div class="content-card" onclick="playContent('${item.type}', '${item.identificador_archive || item.url || item.tmdb_id}')">
+                <img src="${item.poster || 'https://picsum.photos/180/270?random=5'}" 
+                     alt="${item.titulo}" class="poster"
+                     onerror="this.src='https://picsum.photos/180/270?random=6'">
+                <div class="info">
+                  <div class="titulo">${item.titulo}</div>
+                  <div class="meta">
+                    <span>${item.year || 'N/A'}</span>
+                    <span>⭐ ${item.rating || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      app.innerHTML = `
+        <div style="padding:30px;">
+          <h2 style="color:var(--gold);margin-bottom:20px;">🔍 Resultados para: "${query}"</h2>
+          <p style="color:var(--text-secondary);text-align:center;">Nenhum resultado encontrado.</p>
+        </div>
+      `;
+    }
+  } catch (error) {
+    app.innerHTML = '<p style="color:var(--text-secondary);text-align:center;">Erro na busca.</p>';
+  }
+}
+
+// Funções utilitárias da interface
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+function showSettings() {
+  alert('Configurações em desenvolvimento...');
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  const exitPlayerBtn = document.getElementById("exitPlayer");
+  if (exitPlayerBtn) {
+    exitPlayerBtn.onclick = sairPlayer;
+  }
+  
+  // Adicionar listener para fechar player com ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.style.display === 'flex') {
+      sairPlayer();
+    }
+  });
+});
+
+// Navegação por menu
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const page = this.dataset.page;
+      console.log('🎯 Navegando para:', page);
+      carregarPagina(page);
+    });
+  });
+});
+
+// Busca por Enter
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    performSearch();
+  }
+});
+
+// Atalhos de teclado
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'f' && e.ctrlKey) {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+</script>
+
+<!-- ======================================================
+ BLOCO: INICIALIZAÇÃO (NÃO ALTERAR)
+====================================================== -->
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+  // Inicializar o sistema
+  console.log('🎬 PaixãoFlix - Sistema de Streaming Iniciado');
+  
+  // Carregar página inicial
+  loadHomePage();
+  
+  // Adicionar feedback visual de carregamento
+  setTimeout(() => {
+    console.log('✅ Sistema pronto para uso!');
+  }, 1000);
+});
+</script>
+
+<!-- ======================================================
+ BLOCO: CONFIGURAÇÃO BASE UX/UI
+====================================================== -->
+<style>
+/* Tema escuro premium estilo Disney+ + Netflix */
+:root{
+  --bg-primary:#0a0a0f;
+  --bg-secondary:#14141a;
+  --bg-card:#1a1a2e;
+  --bg-hover:#2a2a3e;
+  --text-primary:#ffffff;
+  --text-secondary:#b3b3b3;
+  --accent:#007bff;
+  --accent-hover:#0056b3;
+  --gold:#ffcc00;
+  --netflix-red:#e50914;
+  --disney-blue:#113ccf;
+  --radius:12px;
+  --transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow:0 4px 20px rgba(0,0,0,0.5);
+  --shadow-hover:0 8px 30px rgba(0,0,0,0.7);
+}
+
+/* Scrollbar customizada */
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:var(--bg-secondary);}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--accent-hover);}
+
+/* Cards de conteúdo */
+.content-card{
+  background:var(--bg-card);
+  border-radius:var(--radius);
+  overflow:hidden;
+  transition:var(--transition);
+  cursor:pointer;
+  position:relative;
+  box-shadow:var(--shadow);
+}
+.content-card:hover{
+  transform:scale(1.05);
+  box-shadow:var(--shadow-hover);
+  z-index:10;
+}
+.content-card .poster{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  background:linear-gradient(45deg, var(--bg-secondary), var(--bg-card));
+}
+.content-card .info{
+  padding:12px;
+}
+.content-card .titulo{
+  color:var(--text-primary);
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:4px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.content-card .meta{
+  color:var(--text-secondary);
+  font-size:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* Grid responsivo */
+.content-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+  gap:20px;
+  padding:20px;
+}
+
+/* Menu lateral aprimorado */
+#sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:90px;
+  height:100vh;
+  background:linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px 0;
+  z-index:1000;
+  box-shadow:2px 0 20px rgba(0,0,0,0.5);
+}
+.sidebar-item{
+  width:60px;
+  height:60px;
+  margin:10px 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  cursor:pointer;
+  transition:var(--transition);
+  color:var(--text-secondary);
+  text-decoration:none;
+  font-size:10px;
+  position:relative;
+}
+.sidebar-item:hover{
+  background:var(--bg-hover);
+  color:var(--text-primary);
+  transform:translateX(5px);
+}
+.sidebar-item.active{
+  background:var(--accent);
+  color:var(--text-primary);
+}
+.sidebar-item i{
+  font-size:24px;
+  margin-bottom:4px;
+}
+
+/* Header melhorado */
+#header{
+  position:fixed;
+  top:0;
+  left:90px;
+  height:70px;
+  width:calc(100% - 90px);
+  background:linear-gradient(90deg, var(--bg-primary) 0%, rgba(26,26,46,0.9) 100%);
+  backdrop-filter:blur(20px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  z-index:999;
+  box-shadow:0 2px 20px rgba(0,0,0,0.3);
+}
+
+/* Busca global */
+#buscaGlobal{
+  position:fixed;
+  top:70px;
+  left:90px;
+  width:calc(100% - 90px);
+  height:60px;
+  background:rgba(26,26,46,0.95);
+  backdrop-filter:blur(10px);
+  display:flex;
+  align-items:center;
+  padding:0 30px;
+  z-index:998;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.search-box{
+  position:relative;
+  width:100%;
+  max-width:500px;
+}
+.search-box input{
+  width:100%;
+  padding:12px 45px 12px 20px;
+  border:2px solid rgba(255,255,255,0.1);
+  border-radius:25px;
+  background:rgba(255,255,255,0.05);
+  color:var(--text-primary);
+  font-size:14px;
+  transition:var(--transition);
+}
+.search-box input:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:rgba(255,255,255,0.1);
+}
+.search-box button{
+  position:absolute;
+  right:5px;
+  top:50%;
+  transform:translateY(-50%);
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--accent);
+  color:white;
+  border:none;
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+/* Player overlay premium */
+#playerOverlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background:rgba(0,0,0,0.95);
+  z-index:9999;
+  display:none;
+  flex-direction:column;
+}
+.player-header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  background:linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+}
+.player-content{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+#player{
+  width:100%;
+  max-width:1200px;
+  height:70vh;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+/* Botões 3D premium */
+.btn-3d{
+  background:linear-gradient(145deg, var(--accent), var(--accent-hover));
+  color:white;
+  padding:14px 28px;
+  border-radius:var(--radius);
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  font-size:14px;
+  box-shadow:0 6px 0 var(--accent-hover), 0 12px 20px rgba(0,0,0,0.3);
+  transition:var(--transition);
+  position:relative;
+  top:0;
+}
+.btn-3d:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 0 var(--accent-hover), 0 16px 25px rgba(0,0,0,0.4);
+}
+.btn-3d:active{
+  transform:translateY(4px);
+  box-shadow:0 2px 0 var(--accent-hover), 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Hero Banner */
+.hero-banner{
+  position:relative;
+  height:70vh;
+  min-height:400px;
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:40px;
+  background:linear-gradient(135deg, var(--bg2), var(--bg));
+}
+
+.hero-backdrop{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+  filter:brightness(0.4);
+  z-index:1;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:60px;
+  color:white;
+}
+
+.hero-title{
+  font-size:3.5rem;
+  font-weight:bold;
+  margin-bottom:20px;
+  text-shadow:2px 2px 4px rgba(0,0,0,0.8);
+  max-width:600px;
+}
+
+.hero-description{
+  font-size:1.2rem;
+  margin-bottom:30px;
+  line-height:1.6;
+  max-width:500px;
+  opacity:0.9;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.btn-hero{
+  padding:15px 30px;
+  border:none;
+  border-radius:var(--radius);
+  font-size:1.1rem;
+  font-weight:bold;
+  cursor:pointer;
+  transition:var(--transition);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.btn-play{
+  background:var(--amarelo);
+  color:var(--bg);
+}
+
+.btn-play:hover{
+  background:var(--azul);
+  color:white;
+  transform:scale(1.05);
+}
+
+.btn-info{
+  background:rgba(255,255,255,0.2);
+  color:white;
+  border:2px solid rgba(255,255,255,0.5);
+}
+
+.btn-info:hover{
+  background:rgba(255,255,255,0.3);
+  transform:scale(1.05);
+}
+
+/* Content Sections */
+.content-sections{
+  display:flex;
+  flex-direction:column;
+  gap:40px;
+}
+
+.content-section{
+  margin-bottom:20px;
+}
+
+.section-title{
+  color:var(--amarelo);
+  font-size:1.8rem;
+  font-weight:bold;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.section-title::before{
+  content:'';
+  height:3px;
+  width:40px;
+  background:var(--amarelo);
+  border-radius:2px;
+}
+
+/* Loading spinner */
+.loading{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:200px;
+}
+.spinner{
+  width:50px;
+  height:50px;
+  border:3px solid rgba(255,255,255,0.1);
+  border-top:3px solid var(--accent);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
+/* Responsividade */
+@media(max-width:768px){
+  #sidebar{width:70px;}
+  #header{left:70px;width:calc(100% - 70px);}
+  #buscaGlobal{left:70px;width:calc(100% - 70px);}
+  #app{left:70px;width:calc(100% - 70px);}
+  .content-grid{grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));gap:15px;padding:15px;}
+}
+</style>
+
+<!-- ======================================================
+ BLOCO: ÍCONES (Font Awesome Alternative)
+====================================================== -->
+<style>
+.icon{display:inline-block;width:24px;height:24px;background-size:contain;}
+.icon-home{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23b3b3b3' viewBox='0 0 24 24'%3E%3Cpath d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/%3E%3C/svg%3E");}
+.icon-tv{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23b3b3b3' viewBox='0 0 24 24'%3E%3Cpath d='M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5l-1 2v1h8v-1l-1-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12H3V5h18v10z'/%3E%3C/svg%3E");}
+.icon-film{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23b3b3b3' viewBox='0 0 24 24'%3E%3Cpath d='M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z'/%3E%3C/svg%3E");}
+.icon-child{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23b3b3b3' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");}
+.icon-series{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23b3b3b3' viewBox='0 0 24 24'%3E%3Cpath d='M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z'/%3E%3C/svg%3E");}
+.icon-list{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23b3b3b3' viewBox='0 0 24 24'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z'/%3E%3C/svg%3E");}
+.icon-search{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23b3b3b3' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");}
+.icon-close{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");}
+</style>
+
+</body>
+</html>
+>>>>>>> cc6ff83e3791e9bcdc57d5045e961f5110176589
