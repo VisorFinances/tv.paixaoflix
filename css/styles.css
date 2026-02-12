@@ -231,30 +231,40 @@ body {
     margin: 0 auto;
 }
 
-/* Logo do Título */
+/* Logo do Título - Imagem Banner */
 .hero-logo {
     position: absolute;
-    left: var(--spacing-xl);
-    top: var(--spacing-xl);
-    max-width: 400px;
-    width: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 80%;
+    width: auto;
     height: auto;
+    max-height: 70%;
     z-index: 20;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
     transition: transform var(--transition-normal);
+    object-fit: contain;
 }
 
 .hero-logo:hover {
-    transform: scale(1.02);
+    transform: translate(-50%, -50%) scale(1.02);
 }
 
-/* Informações do Conteúdo */
+/* Informações do Conteúdo - Reposicionado */
 .hero-info {
     position: absolute;
     left: var(--spacing-xl);
     bottom: var(--spacing-xxl);
     max-width: 600px;
     z-index: 15;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+/* Mostrar info apenas quando não há logo ou em hover */
+.hero-banner:hover .hero-info {
+    opacity: 1;
 }
 
 .hero-meta {
