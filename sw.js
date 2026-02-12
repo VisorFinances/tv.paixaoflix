@@ -19,8 +19,8 @@ const STATIC_ASSETS = [
 self.addEventListener('install', (event) => {
     console.log('🚀 Service Worker PaixãoFlix Disney+ V2 instalado!');
     
-    // Forçar ativação imediata
-    self.skipWaiting();
+    // Removido skipWaiting() para evitar loop infinito
+    // self.skipWaiting();
     
     event.waitUntil(
         caches.open(STATIC_CACHE)
@@ -38,8 +38,8 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
     console.log('✅ Service Worker PaixãoFlix Disney+ V2 ativado!');
     
-    // Forçar controle de todos os clientes
-    self.clients.claim();
+    // Removido clients.claim() para evitar loop infinito
+    // self.clients.claim();
     
     event.waitUntil(
         caches.keys()

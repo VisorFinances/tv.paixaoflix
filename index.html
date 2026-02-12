@@ -43,7 +43,8 @@
             // Escutar atualizações do SW
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 console.log('🔄 Service Worker atualizado, recarregando página...');
-                window.location.reload();
+                // Removido reload automático para evitar loop infinito
+                // window.location.reload();
             });
         }
     </script>
