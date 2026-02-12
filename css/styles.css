@@ -10,6 +10,10 @@
     --text-secondary: #b3b3b3;
     --text-muted: #808080;
     
+    /* Proporções Hero Banner */
+    --hero-aspect-ratio: 56.25%; /* 16:9 padrão */
+    --hero-aspect-ratio-21: 42.86%; /* 21:9 ultrawide */
+    
     /* Gradientes */
     --hero-gradient: linear-gradient(135deg, #0c111b 0%, #1a1f2e 50%, #2a3441 100%);
     --card-gradient: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
@@ -143,27 +147,95 @@ body {
 /* ===== HERO BANNER ===== */
 .hero-banner {
     position: relative;
-    height: 70vh;
+    width: 100%;
+    height: 0;
+    padding-bottom: var(--hero-aspect-ratio); /* Proporção dinâmica 16:9 ou 21:9 */
     min-height: 500px;
     overflow: hidden;
+    background: #000;
+}
+
+/* Classe para proporção 21:9 */
+.hero-banner.ultrawide {
+    padding-bottom: var(--hero-aspect-ratio-21);
 }
 
 .hero-backdrop {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background: var(--hero-gradient);
     background-size: cover;
     background-position: center;
     z-index: 1;
+    transition: all var(--transition-slow);
+    transform: scale(1);
+}
+
+/* Animação de entrada do Hero Banner */
+.hero-banner:not(.hero-loaded) .hero-backdrop {
+    opacity: 0;
+    transform: scale(1.1);
+}
+
+.hero-banner.hero-loaded .hero-backdrop {
+    opacity: 1;
+    transform: scale(1);
+    animation: heroBackdropZoom 20s infinite alternate ease-in-out;
+}
+
+@keyframes heroBackdropZoom {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+.hero-backdrop::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(12, 17, 27, 0.9) 0%,
+        rgba(12, 17, 27, 0.7) 30%,
+        rgba(12, 17, 27, 0.4) 60%,
+        rgba(12, 17, 27, 0.2) 80%,
+        transparent 100%
+    );
+    z-index: 2;
+}
+
+.hero-backdrop::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(12, 17, 27, 0.3) 70%,
+        rgba(12, 17, 27, 0.8) 100%
+    );
+    z-index: 3;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 2;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -178,6 +250,9 @@ body {
     margin-bottom: var(--spacing-md);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     max-width: 600px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroContentSlideUp 1s ease-out 0.5s forwards;
 }
 
 .hero-description {
@@ -186,6 +261,24 @@ body {
     margin-bottom: var(--spacing-xl);
     max-width: 600px;
     line-height: 1.5;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroContentSlideUp 1s ease-out 0.7s forwards;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroContentSlideUp 1s ease-out 0.9s forwards;
+}
+
+@keyframes heroContentSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero-buttons {

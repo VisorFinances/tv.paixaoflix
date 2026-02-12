@@ -226,20 +226,64 @@ function groupMoviesByCategory(movies) {
 
 // ===== HERO BANNER =====
 function updateHeroBanner() {
-    // Aqui você pode implementar lógica para selecionar um filme aleatório ou em destaque
-    // Por enquanto, vamos usar o primeiro filme disponível
     loadMovies().then(movies => {
         if (movies.length > 0) {
-            const featuredMovie = movies[0];
+            // Selecionar filme aleatório para o hero banner
+            const featuredMovie = movies[Math.floor(Math.random() * movies.length)];
+            
+            // Configurar proporção baseada na largura da tela
+            setupHeroAspectRatio();
+            
+            // Atualizar conteúdo do hero
             elements.heroTitle.textContent = featuredMovie.titulo;
             elements.heroDescription.textContent = featuredMovie.desc;
-            elements.heroBackdrop.style.backgroundImage = `url(${featuredMovie.poster})`;
             
+            // Configurar backdrop com fallback para poster
+            const backdropUrl = featuredMovie.backdrop || featuredMovie.poster;
+            elements.heroBackdrop.style.backgroundImage = `url(${backdropUrl})`;
+            
+            // Adicionar efeito de zoom suave no backdrop
+            elements.heroBackdrop.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                elements.heroBackdrop.style.transform = 'scale(1)';
+            }, 1000);
+            
+            // Configurar botões
             elements.playBtn.onclick = () => playMovie(featuredMovie);
             elements.infoBtn.onclick = () => showMovieDetails(featuredMovie);
+            
+            // Adicionar classe para animação de entrada
+            elements.heroBanner.classList.add('hero-loaded');
         }
     });
 }
+
+// Configurar proporção do Hero Banner baseada na tela
+function setupHeroAspectRatio() {
+    const screenWidth = window.innerWidth;
+    const heroBanner = elements.heroBanner;
+    
+    // Remover classes existentes
+    heroBanner.classList.remove('ultrawide');
+    
+    // Configurar proporção baseada na largura
+    if (screenWidth >= 2560) {
+        // UltraWide 21:9 para telas muito largas
+        heroBanner.classList.add('ultrawide');
+        console.log('🎬 Hero Banner: Configurado para 21:9 (UltraWide)');
+    } else if (screenWidth >= 1920) {
+        // 16:9 padrão para Full HD+
+        console.log('🎬 Hero Banner: Configurado para 16:9 (Full HD)');
+    } else {
+        // 16:9 para telas menores
+        console.log('🎬 Hero Banner: Configurado para 16:9 (Padrão)');
+    }
+}
+
+// Atualizar proporção ao redimensionar
+window.addEventListener('resize', () => {
+    setupHeroAspectRatio();
+});
 
 // ===== MODAIS =====
 function showMovieDetails(movie) {

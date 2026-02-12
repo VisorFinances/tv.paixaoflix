@@ -9,6 +9,7 @@
         "rating": "7.0",
         "desc": "Félix é uma formiga operária que acaba por estragar a oferta de comida para um bando de gafanhotos gângsteres, que pedem agora o dobro de comida até ao outono. Félix decide ir à grande cidade procurar guerreiros que os ajudem a lutar contra os gafanhotos, mas acaba por encontrar um grupo de artistas de circo desastrados.",
         "poster": "https://media.themoviedb.org/t/p/w300_and_h450_face/dKTJe3KGA2BHdHl9USjjCWZ3U5a.jpg",
+        "backdrop": "https://media.themoviedb.org/t/p/w1920_and_h1080_face/7BXMJvU2p0A2N2l9e2dJ1q1sK9.jpg",
         "type": "movie"
     },
     {
@@ -19,6 +20,7 @@
         "rating": "6.0",
         "desc": "Percy e seus amigos estão na busca pelo Velocino de Ouro, o único artefato mágico capaz de proteger o Acampamento Meio-Sangue da destruição. É com essa missão que ele e outros campistas partem para uma eletrizante viagem pelo Mar de Monstros, onde deparam com seres fantásticos, perigos e situações inusitadas, que põem à prova seu heroísmo e sua herança.",
         "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/izLw6mf5coAJZV6n9wDfbYWXXHW.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/4bHw3XvFz8xkWb9vLg6IjJ9d2.jpg",
         "type": "movie"
     },
     {
@@ -30,6 +32,7 @@
         "rating": "8.4",
         "desc": "Após os eventos devastadores de Vingadores: Guerra Infinita, o universo está em ruínas. Com a ajuda de aliados restantes, os Vingadores devem se reunir mais uma vez para tentar reverter as ações de Thanos e restaurar o equilíbrio do universo, não importa o quão devastadoras sejam as consequências.",
         "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/7RyHsO4yDXtRvE3Mndg2TWL2V.jpg",
         "type": "movie"
     },
     {
@@ -41,6 +44,7 @@
         "rating": "8.5",
         "desc": "Um jovem leão príncipe foge de seu reino após o assassinato de seu pai. A culpa de sua morte o assombra por anos e o leva a abandonar seu passado. No entanto, quando a situação em seu antigo reino se agrava, ele precisa decidir se vai enfrentar seu passado para assumir seu lugar como rei.",
         "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/sKFlSR0VWTGmvTViE5W7YwNJM9.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/1h0zZLJ1E9pJ2Z8Y3qL4d5W6k.jpg",
         "type": "movie"
     },
     {
@@ -52,6 +56,7 @@
         "rating": "8.7",
         "desc": "Um hacker de computador aprende sobre a verdadeira natureza de sua realidade e seu papel na guerra contra seus controladores. Neo descobre que a vida que conhece é uma elaborada simulação criada por máquinas inteligentes para controlar a humanidade.",
         "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/f89U3ADr1Oi3Q9LmY7GTZs3BjYM.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/fi8W2imgn2wFw4pBcT91uBj5q.jpg",
         "type": "movie"
     }
 ]
