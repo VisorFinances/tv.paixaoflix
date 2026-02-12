@@ -1,167 +1,156 @@
-# PaixãoFlix - Smart TV Streaming Platform
+# PaixãoFlix - Streaming Premium
 
-Uma plataforma de streaming completa para Smart TVs inspirada nos melhores recursos da Netflix e Disney+, desenvolvida com HTML5, CSS3 e JavaScript vanilla.
+Interface de streaming inspirada no Disney+ com funcionalidades premium desenvolvida em HTML5, CSS3 e JavaScript puro.
 
-## 🚀 Funcionalidades Principais
+## 🚀 Funcionalidades Implementadas
 
-### 📺 Interface para Smart TV
-- **Menu Lateral Disney+**: Design expansível com backdrop-filter blur(20px)
-- **Hero Banner Netflix**: 80vh de altura com gradientes profissionais
-- **22 Categorias de Conteúdo**: Organizadas em fileiras horizontais scrollable
-- **Sistema de Foco Avançado**: Scale 1.1 + borda glow para navegação remota
+### 🎨 Design Disney+ Premium
+- **Tema Dark**: Gradiente profundo (Deep Blue/Black) igual ao Disney+
+- **Hero Banner Dinâmico**: Transições suaves com destaque para conteúdo em destaque
+- **Cards com Efeito Zoom**: Borda brilhante ao focar (TV Friendly)
+- **Efeito de Reflexo**: Reflexo brilhante nos cards quando em foco
+- **Navegação por Marcas**: Disney, Pixar, Marvel, Star Wars, National Geographic
 
-### 🎮 Navegação Universal
-- **Controle Remoto**: Suporte completo para gamepad (D-pad + botões A/B)
-- **Teclado**: Navegação com setas, Enter, Escape
-- **Touch/Mouse**: Scroll nativo com inertia
-- **Focus Management**: Sistema inteligente de foco entre elementos
+### 🎮 Sistema de Navegação Premium
+- **Controle Total por Teclado**: Navegação completa com setas direcionais
+- **Suporte a Controle Remoto**: Otimizado para Smart TVs
+- **Foco Geográfico**: Sistema avançado de foco visual
+- **Atalhos de Teclado**: ESC para fechar modais, Enter para selecionar
 
-### 🎬 Player de Vídeo "Clapper"
-- **Controles Completos**: Play/pause, skip, volume, fullscreen
-- **Auto-hide Controls**: Oculta automaticamente após 3 segundos
-- **Progress Bar Interativa**: Click para seek, preview ao hover
-- **Configurações**: Velocidade (0.5x-2x) e qualidade (480p-4K)
-- **Resume Play**: Salva progresso automaticamente
+### 🎬 Player de Vídeo Profissional
+- **Clappr Player**: Player HTML5 com suporte HLS
+- **Buffer Inteligente**: Prevenção de travamentos
+- **Auto-Play**: Reprodução automática do próximo conteúdo
+- **Progresso Salvo**: Sistema "Continue Assistindo" com LocalStorage
 
-### 📋 Modal de Detalhes
-- **Informações Completas**: Sinopse, elenco, episódios
-- **Favoritos**: Sistema de favoritos com localStorage
-- **Ações Diretas**: Play direto do modal
-- **Design Responsivo**: Adaptável para diferentes telas
+### 📺 Sistema de Trailers
+- **Modal Flutuante**: Player do YouTube em modal overlay
+- **Conversão Automática**: URL do YouTube → Embed
+- **Controle Total**: Play, pause, fullscreen
 
-## 🛠️ Tecnologias Utilizadas
+### 🏷️ Badges e Metadados
+- **Badge de Gênero**: Etiqueta estilizada "Animação" acima do título
+- **Integração TMDB**: Suporte para buscar backdrops e elenco
+- **Rating Estrelas**: Sistema de avaliação visual com estrelas amarelas
 
-- **HTML5 Semântico**: Estrutura acessível e otimizada
-- **CSS3 Moderno**: Grid, Flexbox, backdrop-filter, animações
-- **JavaScript ES6+**: Classes, async/await, módulos
-- **Font Awesome 6**: Ícones profissionais
-- **Google Fonts**: Tipografia Inter
+### 📚 Gestão de Conteúdo
+- **Minha Lista**: Adicionar/remover filmes da watchlist
+- **Continue Assistindo**: Salvar progresso de visualização
+- **LocalStorage**: Persistência de dados localmente
 
 ## 📁 Estrutura do Projeto
 
 ```
 paixaoflix/
-├── index.html              # Página principal
-├── style.css               # Estilos completos
-├── data/                   # Dados de conteúdo
-│   ├── filmes.json         # Catálogo de filmes
-│   ├── series.json         # Catálogo de séries
-│   ├── ativa_canais.m3u    # Canais ao vivo
-│   ├── kids_filmes.json    # Filmes infantis
-│   ├── kids_series.json    # Séries infantis
-│   └── ativa_kids_canais.m3u # Canais infantis
-└── README.md               # Documentação
+├── index.html          # Página principal (SPA)
+├── css/
+│   └── styles.css      # Estilos com tema Disney+
+├── js/
+│   └── app.js          # Lógica principal da aplicação
+├── data/
+│   └── cinema.json     # Dados dos filmes
+├── assets/             # Imagens e recursos
+└── README.md           # Documentação
 ```
 
 ## 🎯 Como Usar
 
-### Navegação por Controle Remoto
-- **D-pad**: Navegar entre elementos
-- **Botão A**: Selecionar/Ativar
-- **Botão B**: Voltar/Sair
+### 1. Configuração dos Dados
+Edite `data/cinema.json` para adicionar seus filmes:
 
-### Navegação por Teclado
-- **Setas**: Navegar
-- **Enter**: Selecionar
-- **Escape**: Voltar
-- **Espaço**: Play/Pause (no player)
-- **F**: Fullscreen (no player)
-
-### Menu Lateral
-- **Click no Logo**: Expandir/colapsar menu
-- **Hover**: Efeito de transição suave
-- **Foco**: Borda vermelha com glow
-
-## 🎨 Design System
-
-### Cores
-- **Primária**: #E50914 (Vermelho Netflix)
-- **Background**: #0a0a0a (Preto profundo)
-- **Superfície**: #1a1a1a (Cinza escuro)
-- **Texto**: #ffffff (Branco puro)
-- **Secundário**: #b3b3b3 (Cinza médio)
-
-### Tipografia
-- **Fonte**: Inter (Google Fonts)
-- **Pesos**: 300-900
-- **Tamanhos**: Sistema fluido com clamp()
-
-### Animações
-- **Duração**: 0.3s (transições)
-- **Curva**: cubic-bezier(0.4, 0, 0.2, 1)
-- **Performance**: will-change para GPU acceleration
-
-## 📱 Responsividade
-
-### Breakpoints
-- **1200px+**: Desktop/TV completo
-- **768px-1199px**: Tablets grandes
-- **480px-767px**: Tablets pequenos
-- **<480px**: Smartphones
-
-### Adaptações
-- Cards: 200px → 180px → 150px → 120px
-- Sidebar: 80px → 60px
-- Hero: 80vh → 60vh
-- Fontes: Sistema fluido com clamp()
-
-## 🔧 Personalização
-
-### Adicionar Novo Conteúdo
-1. Edite os arquivos JSON em `/data/`
-2. Adicione IDs às categorias correspondentes
-3. Atualize imagens e metadados
-
-### Modificar Cores
-Edite as variáveis CSS em `:root`:
-```css
-:root {
-    --primary-color: #E50914;
-    --background-color: #0a0a0a;
-    /* ... */
+```json
+{
+    "titulo": "Nome do Filme",
+    "tmdb_id": "12345",
+    "url": "URL direta do vídeo",
+    "trailer": "URL do trailer no YouTube",
+    "genero": ["Animação", "Aventura"],
+    "year": "2023",
+    "rating": "8.5",
+    "desc": "Sinopse do filme",
+    "poster": "URL do poster",
+    "type": "movie"
 }
 ```
 
-### Configurar Player
-Modifique a classe `VideoPlayer` para:
-- Mudar vídeo de exemplo
-- Ajustar tempo de auto-hide
-- Adicionar novas configurações
+### 2. Navegação por Teclado
+- **Setas Direcionais**: Navegar entre cards
+- **Enter/Space**: Selecionar item
+- **ESC**: Fechar modais
+- **Tab**: Navegação padrão
 
-## 🚀 Performance
+### 3. Funcionalidades Principais
+- **Clique no Card**: Abrir detalhes do filme
+- **Botão Trailer**: Abrir modal com trailer do YouTube
+- **Botão Assistir**: Iniciar reprodução com Clappr
+- **Botão + Lista**: Adicionar à watchlist
 
-### Otimizações Implementadas
-- **Lazy Loading**: Carregamento sob demanda
-- **GPU Acceleration**: will-change em animações
-- **Debouncing**: Eventos otimizados
-- **LocalStorage**: Cache de preferências
-- **RequestAnimationFrame**: Gamepad loop otimizado
+## 🔧 Tecnologias Utilizadas
 
-### Recomendações
-- Use imagens WebP para melhor compressão
-- Implemente service worker para cache offline
-- Considere CDN para vídeos em produção
+- **HTML5**: Semântica moderna e acessibilidade
+- **CSS3**: Variáveis CSS, Grid, Flexbox, Animações
+- **JavaScript ES6+**: Módulos, async/await, LocalStorage
+- **Clappr**: Player de vídeo profissional
+- **YouTube API**: Integração para trailers
 
-## 🌐 Navegadores Compatíveis
+## 🚀 Deploy no GitHub Pages
 
-- **Chrome 90+**: Full support
-- **Firefox 88+**: Full support  
-- **Safari 14+**: Full support
-- **Edge 90+**: Full support
-- **Smart TVs**: WebOS 3.0+, Tizen 3.0+
+1. **Fork** este repositório
+2. **Suba** seus arquivos para o repositório
+3. **Ative** GitHub Pages em Settings > Pages
+4. **Selecione** branch `main` e pasta `/root`
+5. **Acesse**: `https://[seu-usuario].github.io/paixaoflix`
+
+## 🎨 Personalização
+
+### Cores e Tema
+Edite as variáveis CSS em `css/styles.css`:
+
+```css
+:root {
+    --primary-bg: #0c111b;      /* Fundo principal */
+    --accent-color: #0063e5;    /* Cor de destaque */
+    --text-primary: #f9f9f9;    /* Texto principal */
+}
+```
+
+### Marcas e Filtros
+Modifique a lógica de filtragem em `js/app.js`:
+
+```javascript
+const brandFilters = {
+    'disney': (movie) => /* sua lógica */,
+    'pixar': (movie) => /* sua lógica */,
+    // ...
+};
+```
+
+## 📱 Responsividade
+
+- **Desktop**: Experiência completa com navegação avançada
+- **Tablet**: Layout adaptado com touch-friendly
+- **Mobile**: Interface otimizada para telas pequenas
+
+## 🎯 Features Futuras
+
+- [ ] Sistema de busca avançada
+- [ ] Perfil de usuário múltiplo
+- [ ] Download offline
+- [ ] Legendas e áudio múltiplo
+- [ ] Recomendações baseadas em IA
+
+## 🤝 Contribuição
+
+1. **Fork** o projeto
+2. **Crie** uma branch: `git checkout -b feature/nova-feature`
+3. **Commit** suas mudanças: `git commit -m 'Add nova feature'`
+4. **Push**: `git push origin feature/nova-feature`
+5. **Abra** um Pull Request
 
 ## 📄 Licença
 
-Este projeto é para fins demonstrativos e educacionais.
-
-## 🤝 Contribuições
-
-Contribuições são bem-vindas! Por favor:
-1. Fork o projeto
-2. Crie uma branch feature
-3. Commit suas mudanças
-4. Abra um Pull Request
+Este projeto está sob licença MIT. Veja [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
-**Desenvolvido com ❤️ para a comunidade de desenvolvedores Smart TV**
+**Desenvolvido com ❤️ para a comunidade PaixãoFlix**

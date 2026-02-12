@@ -3,669 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PaixãoFlix - Sua Central de Streaming</title>
-    <meta name="description" content="PaixãoFlix - Sua central de entretenimento com filmes, séries, canais ao vivo e conteúdo infantil">
-    <meta name="keywords" content="streaming, filmes, séries, tv, canais, kids, entretenimento">
-    <meta name="author" content="PaixãoFlix">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#ffc107">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="PaixãoFlix">
-    <meta name="mobile-web-app-capable" content="yes">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/logo192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
-    <!-- Fonts -->
+    <title>PaixãoFlix - Streaming Premium</title>
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Styles -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-        
-        /* Sidebar Fixa */
-        #sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 80px;
-            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
-            border-right: 1px solid #333;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
-        }
-        
-        .nav-item {
-            padding: 20px 15px;
-            color: #ffffff;
-            text-align: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 10px;
-            margin: 5px 10px;
-        }
-        
-        .nav-item:hover {
-            background: #ffc107;
-            color: #000;
-            transform: scale(1.1);
-        }
-        
-        .nav-item.active {
-            background: #ffc107;
-            color: #000;
-        }
-        
-        /* Main Content */
-        #main-content {
-            margin-left: 80px;
-            min-height: 100vh;
-        }
-        
-        /* Hero Destaque */
-        #hero {
-            height: 80vh;
-            background: linear-gradient(135deg, rgba(255,193,7,0.1) 0%, rgba(0,0,0,0.9) 100%);
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: flex-end;
-            padding: 100px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        #hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,193,7,0.2) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 600px;
-        }
-        
-        .hero-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            line-height: 1.2;
-        }
-        
-        .hero-description {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: #cccccc;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .btn-primary {
-            background: #ffc107;
-            color: #000;
-        }
-        
-        .btn-primary:hover {
-            background: #ffb300;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,193,7,0.4);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: #fff;
-            border: 2px solid #ffc107;
-        }
-        
-        .btn-secondary:hover {
-            background: #ffc107;
-            color: #000;
-        }
-        
-        /* Content Sections */
-        .content-section {
-            padding: 60px 40px 40px 120px;
-            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
-        }
-        
-        .category-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: #ffc107;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .category-title i {
-            font-size: 1.5rem;
-        }
-        
-        .movie-row {
-            display: flex;
-            overflow-x: auto;
-            gap: 20px;
-            padding: 20px 0;
-            scrollbar-width: thin;
-            scrollbar-color: #ffc107 #333;
-        }
-        
-        .movie-row::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .movie-row::-webkit-scrollbar-track {
-            background: #333;
-            border-radius: 10px;
-        }
-        
-        .movie-row::-webkit-scrollbar-thumb {
-            background: #ffc107;
-            border-radius: 10px;
-        }
-        
-        .movie-card {
-            min-width: 200px;
-            height: 300px;
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        
-        .movie-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(255,193,7,0.3);
-        }
-        
-        .movie-thumbnail {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #333 0%, #222 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #666;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .movie-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .movie-info {
-            padding: 15px;
-        }
-        
-        .movie-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #fff;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .movie-meta {
-            font-size: 0.8rem;
-            color: #999;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .rating {
-            background: #ffc107;
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.7rem;
-        }
-        
-        .badge {
-            background: #ff4444;
-            color: #fff;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-            color: #ffc107;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            #sidebar {
-                width: 60px;
-            }
-            
-            #main-content {
-                margin-left: 60px;
-            }
-            
-            #hero {
-                padding: 50px 20px;
-                height: 60vh;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .content-section {
-                padding: 40px 20px 40px 80px;
-            }
-            
-            .movie-card {
-                min-width: 150px;
-                height: 250px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            #sidebar {
-                width: 50px;
-            }
-            
-            #main-content {
-                margin-left: 50px;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Sidebar Navigation -->
-    <nav id="sidebar">
-        <div class="nav-item active" onclick="showSection('home')">
-            <i class="fas fa-home"></i>
+    <!-- Header com Navegação -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>PaixãoFlix</h1>
+            </div>
+            <nav class="nav-menu">
+                <ul class="nav-list">
+                    <li><a href="#" class="nav-link active" data-section="home">Início</a></li>
+                    <li><a href="#" class="nav-link" data-section="search">Buscar</a></li>
+                    <li><a href="#" class="nav-link" data-section="watchlist">Minha Lista</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <button class="user-avatar">
+                    <img src="https://via.placeholder.com/32x32" alt="Usuário">
+                </button>
+            </div>
         </div>
-        <div class="nav-item" onclick="showSection('movies')">
-            <i class="fas fa-film"></i>
-        </div>
-        <div class="nav-item" onclick="showSection('series')">
-            <i class="fas fa-tv"></i>
-        </div>
-        <div class="nav-item" onclick="showSection('kids')">
-            <i class="fas fa-child"></i>
-        </div>
-        <div class="nav-item" onclick="showSection('live')">
-            <i class="fas fa-broadcast-tower"></i>
-        </div>
-        <div class="nav-item" onclick="showSection('favorites')">
-            <i class="fas fa-heart"></i>
-        </div>
-        <div class="nav-item" onclick="showSection('search')">
-            <i class="fas fa-search"></i>
-        </div>
-    </nav>
+    </header>
 
-    <!-- Main Content -->
-    <main id="main-content">
-        <!-- Hero Section -->
-        <section id="hero">
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <!-- Hero Banner -->
+        <section class="hero-banner" id="heroBanner">
             <div class="hero-content">
-                <h1 class="hero-title">PaixãoFlix</h1>
-                <p class="hero-description">Sua central de entretenimento definitiva com filmes, séries, canais ao vivo e conteúdo infantil</p>
+                <h1 class="hero-title" id="heroTitle">Carregando...</h1>
+                <p class="hero-description" id="heroDescription">Carregando...</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="startExploring()">
-                        <i class="fas fa-play"></i>
-                        Começar a Assistir
+                    <button class="btn btn-primary" id="playBtn">
+                        <span class="btn-icon">▶</span>
+                        Assistir
                     </button>
-                    <button class="btn btn-secondary" onclick="showMoreInfo()">
-                        <i class="fas fa-info-circle"></i>
-                        Saiba Mais
+                    <button class="btn btn-secondary" id="infoBtn">
+                        <span class="btn-icon">ℹ</span>
+                        Mais Informações
                     </button>
                 </div>
             </div>
+            <div class="hero-backdrop" id="heroBackdrop"></div>
         </section>
 
-        <!-- Trending Section -->
-        <section class="content-section">
-            <h2 class="category-title">
-                <i class="fas fa-fire"></i>
-                Em Alta Agora
-            </h2>
-            <div class="movie-row" id="trending-content">
-                <div class="loading">Carregando conteúdo em alta...</div>
+        <!-- Brands Section -->
+        <section class="brands-section">
+            <div class="brands-container">
+                <button class="brand-btn active" data-brand="all">
+                    <span>Todos</span>
+                </button>
+                <button class="brand-btn" data-brand="disney">
+                    <span>Disney</span>
+                </button>
+                <button class="brand-btn" data-brand="pixar">
+                    <span>Pixar</span>
+                </button>
+                <button class="brand-btn" data-brand="marvel">
+                    <span>Marvel</span>
+                </button>
+                <button class="brand-btn" data-brand="starwars">
+                    <span>Star Wars</span>
+                </button>
+                <button class="brand-btn" data-brand="national">
+                    <span>National Geographic</span>
+                </button>
             </div>
         </section>
 
-        <!-- Movies Section -->
+        <!-- Content Rows -->
         <section class="content-section">
-            <h2 class="category-title">
-                <i class="fas fa-film"></i>
-                Filmes
-            </h2>
-            <div class="movie-row" id="movies-content">
-                <div class="loading">Carregando filmes...</div>
-            </div>
-        </section>
-
-        <!-- Series Section -->
-        <section class="content-section">
-            <h2 class="category-title">
-                <i class="fas fa-tv"></i>
-                Séries
-            </h2>
-            <div class="movie-row" id="series-content">
-                <div class="loading">Carregando séries...</div>
-            </div>
-        </section>
-
-        <!-- Kids Section -->
-        <section class="content-section">
-            <h2 class="category-title">
-                <i class="fas fa-child"></i>
-                Kids
-            </h2>
-            <div class="movie-row" id="kids-content">
-                <div class="loading">Carregando conteúdo infantil...</div>
-            </div>
-        </section>
-
-        <!-- Live Channels Section -->
-        <section class="content-section">
-            <h2 class="category-title">
-                <i class="fas fa-broadcast-tower"></i>
-                Canais ao Vivo
-            </h2>
-            <div class="movie-row" id="live-content">
-                <div class="loading">Carregando canais ao vivo...</div>
+            <div class="content-rows" id="contentRows">
+                <!-- As fileiras serão geradas dinamicamente -->
             </div>
         </section>
     </main>
 
-    <!-- JavaScript -->
-    <script>
-        // Content Loader Service
-        class ContentLoader {
-            constructor() {
-                this.cache = new Map();
-                this.apiKey = 'b275ce8e1a6b3d5d879bb0907e4f56ad';
-                this.baseUrl = 'https://api.themoviedb.org/3';
-            }
-
-            async loadContent() {
-                try {
-                    // Load trending content
-                    await this.loadTrending();
-                    await this.loadMovies();
-                    await this.loadSeries();
-                    await this.loadKids();
-                    await this.loadLiveChannels();
-                } catch (error) {
-                    console.error('Error loading content:', error);
-                    this.showError('Erro ao carregar conteúdo. Tente novamente mais tarde.');
-                }
-            }
-
-            async loadTrending() {
-                const trending = [
-                    {
-                        id: 1,
-                        title: "Ação Imediata",
-                        description: "Um filme de ação emocionante",
-                        thumbnail: "https://via.placeholder.com/200x300/ffc107/000?text=ACAO",
-                        rating: 8.5,
-                        year: 2024,
-                        type: "movie",
-                        badge: "NOVO"
-                    },
-                    {
-                        id: 2,
-                        title: "Comédia Romântica",
-                        description: "Uma história de amor divertida",
-                        thumbnail: "https://via.placeholder.com/200x300/ff6b6b/000?text=COMEDIA",
-                        rating: 7.8,
-                        year: 2024,
-                        type: "movie",
-                        badge: "PREMIUM"
-                    }
-                ];
-
-                this.renderContent('trending-content', trending);
-            }
-
-            async loadMovies() {
-                const movies = [
-                    {
-                        id: 3,
-                        title: "Terror Noturno",
-                        description: "Um filme de terror assustador",
-                        thumbnail: "https://via.placeholder.com/200x300/8b0000/000?text=TERROR",
-                        rating: 8.2,
-                        year: 2024,
-                        type: "movie"
-                    },
-                    {
-                        id: 4,
-                        title: "Aventura Espacial",
-                        description: "Jornada épica no espaço",
-                        thumbnail: "https://via.placeholder.com/200x300/4169e1/000?text=AVENTURA",
-                        rating: 9.1,
-                        year: 2024,
-                        type: "movie"
-                    }
-                ];
-
-                this.renderContent('movies-content', movies);
-            }
-
-            async loadSeries() {
-                const series = [
-                    {
-                        id: 5,
-                        title: "Mistério na Cidade",
-                        description: "Série de suspense e mistério",
-                        thumbnail: "https://via.placeholder.com/200x300/9c27b0/000?text=SERIE",
-                        rating: 8.8,
-                        year: 2024,
-                        type: "series",
-                        seasons: 3
-                    }
-                ];
-
-                this.renderContent('series-content', series);
-            }
-
-            async loadKids() {
-                const kids = [
-                    {
-                        id: 6,
-                        title: "Aventura dos Amigos",
-                        description: "Animação infantil divertida",
-                        thumbnail: "https://via.placeholder.com/200x300/ff9800/000?text=KIDS",
-                        rating: 9.2,
-                        year: 2024,
-                        type: "kids"
-                    }
-                ];
-
-                this.renderContent('kids-content', kids);
-            }
-
-            async loadLiveChannels() {
-                const channels = [
-                    {
-                        id: 7,
-                        title: "Canal de Filmes",
-                        description: "Os melhores filmes 24h",
-                        thumbnail: "https://via.placeholder.com/200x300/2196f3/000?text=CANAL",
-                        type: "live",
-                        live: true
-                    }
-                ];
-
-                this.renderContent('live-content', channels);
-            }
-
-            renderContent(containerId, content) {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-
-                container.innerHTML = content.map(item => `
-                    <div class="movie-card" onclick="playContent(${item.id})">
-                        <div class="movie-thumbnail">
-                            <img src="${item.thumbnail}" alt="${item.title}" onerror="this.style.display='none'">
-                            <i class="fas fa-${this.getIcon(item.type)}"></i>
-                        </div>
-                        <div class="movie-info">
-                            <div class="movie-title">${item.title}</div>
-                            <div class="movie-meta">
-                                <span class="rating">${item.rating}⭐</span>
-                                ${item.badge ? `<span class="badge">${item.badge}</span>` : ''}
-                                ${item.live ? '<span class="badge">AO VIVO</span>' : ''}
-                            </div>
-                        </div>
+    <!-- Modal de Detalhes -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-content details-modal">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="details-container">
+                <div class="details-poster">
+                    <img id="detailsPoster" src="" alt="">
+                </div>
+                <div class="details-info">
+                    <h2 id="detailsTitle"></h2>
+                    <div class="details-meta">
+                        <span class="year" id="detailsYear"></span>
+                        <span class="rating" id="detailsRating"></span>
+                        <span class="genre-badge" id="detailsGenre"></span>
                     </div>
-                `).join('');
-            }
+                    <p class="description" id="detailsDescription"></p>
+                    <div class="details-actions">
+                        <button class="btn btn-primary" id="detailsPlayBtn">
+                            <span>▶</span> Assistir
+                        </button>
+                        <button class="btn btn-secondary" id="detailsTrailerBtn">
+                            <span>▶</span> Trailer
+                        </button>
+                        <button class="btn btn-outline" id="detailsAddToListBtn">
+                            <span>+</span> Minha Lista
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            getIcon(type) {
-                const icons = {
-                    movie: 'film',
-                    series: 'tv',
-                    kids: 'child',
-                    live: 'broadcast-tower'
-                };
-                return icons[type] || 'play';
-            }
+    <!-- Modal de Trailer -->
+    <div class="modal-overlay" id="trailerModal">
+        <div class="modal-content trailer-modal">
+            <button class="modal-close" id="closeTrailerModal">&times;</button>
+            <div class="trailer-container">
+                <iframe id="trailerPlayer" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
-            showError(message) {
-                const containers = ['trending-content', 'movies-content', 'series-content', 'kids-content', 'live-content'];
-                containers.forEach(id => {
-                    const container = document.getElementById(id);
-                    if (container) {
-                        container.innerHTML = `<div style="color: #ff4444; text-align: center; padding: 40px;">${message}</div>`;
-                    }
-                });
-            }
-        }
+    <!-- Player Container -->
+    <div class="player-overlay" id="playerOverlay">
+        <div class="player-container">
+            <button class="player-close" id="closePlayer">&times;</button>
+            <div id="videoPlayer"></div>
+        </div>
+    </div>
 
-        // Initialize
-        const contentLoader = new ContentLoader();
-
-        // Navigation
-        function showSection(section) {
-            // Update active nav
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.nav-item').classList.add('active');
-
-            // Here you can implement section switching
-            console.log('Showing section:', section);
-        }
-
-        function startExploring() {
-            // Scroll to first content section
-            document.querySelector('.content-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function showMoreInfo() {
-            alert('PaixãoFlix - Sua central de entretenimento!\n\nFuncionalidades:\n• Filmes e Séries\n• Canais ao Vivo\n• Conteúdo Kids\n• Busca Avançada\n• Multiplataforma');
-        }
-
-        function playContent(id) {
-            alert(`Iniciando conteúdo ID: ${id}\n\nEm desenvolvimento: Player de vídeo será implementado aqui!`);
-        }
-
-        // Load content when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            contentLoader.loadContent();
-        });
-
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => console.log('SW registered:', registration))
-                .catch(error => console.log('SW registration failed:', error));
-        }
-    </script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
