@@ -18,6 +18,9 @@ const elements = {
     playBtn: document.getElementById('playBtn'),
     trailerBtn: document.getElementById('trailerBtn'),
     
+    // Brands
+    brandCards: document.querySelectorAll('.brand-card'),
+    
     // Content
     contentRows: document.getElementById('contentRows'),
     
@@ -258,8 +261,15 @@ function updateHeroBanner() {
             }, 1000);
             
             // Configurar botões
-            elements.playBtn.onclick = () => playMovie(featuredMovie);
-            elements.trailerBtn.onclick = () => showTrailerModal(featuredMovie);
+            elements.playBtn.onclick = () => {
+                console.log('🎬 Assistir:', featuredMovie.titulo);
+                playMovie(featuredMovie);
+            };
+            
+            elements.trailerBtn.onclick = () => {
+                console.log('🎬 Trailer:', featuredMovie.titulo);
+                showTrailerModal(featuredMovie);
+            };
             
             // Adicionar classe para animação de entrada
             elements.heroBanner.classList.add('hero-loaded');
@@ -604,6 +614,9 @@ function setupEventListeners() {
             hidePlayer();
         }
     });
+    
+    // Brand cards video controls
+    setupBrandVideos();
     
     // Details modal buttons
     elements.detailsPlayBtn.addEventListener('click', () => {

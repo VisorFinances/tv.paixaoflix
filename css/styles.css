@@ -314,47 +314,70 @@ body {
     flex-wrap: wrap;
 }
 
+/* Botão Assistir (Principal) */
 .hero-btn-primary {
-    background: #ffffff;
-    color: #000000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background-color: #f9f9f9;
+    color: #0e1012;
     border: none;
-    padding: 12px 32px;
-    border-radius: var(--border-radius-md);
+    border-radius: 4px;
+    font-weight: bold;
     font-size: 1rem;
-    font-weight: 600;
     cursor: pointer;
-    transition: all var(--transition-normal);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    position: relative;
+    overflow: hidden;
 }
 
-.hero-btn-primary:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+.hero-btn-primary:hover, .hero-btn-primary:focus {
+    background-color: rgb(198, 198, 198);
+    transform: scale(1.05);
 }
 
+/* Efeito de Brilho Dinâmico (Glossy) */
+.hero-btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.5s;
+}
+
+.hero-btn-primary:hover::after {
+    left: 100%;
+}
+
+/* Botão Trailer (Secundário/Vidro) */
 .hero-btn-secondary {
-    background: transparent;
-    color: #ffffff;
-    border: 2px solid #ffffff;
-    padding: 12px 32px;
-    border-radius: var(--border-radius-md);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 10px;
+    padding: 12px 28px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #f9f9f9;
+    border: 1px solid #f9f9f9;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px); /* O famoso efeito de vidro */
+    transition: all 0.2s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
-.hero-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+.hero-btn-secondary:hover, .hero-btn-secondary:focus {
+    background-color: #f9f9f9;
+    color: #0e1012;
+    transform: scale(1.05);
 }
 
 /* Ícones dos botões */
@@ -493,51 +516,118 @@ body {
 /* ===== BRANDS SECTION ===== */
 .brands-section {
     padding: var(--spacing-xl) 0;
-    background: var(--secondary-bg);
 }
 
 .brands-container {
-    display: flex;
-    gap: var(--spacing-md);
-    padding: 0 var(--spacing-xl);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
     max-width: 1400px;
     margin: 0 auto;
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--tertiary-bg) transparent;
+    padding: 0 var(--spacing-xl);
 }
 
-.brands-container::-webkit-scrollbar {
-    height: 6px;
-}
-
-.brands-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.brands-container::-webkit-scrollbar-thumb {
-    background: var(--tertiary-bg);
-    border-radius: 3px;
-}
-
-.brand-btn {
-    flex-shrink: 0;
-    padding: var(--spacing-md) var(--spacing-lg);
-    background: var(--tertiary-bg);
-    border: none;
+/* Cards de Brands com Vídeo */
+.brand-card {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #000;
     border-radius: var(--border-radius-lg);
-    color: var(--text-secondary);
-    font-weight: 600;
+    overflow: hidden;
     cursor: pointer;
-    transition: all var(--transition-fast);
-    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    border: 2px solid transparent;
 }
 
-.brand-btn:hover,
-.brand-btn.active {
-    background: var(--accent-color);
-    color: white;
-    transform: scale(1.05);
+.brand-card:hover, .brand-card:focus {
+    transform: scale(1.1);
+    border-color: rgba(0, 99, 229, 0.5);
+    box-shadow: 0 0 0 3px rgba(0, 99, 229, 0.3);
+}
+
+/* Camada 1: Fundo */
+.brand-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+    z-index: 1;
+}
+
+/* Camada 2: Vídeo */
+.brand-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 2;
+}
+
+.brand-card:hover .brand-video,
+.brand-card:focus .brand-video {
+    opacity: 1;
+}
+
+/* Camada 3: Logo */
+.brand-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    transition: all 0.3s ease;
+}
+
+.brand-logo img {
+    width: 60px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
+    transition: transform 0.3s ease;
+}
+
+.brand-card:hover .brand-logo img,
+.brand-card:focus .brand-logo img {
+    transform: scale(1.1);
+}
+
+/* Responsividade Brands */
+@media (max-width: 1200px) {
+    .brands-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .brands-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 0 var(--spacing-lg);
+    }
+    
+    .brand-logo img {
+        width: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brands-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        padding: 0 var(--spacing-md);
+    }
+    
+    .brand-card {
+        aspect-ratio: 16/9;
+        max-width: 100%;
+    }
 }
 
 /* ===== CONTENT SECTIONS ===== */
