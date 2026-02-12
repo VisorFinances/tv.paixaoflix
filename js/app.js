@@ -4,6 +4,8 @@ let currentBrand = 'all';
 let playerInstance = null;
 let watchlist = [];
 let continueWatching = [];
+let currentPage = 'home'; // home, category, live, details
+let currentFilter = null;
 
 // ===== ELEMENTOS DOM =====
 const elements = {
@@ -18,8 +20,34 @@ const elements = {
     playBtn: document.getElementById('playBtn'),
     trailerBtn: document.getElementById('trailerBtn'),
     
-    // Brands
-    brandCards: document.querySelectorAll('.brand-card'),
+    // Menu Cards
+    menuCards: document.querySelectorAll('.menu-card'),
+    
+    // Páginas
+    categoryPage: document.getElementById('categoryPage'),
+    liveTvPage: document.getElementById('liveTvPage'),
+    detailsPage: document.getElementById('detailsPage'),
+    
+    // Botões Voltar
+    backButton: document.getElementById('backButton'),
+    liveBackButton: document.getElementById('liveBackButton'),
+    detailsBackButton: document.getElementById('detailsBackButton'),
+    
+    // Conteúdo das Páginas
+    categoryTitle: document.getElementById('categoryTitle'),
+    categoryGrid: document.getElementById('categoryGrid'),
+    channelsList: document.getElementById('channelsList'),
+    livePlayer: document.getElementById('livePlayer'),
+    
+    // Página Detalhes
+    detailsPagePoster: document.getElementById('detailsPagePoster'),
+    detailsPageTitle: document.getElementById('detailsPageTitle'),
+    detailsPageYear: document.getElementById('detailsPageYear'),
+    detailsPageRating: document.getElementById('detailsPageRating'),
+    detailsPageGenre: document.getElementById('detailsPageGenre'),
+    detailsPageDescription: document.getElementById('detailsPageDescription'),
+    detailsPagePlayBtn: document.getElementById('detailsPagePlayBtn'),
+    detailsPageTrailerBtn: document.getElementById('detailsPageTrailerBtn'),
     
     // Content
     contentRows: document.getElementById('contentRows'),
@@ -589,8 +617,308 @@ function setupKeyboardNavigation() {
     observer.observe(document.body, { childList: true, subtree: true });
 }
 
+// ===== NAVEGAÇÃO DE PÁGINAS =====
+
+// Função para ocultar todas as páginas
+function hideAllPages() {
+    // Ocultar páginas
+    elements.categoryPage.style.display = 'none';
+    elements.liveTvPage.style.display = 'none';
+    elements.detailsPage.style.display = 'none';
+    
+    // Remover classes ativas
+    elements.categoryPage.classList.remove('active');
+    elements.liveTvPage.classList.remove('active');
+    elements.detailsPage.classList.remove('active');
+    
+    // Ocultar conteúdo principal
+    document.querySelector('.hero-banner').parentElement.style.display = 'none';
+    document.querySelector('.menu-cards-section').style.display = 'none';
+    document.querySelector('.content-section').style.display = 'none';
+}
+
+// Mostrar página inicial
+function showHomePage() {
+    hideAllPages();
+    currentPage = 'home';
+    currentFilter = null;
+    
+    // Mostrar conteúdo principal
+    document.querySelector('.hero-banner').parentElement.style.display = 'block';
+    document.querySelector('.menu-cards-section').style.display = 'block';
+    document.querySelector('.content-section').style.display = 'block';
+    
+    // Atualizar histórico do navegador
+    history.pushState({ page: 'home' }, '', '/');
+}
+
+// Mostrar página de categoria
+function showCategoryPage(menuType) {
+    hideAllPages();
+    currentPage = 'category';
+    currentFilter = menuType;
+    
+    // Configurar título
+    const titles = {
+        'cinema': 'Cinema',
+        'series': 'Séries',
+        'movies_kids': 'Filmes Kids',
+        'series_kids': 'Séries Kids'
+    };
+    
+    elements.categoryTitle.textContent = titles[menuType] || 'Categoria';
+    
+    // Mostrar página
+    elements.categoryPage.style.display = 'block';
+    setTimeout(() => elements.categoryPage.classList.add('active'), 100);
+    
+    // Carregar conteúdo filtrado
+    loadCategoryContent(menuType);
+    
+    // Atualizar histórico
+    history.pushState({ page: 'category', filter: menuType }, '', `/${menuType}`);
+}
+
+// Carregar conteúdo da categoria
+async function loadCategoryContent(menuType) {
+    try {
+        const movies = await loadMovies();
+        let filteredMovies = [];
+        
+        // Aplicar filtros
+        switch(menuType) {
+            case 'cinema':
+                filteredMovies = movies.filter(movie => movie.type === 'movie');
+                break;
+            case 'series':
+                filteredMovies = movies.filter(movie => movie.type === 'series');
+                break;
+            case 'movies_kids':
+                filteredMovies = movies.filter(movie => 
+                    movie.type === 'movie' && 
+                    (movie.genero.includes('Animação') || movie.genero.includes('Kids'))
+                );
+                break;
+            case 'series_kids':
+                filteredMovies = movies.filter(movie => 
+                    movie.type === 'series' && 
+                    (movie.genero.includes('Animação') || movie.genero.includes('Kids'))
+                );
+                break;
+        }
+        
+        // Renderizar grid
+        renderCategoryGrid(filteredMovies);
+        
+    } catch (error) {
+        console.error('Erro ao carregar categoria:', error);
+    }
+}
+
+// Renderizar grid da categoria
+function renderCategoryGrid(movies) {
+    elements.categoryGrid.innerHTML = '';
+    
+    movies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'card-movie';
+        card.tabIndex = 0;
+        
+        card.innerHTML = `
+            <img class="card-poster" src="${movie.poster}" alt="${movie.titulo}">
+            <div class="card-info">
+                <h3 class="card-title">${movie.titulo}</h3>
+                <div class="card-meta">
+                    <span class="card-year">${movie.year}</span>
+                    <span class="card-rating">⭐ ${movie.rating}</span>
+                </div>
+            </div>
+        `;
+        
+        card.addEventListener('click', () => showDetailsPage(movie));
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') showDetailsPage(movie);
+        });
+        
+        elements.categoryGrid.appendChild(card);
+    });
+}
+
+// Mostrar página de canais ao vivo
+function showLiveTvPage() {
+    hideAllPages();
+    currentPage = 'live';
+    
+    // Mostrar página
+    elements.liveTvPage.style.display = 'block';
+    setTimeout(() => elements.liveTvPage.classList.add('active'), 100);
+    
+    // Carregar canais
+    loadLiveChannels();
+    
+    // Atualizar histórico
+    history.pushState({ page: 'live' }, '', '/live');
+}
+
+// Carregar canais ao vivo
+async function loadLiveChannels() {
+    try {
+        // Simular canais (poderia carregar de um arquivo M3U)
+        const channels = [
+            { name: 'Disney Channel', logo: 'https://static-assets.bamgrid.com/product/disneyplus/images/disney.png', url: 'https://example.com/disney-live.m3u8' },
+            { name: 'Marvel HQ', logo: 'https://static-assets.bamgrid.com/product/disneyplus/images/marvel.png', url: 'https://example.com/marvel-live.m3u8' },
+            { name: 'Pixar TV', logo: 'https://static-assets.bamgrid.com/product/disneyplus/images/pixar.png', url: 'https://example.com/pixar-live.m3u8' },
+            { name: 'Star Wars TV', logo: 'https://static-assets.bamgrid.com/product/disneyplus/images/starwars.png', url: 'https://example.com/starwars-live.m3u8' },
+            { name: 'Nat Geo Kids', logo: 'https://static-assets.bamgrid.com/product/disneyplus/images/national.png', url: 'https://example.com/natgeo-live.m3u8' }
+        ];
+        
+        renderChannelsList(channels);
+        
+    } catch (error) {
+        console.error('Erro ao carregar canais:', error);
+    }
+}
+
+// Renderizar lista de canais
+function renderChannelsList(channels) {
+    elements.channelsList.innerHTML = '';
+    
+    channels.forEach((channel, index) => {
+        const item = document.createElement('div');
+        item.className = 'channel-item';
+        item.tabIndex = 0;
+        
+        if (index === 0) item.classList.add('active');
+        
+        item.innerHTML = `
+            <img class="channel-logo" src="${channel.logo}" alt="${channel.name}">
+            <span class="channel-name">${channel.name}</span>
+        `;
+        
+        item.addEventListener('click', () => playLiveChannel(channel));
+        item.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') playLiveChannel(channel);
+        });
+        
+        elements.channelsList.appendChild(item);
+    });
+    
+    // Tocar primeiro canal
+    if (channels.length > 0) {
+        playLiveChannel(channels[0]);
+    }
+}
+
+// Tocar canal ao vivo
+function playLiveChannel(channel) {
+    // Destacar canal ativo
+    document.querySelectorAll('.channel-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+    
+    // Destruir player anterior
+    if (playerInstance) {
+        playerInstance.destroy();
+    }
+    
+    // Criar novo player para canal ao vivo
+    playerInstance = new Clappr.Player({
+        parentId: '#livePlayer',
+        source: channel.url,
+        width: '100%',
+        height: '100%',
+        autoPlay: true,
+        preload: 'metadata',
+        hlsjsConfig: {
+            enableWorker: true,
+            lowLatencyMode: true,
+        }
+    });
+    
+    console.log('📺 Tocando canal:', channel.name);
+}
+
+// Mostrar página de detalhes
+function showDetailsPage(movie) {
+    hideAllPages();
+    currentPage = 'details';
+    currentMovie = movie;
+    
+    // Preencher informações
+    elements.detailsPagePoster.src = movie.poster;
+    elements.detailsPagePoster.alt = movie.titulo;
+    elements.detailsPageTitle.textContent = movie.titulo;
+    elements.detailsPageYear.textContent = movie.year;
+    elements.detailsPageRating.textContent = `⭐ ${movie.rating}`;
+    elements.detailsPageGenre.textContent = Array.isArray(movie.genero) 
+        ? movie.genero.join(', ') 
+        : movie.genero;
+    elements.detailsPageDescription.textContent = movie.desc;
+    
+    // Configurar botões
+    elements.detailsPagePlayBtn.onclick = () => playMovie(movie);
+    elements.detailsPageTrailerBtn.onclick = () => showTrailerModal(movie);
+    
+    // Mostrar página
+    elements.detailsPage.style.display = 'block';
+    setTimeout(() => elements.detailsPage.classList.add('active'), 100);
+    
+    // Atualizar histórico
+    history.pushState({ page: 'details', movieId: movie.titulo }, '', `/details/${movie.titulo}`);
+}
+
+// ===== CONTROLE DE MENU =====
+
+// Configurar eventos dos cards de menu
+function setupMenuCards() {
+    elements.menuCards.forEach(card => {
+        const menuType = card.dataset.menu;
+        
+        card.addEventListener('click', () => {
+            switch(menuType) {
+                case 'live':
+                    showLiveTvPage();
+                    break;
+                case 'cinema':
+                case 'series':
+                case 'movies_kids':
+                case 'series_kids':
+                    showCategoryPage(menuType);
+                    break;
+            }
+        });
+        
+        // Controle de vídeo
+        const video = card.querySelector('.menu-video');
+        
+        card.addEventListener('mouseenter', () => {
+            video.play();
+            video.style.opacity = '1';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            video.pause();
+            video.currentTime = 0;
+            video.style.opacity = '0';
+        });
+        
+        // Otimizar carregamento
+        card.addEventListener('mouseenter', () => {
+            if (video.readyState < 2) {
+                video.load();
+            }
+        }, { once: true });
+    });
+}
+
 // ===== EVENT LISTENERS =====
 function setupEventListeners() {
+    // Botões voltar
+    elements.backButton.addEventListener('click', showHomePage);
+    elements.liveBackButton.addEventListener('click', showHomePage);
+    elements.detailsBackButton.addEventListener('click', showHomePage);
+    
     // Modal close buttons
     elements.closeModal.addEventListener('click', hideDetailsModal);
     elements.closeTrailerModal.addEventListener('click', hideTrailerModal);
@@ -618,6 +946,9 @@ function setupEventListeners() {
     // Brand cards video controls
     setupBrandVideos();
     
+    // Menu cards
+    setupMenuCards();
+    
     // Details modal buttons
     elements.detailsPlayBtn.addEventListener('click', () => {
         if (currentMovie) {
@@ -628,55 +959,64 @@ function setupEventListeners() {
     
     elements.detailsTrailerBtn.addEventListener('click', () => {
         if (currentMovie) {
-            showTrailerModal(currentMovie.trailer);
+            showTrailerModal(currentMovie);
         }
     });
     
     elements.detailsAddToListBtn.addEventListener('click', () => {
         if (currentMovie) {
-            toggleWatchlist(currentMovie.url);
+            toggleWatchlist(currentMovie);
         }
     });
     
-    // Hero buttons
-    elements.playBtn.addEventListener('click', () => {
-        if (currentMovie) {
-            playMovie(currentMovie);
+    // Keyboard navigation
+    setupKeyboardNavigation();
+    
+    // Histórico do navegador
+    window.addEventListener('popstate', handlePopState);
+}
+
+// Manipular histórico do navegador
+function handlePopState(event) {
+    if (event.state) {
+        switch(event.state.page) {
+            case 'home':
+                showHomePage();
+                break;
+            case 'category':
+                showCategoryPage(event.state.filter);
+                break;
+            case 'live':
+                showLiveTvPage();
+                break;
+            case 'details':
+                // Encontrar filme pelo ID
+                loadMovies().then(movies => {
+                    const movie = movies.find(m => m.titulo === event.state.movieId);
+                    if (movie) showDetailsPage(movie);
+                });
+                break;
         }
-    });
-    
-    elements.infoBtn.addEventListener('click', () => {
-        if (currentMovie) {
-            showMovieDetails(currentMovie);
+    } else {
+        showHomePage();
+    }
+}
+
+// ===== KEYBOARD NAVIGATION =====
+function setupKeyboardNavigation() {
+    document.addEventListener('keydown', (e) => {
+        // Voltar com ESC
+        if (e.key === 'Escape') {
+            if (elements.playerOverlay.classList.contains('active')) {
+                hidePlayer();
+            } else if (elements.trailerModal.classList.contains('active')) {
+                hideTrailerModal();
+            } else if (elements.detailsModal.classList.contains('active')) {
+                hideDetailsModal();
+            } else if (currentPage !== 'home') {
+                showHomePage();
+            }
         }
-    });
-    
-    // Brand buttons
-    elements.brandBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remover classe active de todos
-            elements.brandBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            // Atualizar marca atual e recarregar
-            currentBrand = btn.dataset.brand;
-            loadMovies();
-        });
-    });
-    
-    // Navigation
-    elements.navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // Remover classe active de todos
-            elements.navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            
-            // Aqui você pode implementar navegação entre seções
-            const section = link.dataset.section;
-            console.log('Navegando para:', section);
-        });
     });
 }
 

@@ -105,61 +105,66 @@
             </div>
         </section>
 
-        <!-- Brands Section -->
-        <section class="brands-section">
-            <div class="brands-container">
-                <div class="brand-card" data-brand="disney">
-                    <!-- Camada 1: Fundo -->
-                    <div class="brand-background"></div>
-                    
-                    <!-- Camada 2: Vídeo -->
-                    <video class="brand-video" preload="none" muted loop playsinline>
+        <!-- Menu Cards Section -->
+        <section class="menu-cards-section">
+            <div class="menu-cards-container">
+                <!-- Cinema -->
+                <div class="menu-card" data-menu="cinema">
+                    <div class="menu-background"></div>
+                    <video class="menu-video" preload="none" muted loop playsinline>
                         <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/disney-bg.mp4" type="video/mp4">
                     </video>
-                    
-                    <!-- Camada 3: Logo -->
-                    <div class="brand-logo">
-                        <img src="https://static-assets.bamgrid.com/product/disneyplus/images/disney.png" alt="Disney">
+                    <div class="menu-content">
+                        <div class="menu-icon">🎬</div>
+                        <span class="menu-title">Cinema</span>
                     </div>
                 </div>
                 
-                <div class="brand-card" data-brand="pixar">
-                    <div class="brand-background"></div>
-                    <video class="brand-video" preload="none" muted loop playsinline>
-                        <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/pixar-bg.mp4" type="video/mp4">
-                    </video>
-                    <div class="brand-logo">
-                        <img src="https://static-assets.bamgrid.com/product/disneyplus/images/pixar.png" alt="Pixar">
-                    </div>
-                </div>
-                
-                <div class="brand-card" data-brand="marvel">
-                    <div class="brand-background"></div>
-                    <video class="brand-video" preload="none" muted loop playsinline>
+                <!-- Séries -->
+                <div class="menu-card" data-menu="series">
+                    <div class="menu-background"></div>
+                    <video class="menu-video" preload="none" muted loop playsinline>
                         <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/marvel-bg.mp4" type="video/mp4">
                     </video>
-                    <div class="brand-logo">
-                        <img src="https://static-assets.bamgrid.com/product/disneyplus/images/marvel.png" alt="Marvel">
+                    <div class="menu-content">
+                        <div class="menu-icon">📺</div>
+                        <span class="menu-title">Séries</span>
                     </div>
                 </div>
                 
-                <div class="brand-card" data-brand="starwars">
-                    <div class="brand-background"></div>
-                    <video class="brand-video" preload="none" muted loop playsinline>
+                <!-- Canais ao Vivo -->
+                <div class="menu-card" data-menu="live">
+                    <div class="menu-background"></div>
+                    <video class="menu-video" preload="none" muted loop playsinline>
                         <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/starwars-bg.mp4" type="video/mp4">
                     </video>
-                    <div class="brand-logo">
-                        <img src="https://static-assets.bamgrid.com/product/disneyplus/images/starwars.png" alt="Star Wars">
+                    <div class="menu-content">
+                        <div class="menu-icon">📡</div>
+                        <span class="menu-title">Canais ao Vivo</span>
                     </div>
                 </div>
                 
-                <div class="brand-card" data-brand="national">
-                    <div class="brand-background"></div>
-                    <video class="brand-video" preload="none" muted loop playsinline>
+                <!-- Filmes Kids -->
+                <div class="menu-card kids-card" data-menu="movies_kids">
+                    <div class="menu-background"></div>
+                    <video class="menu-video" preload="none" muted loop playsinline>
+                        <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/pixar-bg.mp4" type="video/mp4">
+                    </video>
+                    <div class="menu-content">
+                        <div class="menu-icon">🧸</div>
+                        <span class="menu-title">Filmes Kids</span>
+                    </div>
+                </div>
+                
+                <!-- Séries Kids -->
+                <div class="menu-card kids-card" data-menu="series_kids">
+                    <div class="menu-background"></div>
+                    <video class="menu-video" preload="none" muted loop playsinline>
                         <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/national-bg.mp4" type="video/mp4">
                     </video>
-                    <div class="brand-logo">
-                        <img src="https://static-assets.bamgrid.com/product/disneyplus/images/national.png" alt="National Geographic">
+                    <div class="menu-content">
+                        <div class="menu-icon">🎈</div>
+                        <span class="menu-title">Séries Kids</span>
                     </div>
                 </div>
             </div>
@@ -169,6 +174,78 @@
         <section class="content-section">
             <div class="content-rows" id="contentRows">
                 <!-- As fileiras serão geradas dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Página de Categoria (Filmes/Séries) -->
+        <section class="category-page" id="categoryPage" style="display: none;">
+            <button class="back-button" id="backButton">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                VOLTAR
+            </button>
+            <div class="category-header">
+                <h1 class="category-title" id="categoryTitle">Categoria</h1>
+            </div>
+            <div class="category-grid" id="categoryGrid">
+                <!-- Grid de filmes/séries será gerado dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Página de Canais ao Vivo -->
+        <section class="live-tv-page" id="liveTvPage" style="display: none;">
+            <button class="back-button" id="liveBackButton">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                VOLTAR
+            </button>
+            <div class="live-tv-container">
+                <div class="channels-list" id="channelsList">
+                    <!-- Lista de canais será gerada dinamicamente -->
+                </div>
+                <div class="live-player-container">
+                    <div id="livePlayer"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página de Detalhes -->
+        <section class="details-page" id="detailsPage" style="display: none;">
+            <button class="back-button" id="detailsBackButton">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                VOLTAR
+            </button>
+            <div class="details-container">
+                <div class="details-poster">
+                    <img id="detailsPagePoster" src="" alt="">
+                </div>
+                <div class="details-info">
+                    <h1 id="detailsPageTitle"></h1>
+                    <div class="details-meta">
+                        <span id="detailsPageYear"></span>
+                        <span id="detailsPageRating"></span>
+                        <span id="detailsPageGenre"></span>
+                    </div>
+                    <p id="detailsPageDescription"></p>
+                    <div class="details-actions">
+                        <button class="hero-btn-primary" id="detailsPagePlayBtn">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            ASSISTIR
+                        </button>
+                        <button class="hero-btn-secondary" id="detailsPageTrailerBtn">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10 16.5l6-4.5-6-4.5v9zM12 3C6.48 3 2 7.47 2 13s4.48 10 10 10 10-4.48 10-10S17.52 3 12 3zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8z"/>
+                            </svg>
+                            TRAILER
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
