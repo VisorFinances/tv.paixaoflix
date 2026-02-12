@@ -1,8 +1,8 @@
 // ===== SERVICE WORKER PAIXÃOFLIX DISNEY+ =====
 // Versão otimizada para interface Disney+ Premium
 
-const CACHE_NAME = 'paixaoflix-disney-v1';
-const STATIC_CACHE = 'paixaoflix-static-v1';
+const CACHE_NAME = 'paixaoflix-disney-v2';
+const STATIC_CACHE = 'paixaoflix-static-v2';
 
 // Arquivos essenciais para cache
 const STATIC_ASSETS = [
@@ -17,7 +17,10 @@ const STATIC_ASSETS = [
 
 // Instalação do Service Worker
 self.addEventListener('install', (event) => {
-    console.log('🚀 Service Worker PaixãoFlix Disney+ instalado!');
+    console.log('🚀 Service Worker PaixãoFlix Disney+ V2 instalado!');
+    
+    // Forçar ativação imediata
+    self.skipWaiting();
     
     event.waitUntil(
         caches.open(STATIC_CACHE)
@@ -33,7 +36,10 @@ self.addEventListener('install', (event) => {
 
 // Ativação do Service Worker
 self.addEventListener('activate', (event) => {
-    console.log('✅ Service Worker PaixãoFlix Disney+ ativado!');
+    console.log('✅ Service Worker PaixãoFlix Disney+ V2 ativado!');
+    
+    // Forçar controle de todos os clientes
+    self.clients.claim();
     
     event.waitUntil(
         caches.keys()
@@ -51,6 +57,13 @@ self.addEventListener('activate', (event) => {
     );
 });
 
+// Mensagens do cliente
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
+
 // Estratégia de Cache: Cache First para arquivos estáticos
 self.addEventListener('fetch', (event) => {
     const { request } = event;
@@ -58,12 +71,18 @@ self.addEventListener('fetch', (event) => {
     
     // Ignorar requisições não-GET
     if (request.method !== 'GET') {
-        console.log('📤 SW: Ignorando método não-GET:', request.method, request.url);
         return;
     }
     
     // Ignorar requisições para outros domínios (exceto fonts)
     if (url.origin !== self.location.origin && !url.hostname.includes('fonts.googleapis.com')) {
+        return;
+    }
+    
+    // Bloquear requisições para sistema antigo
+    if (url.hostname.includes('paixaoflix-mobile') || 
+        url.pathname.includes('paixaoflix-mobile')) {
+        console.log('🚫 SW: Bloqueando requisição antiga:', request.url);
         return;
     }
     
@@ -173,4 +192,4 @@ async function cleanupCache() {
     }
 }
 
-console.log('🎬 Service Worker PaixãoFlix Disney+ carregado!');
+console.log('🎬 Service Worker PaixãoFlix Disney+ V2 carregado!');

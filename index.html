@@ -14,13 +14,36 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
+                // Limpar Service Workers antigos
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                    registrations.forEach((registration) => {
+                        if (registration.scope.includes('tv.paixaoflix.vip') || 
+                            !registration.scope.includes('/tv.paixaoflix/')) {
+                            console.log('🗑️ Removendo SW antigo:', registration.scope);
+                            registration.unregister();
+                        }
+                    });
+                });
+                
+                // Registrar novo Service Worker
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
-                        console.log('✅ Service Worker registrado:', registration.scope);
+                        console.log('✅ Service Worker Disney+ registrado:', registration.scope);
+                        
+                        // Forçar atualização
+                        if (registration.active) {
+                            registration.active.postMessage({ type: 'SKIP_WAITING' });
+                        }
                     })
                     .catch((error) => {
                         console.error('❌ Erro ao registrar Service Worker:', error);
                     });
+            });
+            
+            // Escutar atualizações do SW
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('🔄 Service Worker atualizado, recarregando página...');
+                window.location.reload();
             });
         }
     </script>
