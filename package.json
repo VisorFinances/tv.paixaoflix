@@ -1,0 +1,37 @@
+{
+  "name": "paixaoflix",
+  "version": "2.0.0",
+  "description": "PaixãoFlix - Streaming Platform Disney+ Style",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Build completed'",
+    "deploy": "echo 'Deploy to GitHub Pages'"
+  },
+  "keywords": [
+    "streaming",
+    "video",
+    "disney",
+    "netflix",
+    "clappr",
+    "hls",
+    "dash"
+  ],
+  "author": "PaixãoFlix Team",
+  "license": "MIT",
+  "dependencies": {
+    "@clappr/player": "^0.11.16",
+    "dashjs": "^4.7.2",
+    "hls.js": "^1.4.12",
+    "shaka-player": "^4.7.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

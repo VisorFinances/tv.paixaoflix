@@ -548,7 +548,8 @@ function playMovie(movie, startTime = null) {
         startTime = movieContinueData ? movieContinueData.currentTime : 0;
     }
     
-    playerInstance = new Clappr.Player({
+    // Configurar player com HLS.js para streaming
+    const playerConfig = {
         parentId: '#videoPlayer',
         source: movie.url,
         width: '100%',
@@ -556,25 +557,76 @@ function playMovie(movie, startTime = null) {
         autoPlay: true,
         preload: 'metadata',
         startTime: startTime,
+        
+        // Configurações de HLS
         hlsjsConfig: {
             enableWorker: true,
             lowLatencyMode: true,
+            maxBufferLength: 30,
+            maxMaxBufferLength: 600,
+            maxBufferSize: 60 * 1000 * 1000,
+            maxBufferHole: 0.5
+        },
+        
+        // Plugins
+        plugins: [HlsJsPlayback],
+        
+        // Controles
+        controls: true,
+        disableKeyboardShortcuts: false,
+        
+        // Qualidade
+        playback: {
+            controls: true,
+            playInline: true,
+            recycleVideo: true
+        },
+        
+        // Eventos
+        events: {
+            onReady: function() {
+                console.log('🎬 Player Clappr pronto');
+            },
+            onPlay: function() {
+                console.log('▶️ Reprodução iniciada');
+            },
+            onPause: function() {
+                console.log('⏸️ Reprodução pausada');
+            },
+            onEnded: function() {
+                console.log('🏁 Reprodução finalizada');
+                onPlayerEnded();
+            },
+            onError: function(e) {
+                console.error('❌ Erro no player:', e);
+            }
         }
-    });
+    };
     
+    // Criar instância do player
+    playerInstance = new Clappr.Player(playerConfig);
+    
+    // Configurar eventos personalizados
     playerInstance.on(Clappr.Events.PLAYER_TIMEUPDATE, onTimeUpdate);
     playerInstance.on(Clappr.Events.PLAYER_ENDED, onPlayerEnded);
     
+    // Salvar progresso periodicamente
     const progressInterval = setInterval(() => {
         updateContinueWatchingProgress();
     }, 5000);
     
+    // Limpar interval quando player for destruído
     playerInstance.on(Clappr.Events.PLAYER_DESTROY, () => {
         clearInterval(progressInterval);
     });
     
+    // Mostrar player
     elements.playerOverlay.classList.add('active');
+    
+    // Salvar estado inicial
     saveContinueWatching(movie.titulo, startTime || 0, 0);
+    
+    console.log('🎬 Player Clappr iniciado para:', movie.titulo);
 }
 
 function updateContinueWatchingProgress() {
