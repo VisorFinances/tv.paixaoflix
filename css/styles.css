@@ -1114,7 +1114,8 @@ body {
 
 .card-movie {
     flex: 0 0 auto;
-    width: 200px;
+    width: 300px;
+    height: 450px;
     aspect-ratio: 2/3;
     border-radius: var(--border-radius-md);
     overflow: hidden;
@@ -1887,6 +1888,11 @@ body {
     .brands-container {
         padding: 0 var(--spacing-md);
     }
+    
+    .card-movie {
+        width: 250px;
+        height: 375px; /* Mantém 2:3 */
+    }
 }
 
 @media (max-width: 480px) {
@@ -1900,6 +1906,11 @@ body {
     
     .btn {
         width: 100%;
+    }
+    
+    .card-movie {
+        width: 200px;
+        height: 300px; /* Mantém 2:3 */
     }
 }
 
