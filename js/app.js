@@ -6,6 +6,70 @@ let watchlist = [];
 let continueWatching = [];
 let currentPage = 'home'; // home, category, live, details
 let currentFilter = null;
+let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+// ===== CONTINUE WATCHING SYSTEM =====
+function saveContinueWatching(movieId, currentTime, duration) {
+    const continueWatchingData = JSON.parse(localStorage.getItem('continueWatching')) || {};
+    
+    continueWatchingData[movieId] = {
+        movieId: movieId,
+        currentTime: currentTime,
+        duration: duration,
+        lastWatched: new Date().toISOString(),
+        progress: (currentTime / duration) * 100
+    };
+    
+    localStorage.setItem('continueWatching', JSON.stringify(continueWatchingData));
+}
+
+function getContinueWatching() {
+    const data = JSON.parse(localStorage.getItem('continueWatching')) || {};
+    return Object.values(data)
+        .sort((a, b) => new Date(b.lastWatched) - new Date(a.lastWatched))
+        .slice(0, 3);
+}
+
+function removeFromContinueWatching(movieId) {
+    const data = JSON.parse(localStorage.getItem('continueWatching')) || {};
+    delete data[movieId];
+    localStorage.setItem('continueWatching', JSON.stringify(data));
+}
+
+// ===== FAVORITES SYSTEM =====
+function toggleFavorite(movieId) {
+    const index = favorites.indexOf(movieId);
+    
+    if (index > -1) {
+        favorites.splice(index, 1);
+    } else {
+        favorites.push(movieId);
+    }
+    
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    updateFavoriteButtons();
+    return index === -1; // true se adicionou, false se removeu
+}
+
+function isFavorite(movieId) {
+    return favorites.includes(movieId);
+}
+
+function updateFavoriteButtons() {
+    // Atualizar botão na página de detalhes
+    const favBtn = document.getElementById('detailsPageFavoriteBtn');
+    if (favBtn && currentMovie) {
+        const isFav = isFavorite(currentMovie.titulo);
+        favBtn.innerHTML = isFav 
+            ? '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> NA MINHA LISTA'
+            : '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> ADICIONAR';
+        favBtn.classList.toggle('active', isFav);
+    }
+}
+
+function getFavorites() {
+    return favorites;
+}
 
 // ===== ELEMENTOS DOM =====
 const elements = {
@@ -88,20 +152,25 @@ const elements = {
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
+    initialize();
 });
 
-async function initializeApp() {
-    try {
-        await loadWatchlist();
-        await loadContinueWatching();
-        await loadMovies();
-        setupEventListeners();
-        setupKeyboardNavigation();
-        updateHeroBanner();
-    } catch (error) {
-        console.error('Erro ao inicializar aplicação:', error);
-    }
+async function initialize() {
+    console.log(' Inicializando PaixãoFlix Disney+ V2...');
+    
+    // Carregar seções da home
+    renderHomeSections();
+    
+    // Atualizar hero banner
+    updateHeroBanner();
+    
+    // Configurar event listeners
+    setupEventListeners();
+    
+    // Carregar favoritos
+    favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    
+    console.log(' PaixãoFlix inicializado com sucesso!');
 }
 
 // ===== CARREGAMENTO DE DADOS =====
@@ -258,6 +327,130 @@ function groupMoviesByCategory(movies) {
     return categories;
 }
 
+// ===== HOME SECTIONS =====
+async function renderHomeSections() {
+    try {
+        const movies = await loadMovies();
+        const continueWatchingData = getContinueWatching();
+        const favoritesList = getFavorites();
+        
+        let html = '';
+        
+        // 1. Continuar Assistindo
+        if (continueWatchingData.length > 0) {
+            html += createSection('Continuar Assistindo', continueWatchingData, 'continue-watching');
+        }
+        
+        // 2. Minha Lista
+        if (favoritesList.length > 0) {
+            const favoriteMovies = movies.filter(movie => favoritesList.includes(movie.titulo));
+            if (favoriteMovies.length > 0) {
+                html += createSection('Minha Lista', favoriteMovies, 'favorites');
+            }
+        }
+        
+        // 3. Sábado a noite merece (Ação/Comédia)
+        const sabadoNoite = movies.filter(movie => 
+            movie.genero.includes('Ação') || movie.genero.includes('Comédia')
+        ).slice(0, 8);
+        if (sabadoNoite.length > 0) {
+            html += createSection('Sábado a noite merece', sabadoNoite, 'sabado-noite');
+        }
+        
+        // 4. As crianças amam (Animação/Kids)
+        const criancasAmam = movies.filter(movie => 
+            movie.genero.includes('Animação') || movie.genero.includes('Kids')
+        ).slice(0, 8);
+        if (criancasAmam.length > 0) {
+            html += createSection('As crianças amam', criancasAmam, 'kids');
+        }
+        
+        // 5. Romances para inspirações
+        const romances = movies.filter(movie => 
+            movie.genero.includes('Romance')
+        ).slice(0, 8);
+        if (romances.length > 0) {
+            html += createSection('Histórias que aceleram o coração: sinta a paixão em cada cena.', romances, 'romances');
+        }
+        
+        // 6. Nostalgias que aquecem o coração (antes de 2010)
+        const nostalgias = movies.filter(movie => 
+            parseInt(movie.year) < 2010
+        ).slice(0, 8);
+        if (nostalgias.length > 0) {
+            html += createSection('Nostalgias que aquecem o coração', nostalgias, 'nostalgias', true);
+        }
+        
+        // 7. Os melhores de 2025
+        const melhores2025 = movies.filter(movie => 
+            movie.year === '2025'
+        ).slice(0, 8);
+        if (melhores2025.length > 0) {
+            html += createSection('Os melhores de 2025', melhores2025, 'melhores-2025');
+        }
+        
+        // 8. Prepare a pipoca (Séries)
+        const series = movies.filter(movie => movie.type === 'series').slice(0, 8);
+        if (series.length > 0) {
+            html += createSection('Prepare a pipoca e venha maratonar', series, 'series');
+        }
+        
+        // 9. Novela é sempre bom
+        const novelas = movies.filter(movie => 
+            movie.genero.includes('Novela')
+        ).slice(0, 8);
+        if (novelas.length > 0) {
+            html += createSection('Novela é sempre bom', novelas, 'novelas');
+        }
+        
+        elements.contentRows.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Erro ao renderizar seções:', error);
+        elements.contentRows.innerHTML = '<p>Erro ao carregar conteúdo.</p>';
+    }
+}
+
+function createSection(title, movies, sectionId, isNostalgia = false) {
+    const nostalgiaClass = isNostalgia ? 'nostalgia-card' : '';
+    
+    let moviesHtml = movies.map(movie => {
+        const progressData = getContinueWatching().find(item => item.movieId === movie.titulo);
+        const progressBar = progressData ? 
+            `<div class="continue-watching-progress" style="width: ${progressData.progress}%"></div>` : '';
+        
+        const cardClass = isNostalgia ? 'card-movie nostalgia-card' : 'card-movie';
+        
+        return `
+            <div class="${cardClass}" tabindex="0" onclick="showDetailsPage(${JSON.stringify(movie).replace(/"/g, '&quot;')})">
+                <img class="card-poster" src="${movie.poster}" alt="${movie.titulo}">
+                ${progressBar}
+                <div class="card-info">
+                    <h3 class="card-title">${movie.titulo}</h3>
+                    <div class="card-meta">
+                        <span class="card-year">${movie.year}</span>
+                        <span class="card-rating">⭐ ${movie.rating}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    return `
+        <div class="content-row" id="${sectionId}">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">${title}</h2>
+                    ${sectionId === 'romances' ? '<p class="section-subtitle">sinta a paixão em cada cena</p>' : ''}
+                </div>
+            </div>
+            <div class="row-content">
+                ${moviesHtml}
+            </div>
+        </div>
+    `;
+}
+
 // ===== HERO BANNER =====
 function updateHeroBanner() {
     loadMovies().then(movies => {
@@ -395,12 +588,19 @@ function convertToEmbedUrl(url) {
 }
 
 // ===== PLAYER =====
-function playMovie(movie) {
+function playMovie(movie, startTime = null) {
     currentMovie = movie;
     
     // Destruir player anterior se existir
     if (playerInstance) {
         playerInstance.destroy();
+    }
+    
+    // Obter tempo de continuação se não especificado
+    if (startTime === null) {
+        const continueData = JSON.parse(localStorage.getItem('continueWatching')) || {};
+        const movieContinueData = continueData[movie.titulo];
+        startTime = movieContinueData ? movieContinueData.currentTime : 0;
     }
     
     // Criar novo player
@@ -411,6 +611,7 @@ function playMovie(movie) {
         height: '100%',
         autoPlay: true,
         preload: 'metadata',
+        startTime: startTime,
         hlsjsConfig: {
             enableWorker: true,
             lowLatencyMode: true,
@@ -421,11 +622,20 @@ function playMovie(movie) {
     playerInstance.on(Clappr.Events.PLAYER_TIMEUPDATE, onTimeUpdate);
     playerInstance.on(Clappr.Events.PLAYER_ENDED, onPlayerEnded);
     
+    // Salvar progresso a cada 5 segundos
+    const progressInterval = setInterval(() => {
+        updateContinueWatchingProgress();
+    }, 5000);
+    
+    playerInstance.on(Clappr.Events.PLAYER_DESTROY, () => {
+        clearInterval(progressInterval);
+    });
+    
     // Mostrar player
     elements.playerOverlay.classList.add('active');
     
     // Salvar em "Continue Assistindo"
-    addToContinueWatching(movie);
+    saveContinueWatching(movie.titulo, startTime || 0, 0);
 }
 
 function hidePlayer() {
@@ -447,13 +657,24 @@ function onTimeUpdate(progress) {
 }
 
 function onPlayerEnded() {
-    // Auto-play do próximo episódio/filme (se houver)
+    if (currentMovie) {
+        // Remover da lista de continue watching quando terminar
+        removeFromContinueWatching(currentMovie.titulo);
+        
+        // Adicionar aos filmes assistidos
+        const watchedMovies = JSON.parse(localStorage.getItem('watchedMovies')) || [];
+        if (!watchedMovies.includes(currentMovie.titulo)) {
+            watchedMovies.push(currentMovie.titulo);
+            localStorage.setItem('watchedMovies', JSON.stringify(watchedMovies));
+        }
+    }
     // Por enquanto, apenas fecha o player
     setTimeout(() => {
         hidePlayer();
     }, 3000);
 }
 
+// ... (rest of the code remains the same)
 // ===== WATCHLIST E CONTINUE WATCHING =====
 function toggleWatchlist(url) {
     const index = watchlist.indexOf(url);
@@ -647,6 +868,9 @@ function showHomePage() {
     document.querySelector('.hero-banner').parentElement.style.display = 'block';
     document.querySelector('.menu-cards-section').style.display = 'block';
     document.querySelector('.content-section').style.display = 'block';
+    
+    // Renderizar seções organizadas
+    renderHomeSections();
     
     // Atualizar histórico do navegador
     history.pushState({ page: 'home' }, '', '/');
@@ -857,8 +1081,26 @@ function showDetailsPage(movie) {
     elements.detailsPageDescription.textContent = movie.desc;
     
     // Configurar botões
-    elements.detailsPagePlayBtn.onclick = () => playMovie(movie);
+    elements.detailsPagePlayBtn.onclick = () => {
+        const continueData = JSON.parse(localStorage.getItem('continueWatching')) || {};
+        const movieContinueData = continueData[movie.titulo];
+        const startTime = movieContinueData ? movieContinueData.currentTime : 0;
+        playMovie(movie, startTime);
+    };
+    
     elements.detailsPageTrailerBtn.onclick = () => showTrailerModal(movie);
+    
+    // Configurar botão de favoritos
+    const favBtn = document.getElementById('detailsPageFavoriteBtn');
+    if (favBtn) {
+        favBtn.onclick = () => {
+            toggleFavorite(movie.titulo);
+            updateFavoriteButtons();
+        };
+    }
+    
+    // Atualizar estado do botão de favoritos
+    updateFavoriteButtons();
     
     // Mostrar página
     elements.detailsPage.style.display = 'block';
