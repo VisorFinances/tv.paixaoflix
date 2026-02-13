@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: http://tv.paixaoflix.vip/sitemap.xml
-
-# Bloquear acesso a arquivos de sistema
-Disallow: /.git/
-Disallow: /node_modules/
-Disallow: /.env
