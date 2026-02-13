@@ -1,67 +1,331 @@
-[
+{
+  "filmes": [
     {
-        "titulo": "Uma Vida de Insecto",
-        "logo_titulo": "https://media.themoviedb.org/t/p/w500_and_h282_face/dKTJe3KGA2BHdHl9USjjCWZ3U5a.jpg",
-        "tmdb_id": "9487",
-        "url": "https://ia800606.us.archive.org/11/items/paixaoflix_a_bugs_life-pronto/A%20Bugs%20Life_Paix%C3%A3oFlix.mp4",
-        "trailer": "https://youtu.be/mE35XQFxbeo",
-        "genero": ["Animação"],
-        "year": "1998",
-        "rating": "7.0",
-        "desc": "Félix é uma formiga operária que acaba por estragar a oferta de comida para um bando de gafanhotos gângsteres, que pedem agora o dobro de comida até ao outono. Félix decide ir à grande cidade procurar guerreiros que os ajudem a lutar contra os gafanhotos, mas acaba por encontrar um grupo de artistas de circo desastrados.",
-        "poster": "https://media.themoviedb.org/t/p/w300_and_h450_face/dKTJe3KGA2BHdHl9USjjCWZ3U5a.jpg",
-        "backdrop": "https://media.themoviedb.org/t/p/w1920_and_h1080_face/7BXMJvU2p0A2N2l9e2dJ1q1sK9.jpg",
-        "type": "movie"
+      "id": 1,
+      "titulo": "Vingadores: Ultimato",
+      "descricao": "Os Vingadores se reúnem pela última vez para derrotar Thanos e salvar o universo.",
+      "poster": "https://image.tmdb.org/t/p/w500/or06FN3Dka5rukK48wMXKsQot9.jpg",
+      "ano": 2019,
+      "genero": "Ação, Aventura, Ficção",
+      "duracao": "3h 1min",
+      "classificacao": "12",
+      "avaliacao": "8.4",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/TcMBFSGVi1c",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
-        "titulo": "Percy Jackson e o Mar de Monstros",
-        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/izLw6mf5coAJZV6n9wDfbYWXXHW.jpg",
-        "url": "https://ia600301.us.archive.org/28/items/percy-jackson-e-o-mar-de-monstros-paixaoflix/CONV_Percy%20Jackson%20e%20o%20Mar%20de%20Monstros.mp4",
-        "genero": "Aventura",
-        "year": "2013",
-        "rating": "6.0",
-        "desc": "Percy e seus amigos estão na busca pelo Velocino de Ouro, o único artefato mágico capaz de proteger o Acampamento Meio-Sangue da destruição. É com essa missão que ele e outros campistas partem para uma eletrizante viagem pelo Mar de Monstros, onde deparam com seres fantásticos, perigos e situações inusitadas, que põem à prova seu heroísmo e sua herança.",
-        "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/izLw6mf5coAJZV6n9wDfbYWXXHW.jpg",
-        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/4bHw3XvFz8xkWb9vLg6IjJ9d2.jpg",
-        "type": "movie"
+      "id": 2,
+      "titulo": "O Rei Leão",
+      "descricao": "Um jovem leão chamado Simba foge de seu reino após a tragédia que matou seu pai.",
+      "poster": "https://image.tmdb.org/t/p/w500/5A2bMl9J0AJMIs46Xzkuj5R2jsB.jpg",
+      "ano": 2019,
+      "genero": "Animação, Aventura, Drama, Família",
+      "duracao": "1h 58min",
+      "classificacao": "Livre",
+      "avaliacao": "7.0",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/7TavVZMewpY",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
     },
     {
-        "titulo": "Vingadores: Ultimato",
-        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-        "tmdb_id": "299536",
-        "url": "https://example.com/vingadores-ultimato.mp4",
-        "genero": ["Ação", "Aventura", "Ficção"],
-        "year": "2019",
-        "rating": "8.4",
-        "desc": "Após os eventos devastadores de Vingadores: Guerra Infinita, o universo está em ruínas. Com a ajuda de aliados restantes, os Vingadores devem se reunir mais uma vez para tentar reverter as ações de Thanos e restaurar o equilíbrio do universo, não importa o quão devastadoras sejam as consequências.",
-        "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/7RyHsO4yDXtRvE3Mndg2TWL2V.jpg",
-        "type": "movie"
+      "id": 3,
+      "titulo": "Coringa",
+      "descricao": "Um comediante falhado em Gotham City se transforma no Coringa.",
+      "poster": "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteCaCU.jpg",
+      "ano": 2019,
+      "genero": "Drama, Crime, Suspense",
+      "duracao": "2h 2min",
+      "classificacao": "16",
+      "avaliacao": "8.5",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/zAGVQLHvwOY",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
     },
     {
-        "titulo": "O Rei Leão",
-        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/sKFlSR0VWTGmvTViE5W7YwNJM9.jpg",
-        "tmdb_id": "8587",
-        "url": "https://example.com/rei-leao.mp4",
-        "genero": ["Animação", "Drama", "Família"],
-        "year": "1994",
-        "rating": "8.5",
-        "desc": "Um jovem leão príncipe foge de seu reino após o assassinato de seu pai. A culpa de sua morte o assombra por anos e o leva a abandonar seu passado. No entanto, quando a situação em seu antigo reino se agrava, ele precisa decidir se vai enfrentar seu passado para assumir seu lugar como rei.",
-        "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/sKFlSR0VWTGmvTViE5W7YwNJM9.jpg",
-        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/1h0zZLJ1E9pJ2Z8Y3qL4d5W6k.jpg",
-        "type": "movie"
+      "id": 4,
+      "titulo": "Frozen 2",
+      "descricao": "Elsa e Anna embarcam em uma jornada perigosa para descobrir a origem dos poderes de Elsa.",
+      "poster": "https://image.tmdb.org/t/p/w500/pjeMs3yqRmFL3piJ2FpGKYRQcX2.jpg",
+      "ano": 2019,
+      "genero": "Animação, Aventura, Musical, Família",
+      "duracao": "1h 43min",
+      "classificacao": "Livre",
+      "avaliacao": "7.2",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/bwzLiQZDw2I",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
     },
     {
-        "titulo": "Matrix",
-        "logo_titulo": "https://image.tmdb.org/t/p/w500_and_h282_face/f89U3ADr1Oi3Q9LmY7GTZs3BjYM.jpg",
-        "tmdb_id": "603",
-        "url": "https://example.com/matrix.mp4",
-        "genero": ["Ação", "Ficção"],
-        "year": "1999",
-        "rating": "8.7",
-        "desc": "Um hacker de computador aprende sobre a verdadeira natureza de sua realidade e seu papel na guerra contra seus controladores. Neo descobre que a vida que conhece é uma elaborada simulação criada por máquinas inteligentes para controlar a humanidade.",
-        "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/f89U3ADr1Oi3Q9LmY7GTZs3BjYM.jpg",
-        "backdrop": "https://image.tmdb.org/t/p/w1920_and_h1080_face/fi8W2imgn2wFw4pBcT91uBj5q.jpg",
-        "type": "movie"
+      "id": 5,
+      "titulo": "Homem-Aranha: Longe de Casa",
+      "descricao": "Peter Parker vai para a Europa e enfrenta novos vilões.",
+      "poster": "https://image.tmdb.org/t/p/w500/4q2NN2T8qVvR3Y2bnTGLAqAK0TV.jpg",
+      "ano": 2019,
+      "genero": "Ação, Aventura, Ficção",
+      "duracao": "2h 9min",
+      "classificacao": "10",
+      "avaliacao": "7.9",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/Nt9L1jCKGnE",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+    },
+    {
+      "id": 6,
+      "titulo": "It: A Coisa",
+      "descricao": "Um grupo de crianças enfrenta um palhaço demoníaco que assoma sua cidade.",
+      "poster": "https://image.tmdb.org/t/p/w500/7FjuGFOKvQZc1o4gk5k3rVZcYfN.jpg",
+      "ano": 2017,
+      "genero": "Terror, Suspense",
+      "duracao": "2h 15min",
+      "classificacao": "16",
+      "avaliacao": "7.3",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/xKJmEC5ieOk",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 7,
+      "titulo": "Matrix",
+      "descricao": "Um hacker descobre que sua realidade é uma simulação criada por máquinas.",
+      "poster": "https://image.tmdb.org/t/p/w500/f89U3ADr1Oi5Q6TgE9ATJnE5f.jpg",
+      "ano": 1999,
+      "genero": "Ficção, Ação, Suspense, Clássicos",
+      "duracao": "2h 16min",
+      "classificacao": "14",
+      "avaliacao": "8.7",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/vKQi3bG5k9Y",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 8,
+      "titulo": "O Senhor dos Anéis",
+      "descricao": "Uma jornada épica para destruir um anel poderoso.",
+      "poster": "https://image.tmdb.org/t/p/w500/5vtXlEgu9Jl8d0n.jpg",
+      "ano": 2001,
+      "genero": "Aventura, Fantasia, Drama, Clássicos",
+      "duracao": "2h 58min",
+      "classificacao": "12",
+      "avaliacao": "8.9",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/5p1kL9cEjg",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 9,
+      "titulo": "Interestelar",
+      "descricao": "Exploradores viajam através de um buraco de minhoca para salvar a humanidade.",
+      "poster": "https://image.tmdb.org/t/p/w500/gKy2F8LJN9D8iJxL.jpg",
+      "ano": 2014,
+      "genero": "Ficção, Aventura, Drama",
+      "duracao": "2h 49min",
+      "classificacao": "12",
+      "avaliacao": "8.6",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/80S9AfaN4JQ",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 10,
+      "titulo": "Pulp Fiction",
+      "descricao": "Histórias interligadas de criminosos em Los Angeles.",
+      "poster": "https://image.tmdb.org/t/p/w500/5p1kL9cEjg.jpg",
+      "ano": 1994,
+      "genero": "Crime, Drama, Suspense, Clássicos",
+      "duracao": "2h 34min",
+      "classificacao": "16",
+      "avaliacao": "8.9",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/5p1kL9cEjg",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 11,
+      "titulo": "O Poderoso Chefão",
+      "descricao": "A história da família Corleone e seu império criminoso.",
+      "poster": "https://image.tmdb.org/t/p/w500/58nmn2lmpm2Ls8gSjJ.jpg",
+      "ano": 1972,
+      "genero": "Crime, Drama, Clássicos",
+      "duracao": "2h 55min",
+      "classificacao": "16",
+      "avaliacao": "9.2",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/5p1kL9cEjg",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 12,
+      "titulo": "Titanic",
+      "descricao": "Um romance trágico a bordo do navio Titanic.",
+      "poster": "https://image.tmdb.org/t/p/w500/5p1kL9cEjg.jpg",
+      "ano": 1997,
+      "genero": "Romance, Drama, Clássicos",
+      "duracao": "3h 14min",
+      "classificacao": "12",
+      "avaliacao": "7.9",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/5p1kL9cEjg",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 13,
+      "titulo": "Avatar",
+      "descricao": "Um marine em Pandora se envolve com os Na'vi.",
+      "poster": "https://image.tmdb.org/t/p/w500/5p1kL9cEjg.jpg",
+      "ano": 2009,
+      "genero": "Ficção, Aventura, Ação",
+      "duracao": "2h 42min",
+      "classificacao": "12",
+      "avaliacao": "7.8",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/5p1kL9cEjg",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 14,
+      "titulo": "Star Wars",
+      "descricao": "Luke Skywalker se une à Rebelião contra o Império.",
+      "poster": "https://image.tmdb.org/t/p/w500/5p1kL9cEjg.jpg",
+      "ano": 1977,
+      "genero": "Ficção, Aventura, Clássicos",
+      "duracao": "2h 1min",
+      "classificacao": "12",
+      "avaliacao": "8.6",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/5p1kL9cEjg",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+    },
+    {
+      "id": 15,
+      "titulo": "Os Vingadores",
+      "descricao": "Heróis se unem para salvar o mundo.",
+      "poster": "https://image.tmdb.org/t/p/w500/5p1kL9cEjg.jpg",
+      "ano": 2012,
+      "genero": "Ação, Aventura, Ficção",
+      "duracao": "2h 23min",
+      "classificacao": "12",
+      "avaliacao": "8.0",
+      "type": "movie",
+      "trailer": "https://www.youtube.com/embed/5p1kL9cEjg",
+      "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
     }
-]
+  ],
+  "categorias": [
+    {
+      "id": "lancamento-2026",
+      "nome": "Lançamento 2026",
+      "cor": "#e50914"
+    },
+    {
+      "id": "lancamento-2025",
+      "nome": "Lançamento 2025",
+      "cor": "#ff6b35"
+    },
+    {
+      "id": "acao",
+      "nome": "Ação",
+      "cor": "#e50914"
+    },
+    {
+      "id": "aventura",
+      "nome": "Aventura",
+      "cor": "#ff6b35"
+    },
+    {
+      "id": "anime",
+      "nome": "Anime",
+      "cor": "#f7931e"
+    },
+    {
+      "id": "animacao",
+      "nome": "Animação",
+      "cor": "#4a90e2"
+    },
+    {
+      "id": "comedia",
+      "nome": "Comédia",
+      "cor": "#7b68ee"
+    },
+    {
+      "id": "drama",
+      "nome": "Drama",
+      "cor": "#50c878"
+    },
+    {
+      "id": "dorama",
+      "nome": "Dorama",
+      "cor": "#e50914"
+    },
+    {
+      "id": "classicos",
+      "nome": "Clássicos",
+      "cor": "#ff6b35"
+    },
+    {
+      "id": "crime",
+      "nome": "Crime",
+      "cor": "#f7931e"
+    },
+    {
+      "id": "policial",
+      "nome": "Policial",
+      "cor": "#4a90e2"
+    },
+    {
+      "id": "familia",
+      "nome": "Família",
+      "cor": "#7b68ee"
+    },
+    {
+      "id": "musical",
+      "nome": "Musical",
+      "cor": "#50c878"
+    },
+    {
+      "id": "documentario",
+      "nome": "Documentário",
+      "cor": "#e50914"
+    },
+    {
+      "id": "faroeste",
+      "nome": "Faroeste",
+      "cor": "#ff6b35"
+    },
+    {
+      "id": "ficcao",
+      "nome": "Ficção",
+      "cor": "#f7931e"
+    },
+    {
+      "id": "nacional",
+      "nome": "Nacional",
+      "cor": "#4a90e2"
+    },
+    {
+      "id": "religioso",
+      "nome": "Religioso",
+      "cor": "#7b68ee"
+    },
+    {
+      "id": "romance",
+      "nome": "Romance",
+      "cor": "#50c878"
+    },
+    {
+      "id": "terror",
+      "nome": "Terror",
+      "cor": "#e50914"
+    },
+    {
+      "id": "suspense",
+      "nome": "Suspense",
+      "cor": "#f7931e"
+    },
+    {
+      "id": "adulto",
+      "nome": "Adulto",
+      "cor": "#7b68ee"
+    }
+  ]
+}

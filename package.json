@@ -1,37 +1,25 @@
 {
   "name": "paixaoflix",
-  "version": "2.0.0",
-  "description": "PaixãoFlix - Streaming Platform Disney+ Style",
+  "version": "1.0.0",
+  "description": "PaixãoFlix - Plataforma de Streaming Premium",
   "main": "index.html",
+  "homepage": "http://tv.paixaoflix.vip",
   "scripts": {
     "start": "python -m http.server 8000",
     "dev": "python -m http.server 8000",
-    "build": "echo 'Build completed'",
-    "deploy": "echo 'Deploy to GitHub Pages'"
+    "build": "echo 'Build para produção'",
+    "deploy": "echo 'Deploy para tv.paixaoflix.vip'"
   },
   "keywords": [
     "streaming",
-    "video",
-    "disney",
-    "netflix",
-    "clappr",
-    "hls",
-    "dash"
+    "filmes",
+    "series",
+    "tv.paixaoflix.vip"
   ],
-  "author": "PaixãoFlix Team",
+  "author": "PaixãoFlix",
   "license": "MIT",
-  "dependencies": {
-    "@clappr/player": "^0.11.16",
-    "dashjs": "^4.7.2",
-    "hls.js": "^1.4.12",
-    "shaka-player": "^4.7.2"
-  },
-  "devDependencies": {
-    "http-server": "^14.1.1"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paixaoflix/tv.paixaoflix.vip"
+  }
 }

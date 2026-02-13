@@ -3,392 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PaixãoFlix - Streaming Premium</title>
+    <title>PaixãoFlix - Streaming de Filmes e Séries</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
-    <!-- Clappr Player -->
-    <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dashjs@latest/dist/dash.all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/shaka-player@latest/dist/shaka-player.ui.js"></script>
+    <!-- Meta tags para SEO e redes sociais -->
+    <meta name="description" content="PaixãoFlix - Os melhores filmes e séries em streaming">
+    <meta property="og:title" content="PaixãoFlix - Streaming Premium">
+    <meta property="og:description" content="Os melhores filmes e séries em um só lugar">
+    <meta property="og:url" content="http://tv.paixaoflix.vip">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
-    <!-- Registro do Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // Limpar Service Workers antigos
-                navigator.serviceWorker.getRegistrations().then((registrations) => {
-                    registrations.forEach((registration) => {
-                        if (registration.scope.includes('tv.paixaoflix.vip') || 
-                            !registration.scope.includes('/tv.paixaoflix/')) {
-                            console.log('🗑️ Removendo SW antigo:', registration.scope);
-                            registration.unregister();
-                        }
-                    });
-                });
-                
-                // Registrar novo Service Worker
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('✅ Service Worker Disney+ registrado:', registration.scope);
-                        
-                        // Forçar atualização
-                        if (registration.active) {
-                            registration.active.postMessage({ type: 'SKIP_WAITING' });
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('❌ Erro ao registrar Service Worker:', error);
-                    });
-            });
-            
-            // Escutar atualizações do SW
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                console.log('🔄 Service Worker atualizado, recarregando página...');
-                window.location.reload();
-            });
-        }
-    </script>
+    <!-- Menu Lateral -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">PaixãoFlix</div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <span>☰</span>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#home" class="sidebar-link active" data-page="home">
+                        <span class="menu-icon">🏠</span>
+                        <span class="menu-text">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#pesquisar" class="sidebar-link" data-page="pesquisar">
+                        <span class="menu-icon">🔍</span>
+                        <span class="menu-text">Pesquisar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#cinema" class="sidebar-link" data-page="cinema">
+                        <span class="menu-icon">🎬</span>
+                        <span class="menu-text">Cinema</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#series" class="sidebar-link" data-page="series">
+                        <span class="menu-icon">📺</span>
+                        <span class="menu-text">Séries</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#canais" class="sidebar-link" data-page="canais">
+                        <span class="menu-icon">📡</span>
+                        <span class="menu-text">Canais ao Vivo</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#filmes-kids" class="sidebar-link" data-page="filmes-kids">
+                        <span class="menu-icon">🧸</span>
+                        <span class="menu-text">Filmes Kids</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#series-kids" class="sidebar-link" data-page="series-kids">
+                        <span class="menu-icon">🎈</span>
+                        <span class="menu-text">Séries Kids</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#minha-lista" class="sidebar-link" data-page="minha-lista">
+                        <span class="menu-icon">❤️</span>
+                        <span class="menu-text">Minha Lista</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0NDQ4NTMiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI4IiB5PSI4Ij4KPHBhdGggZD0iTTEyIDEyQzE0LjIwOTEgMTIgMTYgMTMuNzkwOSAxNiAxNkMxNiAxOC4yMDkxIDE0LjIwOTEgMjAgMTIgMjBDOS43OTA4NiAyMCA4IDE4LjIwOTEgOCAxNkM4IDEzLjc5MDkgOS43OTA4NiAxMiAxMiAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K" alt="Usuário">
+                </div>
+                <div class="user-info">
+                    <span class="user-name">Visitante</span>
+                    <span class="user-status">Online</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Header com Navegação -->
-    <header class="header">
-        <div class="header-container">
-            <div class="logo">
-                <h1>PaixãoFlix</h1>
-            </div>
-            <nav class="nav-menu">
-                <ul class="nav-list">
-                    <li><a href="#" class="nav-link active" data-section="home">Início</a></li>
-                    <li><a href="#" class="nav-link" data-section="search">Buscar</a></li>
-                    <li><a href="#" class="nav-link" data-section="watchlist">Minha Lista</a></li>
-                </ul>
-            </nav>
-            <div class="user-menu">
-                <button class="user-avatar">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiM0NDQ4NTMiLz4KPHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSI2IiB5PSI2Ij4KPHBhdGggZD0iTTEwIDEwQzEyLjIwOTEgMTAgMTQgMTEuNzkwOSAxNCAxNEMxNCAxNi4yMDkxIDEyLjIwOTEgMTggMTAgMThDNy43OTA4NiAxOCA2IDE2LjIwOTEgNiAxNEM2IDExLjc5MDkgNy43OTA4NiAxMCAxMCAxMFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K" alt="Usuário">
-                </button>
-            </div>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Header Principal (reduzido) -->
+    <header class="main-header">
+        <div class="header-actions">
+            <!-- Espaço vazio - sem botões -->
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
-    <main class="main-content">
-        <!-- Hero Banner -->
-        <section class="hero-banner" id="heroBanner">
-            <div class="hero-backdrop" id="heroBackdrop"></div>
+    <main>
+        <section id="hero">
             <div class="hero-content">
-                <!-- Logo do Título -->
-                <img class="hero-logo" id="heroLogo" src="" alt="">
-                
-                <!-- Informações do Conteúdo -->
-                <div class="hero-info">
-                    <div class="hero-meta">
-                        <span class="hero-year" id="heroYear"></span>
-                        <span class="hero-rating" id="heroRating"></span>
-                        <span class="hero-genre" id="heroGenre"></span>
-                    </div>
-                    <p class="hero-description" id="heroDescription"></p>
-                    <div class="hero-buttons">
-                        <button class="hero-btn-primary" id="playBtn">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                            ASSISTIR
-                        </button>
-                        <button class="hero-btn-secondary" id="trailerBtn">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M10 16.5l6-4.5-6-4.5v9zM12 3C6.48 3 2 7.47 2 13s4.48 10 10 10 10-4.48 10-10S17.52 3 12 3zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8z"/>
-                            </svg>
-                            TRAILER
-                        </button>
-                    </div>
+                <h1>Bem-vindo à PaixãoFlix</h1>
+                <p>Os melhores filmes e séries em um só lugar</p>
+                <button class="cta-button">Começar Agora</button>
+            </div>
+        </section>
+
+        <!-- Continuar assistindo -->
+        <section id="continuar-assistindo" class="content-section">
+            <div class="section-container">
+                <h2>🎬 Continuar assistindo</h2>
+                <div class="content-grid" id="continuarGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
                 </div>
             </div>
         </section>
 
-        <!-- Menu Cards Section -->
-        <section class="menu-cards-section">
-            <div class="menu-cards-container">
-                <!-- Cinema -->
-                <div class="menu-card" data-menu="cinema">
-                    <div class="menu-background"></div>
-                    <video class="menu-video" preload="none" muted loop playsinline>
-                        <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/disney-bg.mp4" type="video/mp4">
-                    </video>
-                    <div class="menu-content">
-                        <div class="menu-icon">🎬</div>
-                        <span class="menu-title">Cinema</span>
-                    </div>
-                </div>
-                
-                <!-- Séries -->
-                <div class="menu-card" data-menu="series">
-                    <div class="menu-background"></div>
-                    <video class="menu-video" preload="none" muted loop playsinline>
-                        <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/marvel-bg.mp4" type="video/mp4">
-                    </video>
-                    <div class="menu-content">
-                        <div class="menu-icon">📺</div>
-                        <span class="menu-title">Séries</span>
-                    </div>
-                </div>
-                
-                <!-- Canais ao Vivo -->
-                <div class="menu-card" data-menu="live">
-                    <div class="menu-background"></div>
-                    <video class="menu-video" preload="none" muted loop playsinline>
-                        <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/starwars-bg.mp4" type="video/mp4">
-                    </video>
-                    <div class="menu-content">
-                        <div class="menu-icon">📡</div>
-                        <span class="menu-title">Canais ao Vivo</span>
-                    </div>
-                </div>
-                
-                <!-- Filmes Kids -->
-                <div class="menu-card kids-card" data-menu="movies_kids">
-                    <div class="menu-background"></div>
-                    <video class="menu-video" preload="none" muted loop playsinline>
-                        <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/pixar-bg.mp4" type="video/mp4">
-                    </video>
-                    <div class="menu-content">
-                        <div class="menu-icon">🧸</div>
-                        <span class="menu-title">Filmes Kids</span>
-                    </div>
-                </div>
-                
-                <!-- Séries Kids -->
-                <div class="menu-card kids-card" data-menu="series_kids">
-                    <div class="menu-background"></div>
-                    <video class="menu-video" preload="none" muted loop playsinline>
-                        <source src="https://static-assets.bamgrid.com/product/disneyplus/videos/national-bg.mp4" type="video/mp4">
-                    </video>
-                    <div class="menu-content">
-                        <div class="menu-icon">🎈</div>
-                        <span class="menu-title">Séries Kids</span>
-                    </div>
+        <!-- Não deixe de ver -->
+        <section id="nao-deixe-de-ver" class="content-section">
+            <div class="section-container">
+                <h2>🔥 Não deixe de ver</h2>
+                <div class="content-grid" id="naoDeixeVerGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
                 </div>
             </div>
         </section>
 
-        <!-- Seções de Conteúdo -->
-        <section class="content-section">
-            <!-- Continuar Assistindo -->
-            <div class="content-row" id="continue-watching-section">
-                <h2 class="section-title">Continuar Assistindo</h2>
-                <div class="row-carousel" id="continue-watching-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Minha Lista -->
-            <div class="content-row" id="my-list-section" style="display: none;">
-                <h2 class="section-title">Minha Lista</h2>
-                <div class="row-carousel" id="my-list-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Não deixe de ver essa seleção -->
-            <div class="content-row" id="featured-section">
-                <h2 class="section-title">Não deixe de ver essa seleção</h2>
-                <div class="row-carousel" id="featured-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Sábado a noite merece -->
-            <div class="content-row" id="saturday-night-section">
-                <h2 class="section-title">Sábado a noite merece</h2>
-                <div class="row-carousel" id="saturday-night-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- As crianças amam -->
-            <div class="content-row" id="kids-section">
-                <h2 class="section-title">As crianças amam</h2>
-                <div class="row-carousel" id="kids-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Romances para se inspirar -->
-            <div class="content-row" id="romance-section">
-                <h2 class="section-title">Romances para se inspirar</h2>
-                <div class="row-carousel" id="romance-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Nostalgias que aquecem o coração -->
-            <div class="content-row" id="nostalgia-section">
-                <h2 class="section-title">Nostalgias que aquecem o coração</h2>
-                <div class="row-carousel" id="nostalgia-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Os melhores de 2025 -->
-            <div class="content-row" id="best-2025-section">
-                <h2 class="section-title">Os melhores de 2025</h2>
-                <div class="row-carousel" id="best-2025-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Prepare a pipoca e venha maratonar -->
-            <div class="content-row" id="series-section">
-                <h2 class="section-title">Prepare a pipoca e venha maratonar</h2>
-                <div class="row-carousel" id="series-carousel">
-                    <!-- Cards gerados dinamicamente -->
-                </div>
-            </div>
-
-            <!-- Novela é sempre bom -->
-            <div class="content-row" id="novela-section">
-                <h2 class="section-title">Novela é sempre bom</h2>
-                <div class="row-carousel" id="novela-carousel">
-                    <!-- Cards gerados dinamicamente -->
+        <!-- Prepare a pipoca -->
+        <section id="prepare-pipoca" class="content-section">
+            <div class="section-container">
+                <h2>🍿 Prepare a pipoca e venha maratonar</h2>
+                <div class="content-grid" id="pipocaGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
                 </div>
             </div>
         </section>
 
-        <!-- Página de Categoria (Filmes/Séries) -->
-        <section class="category-page" id="categoryPage" style="display: none;">
-            <button class="back-button" id="backButton">
-                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                </svg>
-                VOLTAR
-            </button>
-            <div class="category-header">
-                <h1 class="category-title" id="categoryTitle">Categoria</h1>
-            </div>
-            <div class="category-grid" id="categoryGrid">
-                <!-- Grid de filmes/séries será gerado dinamicamente -->
-            </div>
-        </section>
-
-        <!-- Página de Canais ao Vivo -->
-        <section class="live-tv-page" id="liveTvPage" style="display: none;">
-            <button class="back-button" id="liveBackButton">
-                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                </svg>
-                VOLTAR
-            </button>
-            <div class="live-tv-container">
-                <div class="channels-list" id="channelsList">
-                    <!-- Lista de canais será gerada dinamicamente -->
-                </div>
-                <div class="live-player-container">
-                    <div id="livePlayer"></div>
+        <!-- Sábado a noite merece -->
+        <section id="sabado-noite" class="content-section">
+            <div class="section-container">
+                <h2>🌙 Sábado a noite merece</h2>
+                <div class="content-grid" id="sabadoGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
                 </div>
             </div>
         </section>
 
-        <!-- Página de Detalhes -->
-        <section class="details-page" id="detailsPage" style="display: none;">
-            <button class="back-button" id="detailsBackButton">
-                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                </svg>
-                VOLTAR
-            </button>
-            <div class="details-container">
-                <div class="details-poster">
-                    <img id="detailsPagePoster" src="" alt="">
+        <!-- Os melhores de 2025 -->
+        <section id="melhores-2025" class="content-section">
+            <div class="section-container">
+                <h2>⭐ Os melhores de 2025</h2>
+                <div class="content-grid" id="melhores2025Grid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
                 </div>
-                <div class="details-info">
-                    <h1 id="detailsPageTitle"></h1>
-                    <div class="details-meta">
-                        <span id="detailsPageYear"></span>
-                        <span id="detailsPageRating"></span>
-                        <span id="detailsPageGenre"></span>
-                    </div>
-                    <p id="detailsPageDescription"></p>
-                    <div class="details-actions">
-                        <button class="hero-btn-primary" id="detailsPagePlayBtn">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                            ASSISTIR
-                        </button>
-                        <button class="hero-btn-secondary" id="detailsPageTrailerBtn">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M10 16.5l6-4.5-6-4.5v9zM12 3C6.48 3 2 7.47 2 13s4.48 10 10 10 10-4.48 10-10S17.52 3 12 3zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8z"/>
-                            </svg>
-                            TRAILER
-                        </button>
-                        <button class="hero-btn-secondary favorite-btn" id="detailsPageFavoriteBtn">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                            </svg>
-                            ADICIONAR
-                        </button>
-                    </div>
+            </div>
+        </section>
+
+        <!-- As crianças amam -->
+        <section id="criancas-amam" class="content-section">
+            <div class="section-container">
+                <h2>🧸 As crianças amam</h2>
+                <div class="content-grid" id="criancasGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Romances para se inspirar -->
+        <section id="romances" class="content-section">
+            <div class="section-container">
+                <h2>💕 Romances para se inspirar</h2>
+                <div class="content-grid" id="romancesGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Premiados pela mídia -->
+        <section id="premiados" class="content-section">
+            <div class="section-container">
+                <h2>🏆 Premiados pela mídia</h2>
+                <div class="content-grid" id="premiadosGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Nostalgia que aquecem o coração -->
+        <section id="nostalgia" class="content-section">
+            <div class="section-container">
+                <h2>💖 Nostalgia que aquecem o coração</h2>
+                <div class="content-grid" id="nostalgiaGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Novelas -->
+        <section id="novelas" class="content-section">
+            <div class="section-container">
+                <h2>📺 Novelas</h2>
+                <div class="content-grid" id="novelasGrid">
+                    <!-- Conteúdo será adicionado dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Pesquisar -->
+        <section id="pesquisar" class="search-section" style="display: none;">
+            <div class="search-container">
+                <h2>Buscar Conteúdo</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Digite o nome do filme ou série...">
+                    <button id="searchButton">🔍 Buscar</button>
+                </div>
+                <div class="search-results" id="searchResults">
+                    <!-- Resultados da busca -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Canais ao Vivo -->
+        <section id="canais" class="canais-section" style="display: none;">
+            <div class="canais-container">
+                <h2>Canais ao Vivo</h2>
+                <div class="canais-grid" id="canaisGrid">
+                    <!-- Canais serão adicionados dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Filmes Kids -->
+        <section id="filmes-kids" class="kids-section" style="display: none;">
+            <div class="kids-container">
+                <h2>🧸 Filmes Kids</h2>
+                <div class="kids-grid" id="filmesKidsGrid">
+                    <!-- Filmes kids serão adicionados dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Séries Kids -->
+        <section id="series-kids" class="kids-section" style="display: none;">
+            <div class="kids-container">
+                <h2>🎈 Séries Kids</h2>
+                <div class="kids-grid" id="seriesKidsGrid">
+                    <!-- Séries kids serão adicionadas dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Minha Lista -->
+        <section id="minha-lista" class="search-section" style="display: none;">
+            <div class="search-container">
+                <h2>❤️ Minha Lista</h2>
+                <div class="content-grid" id="minhaListaGrid">
+                    <!-- Conteúdo da lista será adicionado dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Página de Cinema com Categorias do JSON -->
+        <section class="cinema-page" id="cinema-page" style="display: none;">
+            <div class="cinema-container">
+                <button class="back-button" id="backFromCinema">
+                    <span>←</span> Voltar
+                </button>
+                
+                <div class="cinema-header">
+                    <h1>Cinema PaixãoFlix</h1>
+                    <p>Os melhores lançamentos e clássicos do cinema</p>
+                </div>
+
+                <!-- Categorias do JSON -->
+                <div class="cinema-categories" id="cinemaCategories">
+                    <!-- Categorias serão carregadas dinamicamente do JSON -->
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Modal de Detalhes -->
-    <div class="modal-overlay" id="detailsModal">
-        <div class="modal-content details-modal">
-            <button class="modal-close" id="closeModal">&times;</button>
-            <div class="details-container">
-                <div class="details-poster">
-                    <img id="detailsPoster" src="" alt="">
-                </div>
-                <div class="details-info">
-                    <h2 id="detailsTitle"></h2>
-                    <div class="details-meta">
-                        <span class="year" id="detailsYear"></span>
-                        <span class="rating" id="detailsRating"></span>
-                        <span class="genre-badge" id="detailsGenre"></span>
-                    </div>
-                    <p class="description" id="detailsDescription"></p>
-                    <div class="details-actions">
-                        <button class="btn btn-primary" id="detailsPlayBtn">
-                            <span>▶</span> Assistir
-                        </button>
-                        <button class="btn btn-secondary" id="detailsTrailerBtn">
-                            <span>▶</span> Trailer
-                        </button>
-                        <button class="btn btn-outline" id="detailsAddToListBtn">
-                            <span>+</span> Minha Lista
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <footer>
+        <p>&copy; 2025 PaixãoFlix. Todos os direitos reservados.</p>
+    </footer>
 
-    <!-- Modal de Trailer -->
-    <div class="modal-overlay" id="trailerModal">
-        <div class="modal-content trailer-modal">
-            <button class="modal-close" id="closeTrailerModal">&times;</button>
-            <div class="trailer-container">
-                <iframe id="trailerPlayer" src="" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-
-    <!-- Player Container -->
-    <div class="player-overlay" id="playerOverlay">
-        <div class="player-container">
-            <button class="player-close" id="closePlayer">&times;</button>
-            <div id="videoPlayer"></div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/tmdb-api.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

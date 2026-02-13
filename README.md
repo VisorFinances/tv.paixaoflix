@@ -1,54 +1,54 @@
-# PaixãoFlix - Streaming Premium
+# PaixãoFlix
 
-Interface de streaming inspirada no Disney+ com funcionalidades premium desenvolvida em HTML5, CSS3 e JavaScript puro.
+🎬 **Plataforma de Streaming Premium**  
+🌐 **Domínio:** http://tv.paixaoflix.vip
 
-## 🚀 Funcionalidades Implementadas
+## Como Executar Localmente
 
-### 🎨 Design Disney+ Premium
-- **Tema Dark**: Gradiente profundo (Deep Blue/Black) igual ao Disney+
-- **Hero Banner Dinâmico**: Transições suaves com destaque para conteúdo em destaque
-- **Cards com Efeito Zoom**: Borda brilhante ao focar (TV Friendly)
-- **Efeito de Reflexo**: Reflexo brilhante nos cards quando em foco
-- **Navegação por Marcas**: Disney, Pixar, Marvel, Star Wars, National Geographic
+1. Clone o repositório
+2. Execute o servidor local:
+   ```bash
+   npm start
+   ```
+3. Acesse http://localhost:8000
 
-### 🎮 Sistema de Navegação Premium
-- **Controle Total por Teclado**: Navegação completa com setas direcionais
-- **Suporte a Controle Remoto**: Otimizado para Smart TVs
-- **Foco Geográfico**: Sistema avançado de foco visual
-- **Atalhos de Teclado**: ESC para fechar modais, Enter para selecionar
+## Deploy Produção
 
-### 🎬 Player de Vídeo Profissional
-- **Clappr Player**: Player HTML5 com suporte HLS
-- **Buffer Inteligente**: Prevenção de travamentos
-- **Auto-Play**: Reprodução automática do próximo conteúdo
-- **Progresso Salvo**: Sistema "Continue Assistindo" com LocalStorage
+O projeto está configurado para o domínio **tv.paixaoflix.vip**
 
-### 📺 Sistema de Trailers
-- **Modal Flutuante**: Player do YouTube em modal overlay
-- **Conversão Automática**: URL do YouTube → Embed
-- **Controle Total**: Play, pause, fullscreen
+### Arquivos de Configuração:
+- `CNAME` - Configuração do domínio
+- `.htaccess` - Configurações Apache
+- `robots.txt` - SEO para motores de busca
+- `sitemap.xml` - Mapa do site
 
-### 🏷️ Badges e Metadados
-- **Badge de Gênero**: Etiqueta estilizada "Animação" acima do título
-- **Integração TMDB**: Suporte para buscar backdrops e elenco
-- **Rating Estrelas**: Sistema de avaliação visual com estrelas amarelas
-
-### 📚 Gestão de Conteúdo
-- **Minha Lista**: Adicionar/remover filmes da watchlist
-- **Continue Assistindo**: Salvar progresso de visualização
-- **LocalStorage**: Persistência de dados localmente
-
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
-paixaoflix/
-├── index.html          # Página principal (SPA)
+├── index.html          # Página principal
 ├── css/
-│   └── styles.css      # Estilos com tema Disney+
+│   └── styles.css      # Estilos responsivos
 ├── js/
-│   └── app.js          # Lógica principal da aplicação
-├── data/
-│   └── cinema.json     # Dados dos filmes
-├── assets/             # Imagens e recursos
-└── README.md           # Documentação
+│   └── main.js         # Funcionalidades
+├── CNAME               # Domínio personalizado
+├── .htaccess           # Configurações Apache
+├── robots.txt          # SEO
+├── sitemap.xml         # Sitemap
+└── package.json        # Configuração do projeto
 ```
+
+## Funcionalidades
+
+✅ Interface responsiva  
+✅ Navegação suave  
+✅ Grid de filmes dinâmico  
+✅ SEO otimizado  
+✅ Performance otimizada  
+✅ Design moderno estilo streaming
+
+## Tecnologias
+
+- HTML5 Semântico
+- CSS3 Responsivo
+- JavaScript Vanilla
+- Hospedagem configurada para tv.paixaoflix.vip
