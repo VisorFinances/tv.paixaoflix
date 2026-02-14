@@ -204,8 +204,11 @@ class PaixaoFlix {
         // 12. Novela é sempre bom (Gênero: Novela)
         const novelas = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Novela']);
         this.renderSection('novelas', 'Novela é sempre bom', novelas);
-    }
-
+        
+        // Atualizar outras seções para subir/descer e não deixar espaço vazio quando Sábado a Noite estiver ativo
+        this.adjustSectionsForSabadoNoite();
+    }    
+        
     renderSection(id, title, items, showProgress = false) {
         if (!items || items.length === 0) return;
         
