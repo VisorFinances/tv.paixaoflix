@@ -113,7 +113,7 @@ body {
 }
 
 .search-btn {
-    background: #ff6b6b;
+    background: #E50914; /* Vermelho Netflix */
     border: none;
     color: white;
     padding: 10px 15px;
@@ -123,7 +123,7 @@ body {
 }
 
 .search-btn:hover {
-    background: #ff5252;
+    background: #F40612; /* Vermelho Netflix mais claro no hover */
 }
 
 .user-menu {
