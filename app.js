@@ -189,7 +189,7 @@ class PaixaoFlix {
         const romances = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Romance']).slice(0, 5);
         this.renderSection('romances', 'Histórias que aceleram o coração...', romances);
         
-        // 9. Nostalgias que aquecem o coração (Ano < 2010)
+        // 9. Nostalgias que aquecem o coração (Ano < 2010) - Atualizar a cada reinício
         const nostalgias = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) < 2010);
         this.renderSection('nostalgias', 'Nostalgias que aquecem o coração', nostalgias);
         
