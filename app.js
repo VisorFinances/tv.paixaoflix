@@ -186,7 +186,7 @@ class PaixaoFlix {
         this.renderSection('criancas-amam', 'As crianças amam', criancas.slice(0, 5));
         
         // 8. Romances para inspirações
-        const romances = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Romance']);
+        const romances = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Romance']).slice(0, 5);
         this.renderSection('romances', 'Histórias que aceleram o coração...', romances);
         
         // 9. Nostalgias que aquecem o coração (Ano < 2010)
