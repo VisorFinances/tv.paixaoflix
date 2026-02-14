@@ -374,7 +374,7 @@ class PaixaoFlix {
                 this.renderHome();
                 break;
             case 'cinema':
-                this.renderSection('cinema', 'Cinema', this.cinemaData);
+                this.renderCinemaByGenre();
                 break;
             case 'series':
                 this.renderSection('series', 'Séries', this.seriesData);
@@ -527,6 +527,118 @@ class PaixaoFlix {
         // Em produção, isso seria salvo no servidor
         // Por enquanto, apenas no localStorage
         console.log('Favoritos salvos:', this.favoritos.length);
+    }
+
+    // Renderizar Cinema por Gênero (Vertical)
+    renderCinemaByGenre() {
+        const container = document.getElementById('content-container');
+        
+        // Obter todos os gêneros únicos
+        const genres = this.getUniqueGenres(this.cinemaData);
+        
+        // Criar container principal
+        const categoriesContainer = document.createElement('div');
+        categoriesContainer.className = 'categories-container';
+        
+        // Criar sidebar de categorias
+        const sidebar = document.createElement('div');
+        sidebar.className = 'category-sidebar';
+        sidebar.innerHTML = `
+            <div class="category-title">🎬 Gêneros</div>
+            <ul class="category-list">
+                <li class="category-item active" data-genre="all">
+                    Todos <span class="category-count">${this.cinemaData.length}</span>
+                </li>
+                ${genres.map(genre => {
+                    const count = this.cinemaData.filter(item => item.genero === genre).length;
+                    return `
+                        <li class="category-item" data-genre="${genre}">
+                            ${genre} <span class="category-count">${count}</span>
+                        </li>
+                    `;
+                }).join('')}
+            </ul>
+        `;
+        
+        // Criar conteúdo principal
+        const content = document.createElement('div');
+        content.className = 'category-content';
+        
+        // Header do cinema
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `
+            <h2>🎬 Cinema</h2>
+            <p>Explore nossa coleção de filmes por gênero</p>
+        `;
+        
+        content.appendChild(header);
+        
+        // Container dos filmes
+        const moviesContainer = document.createElement('div');
+        moviesContainer.id = 'movies-container';
+        moviesContainer.innerHTML = `
+            <div class="cards-container">
+                ${this.cinemaData.map(item => this.createCard(item)).join('')}
+            </div>
+        `;
+        
+        content.appendChild(moviesContainer);
+        
+        // Montar estrutura
+        categoriesContainer.appendChild(sidebar);
+        categoriesContainer.appendChild(content);
+        container.appendChild(categoriesContainer);
+        
+        // Adicionar event listeners
+        this.addCategoryListeners();
+        this.addCardListeners();
+    }
+
+    // Obter gêneros únicos
+    getUniqueGenres(movies) {
+        const genres = [...new Set(movies.map(item => item.genero).filter(Boolean))];
+        return genres.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    }
+
+    // Adicionar listeners às categorias
+    addCategoryListeners() {
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Remover classe active de todos
+                document.querySelectorAll('.category-item').forEach(cat => {
+                    cat.classList.remove('active');
+                });
+                
+                // Adicionar classe active ao item clicado
+                e.target.classList.add('active');
+                
+                // Filtrar filmes por gênero
+                const genre = e.target.dataset.genre;
+                this.filterMoviesByGenre(genre);
+            });
+        });
+    }
+
+    // Filtrar filmes por gênero
+    filterMoviesByGenre(genre) {
+        const moviesContainer = document.getElementById('movies-container');
+        
+        let filteredMovies;
+        if (genre === 'all') {
+            filteredMovies = this.cinemaData;
+        } else {
+            filteredMovies = this.cinemaData.filter(item => item.genero === genre);
+        }
+        
+        moviesContainer.innerHTML = `
+            <div class="cards-container">
+                ${filteredMovies.map(item => this.createCard(item)).join('')}
+            </div>
+        `;
+        
+        // Adicionar listeners aos novos cards
+        this.addCardListeners();
     }
 
     // Adicionar listeners aos cards
