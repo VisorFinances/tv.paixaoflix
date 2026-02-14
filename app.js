@@ -199,9 +199,10 @@ class PaixaoFlix {
         const lancamentos2025 = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Lançamento 2025']).slice(0, 5);
         this.renderSection('melhores-2025', 'Os melhores de 2025', lancamentos2025);
         
-        // 11. Prepare a pipoca e venha maratonar (Type = series) - Atualizar a cada reinício
-        const series = [...this.seriesData, ...this.seriesKidsData];
-        this.renderSection('maratonar', 'Prepare a pipoca e venha maratonar', series.slice(0, 5));
+        // 11. Prepare a pipoca e venha maratonar (Categoria Séries) - Atualizar a cada reinício
+        const allSeries = [...this.seriesData, ...this.seriesKidsData];
+        const uniqueSeries = this.removeDuplicateSeries(allSeries);
+        this.renderSection('maratonar', 'Prepare a pipoca e venha maratonar', uniqueSeries.slice(0, 5));
         
         // 12. Novela é sempre bom (Gênero: Novela) - Atualizar a cada reinício
         const novelas = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Novela']).slice(0, 5);
@@ -510,6 +511,19 @@ class PaixaoFlix {
         // Embaralhar e pegar quantidade solicitada
         const shuffled = [...lancamentos2026].sort(() => 0.5 - Math.random());
         return shuffled.slice(0, Math.min(count, lancamentos2026.length));
+    }
+
+    // Remover séries duplicadas (mesmo título, temporadas diferentes)
+    removeDuplicateSeries(series) {
+        const seen = new Set();
+        return series.filter(item => {
+            const title = (item.titulo || item.nome).toLowerCase().trim();
+            if (seen.has(title)) {
+                return false;
+            }
+            seen.add(title);
+            return true;
+        });
     }
 
     // Obter itens aleatórios
