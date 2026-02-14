@@ -438,6 +438,20 @@ body {
     opacity: 0.9;
 }
 
+/* Ajuste para Sábado a Noite */
+.content-container.sabado-noite-active .section:not(#sabado-noite) {
+    margin-bottom: 20px; /* Reduzir espaçamento quando Sábado a Noite está ativo */
+}
+
+.content-container.sabado-noite-active .section:not(#sabado-noite) .section-title {
+    font-size: 1.5rem; /* Títulos menores */
+    margin-bottom: 15px;
+}
+
+.content-container.sabado-noite-active .section:not(#sabado-noite) .cards-container {
+    gap: 15px; /* Reduzir gap entre cards */
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .sidebar {
@@ -468,5 +482,14 @@ body {
         flex: none;
         position: relative;
         top: auto;
+    }
+    
+    /* Ajustes mobile para Sábado a Noite */
+    .content-container.sabado-noite-active .section:not(#sabado-noite) {
+        margin-bottom: 15px;
+    }
+    
+    .content-container.sabado-noite-active .section:not(#sabado-noite) .cards-container {
+        gap: 10px;
     }
 }

@@ -173,9 +173,8 @@ class PaixaoFlix {
         const lancamentos2026 = this.getRandomLancamentos2026(5);
         this.renderSection('selecao', 'Não deixe de ver essa seleção', lancamentos2026);
         
-        // 6. Sábado a noite merece (Gênero: Ação/Aventura)
-        const acaoAventura = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Ação', 'Aventura']);
-        this.renderSection('sabado-noite', 'Sábado a noite merece', acaoAventura);
+        // 6. Sábado a noite merece (Apenas aos sábados após 16:49)
+        this.renderSabadoNoite();
         
         // 7. As crianças amam (Gênero: Animação/Kids)
         const criancas = [...this.kidsData, ...this.seriesKidsData];
@@ -454,7 +453,57 @@ class PaixaoFlix {
         }
     }
 
-    // Obter lançamentos aleatórios de 2026
+    // Renderizar seção Sábado a Noite (com regras de horário)
+    renderSabadoNoite() {
+        const now = new Date();
+        const dayOfWeek = now.getDay(); // 0 = Domingo, 6 = Sábado
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        
+        // Verificar se deve mostrar a seção
+        const isSabado = dayOfWeek === 6;
+        const isDepoisDas1649 = isSabado && (hour > 16 || (hour === 16 && minute >= 49));
+        const isDomingoManha = dayOfWeek === 0 && (hour < 11 || (hour === 11 && minute < 59));
+        
+        // Se não for o horário permitido, não mostrar nada
+        if (!isDepoisDas1649 && !isDomingoManha) {
+            return;
+        }
+        
+        // Obter conteúdos das categorias específicas
+        const comedia = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Comédia']).slice(0, 2);
+        const acao = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Ação']).slice(0, 1);
+        const suspense = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Suspense']).slice(0, 1);
+        const religioso = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Religioso']).slice(0, 1);
+        const musical = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Musical']).slice(0, 1);
+        
+        // Combinar todos (total de 6 capas)
+        const sabadoNoiteContent = [...comedia, ...acao, ...suspense, ...religioso, ...musical];
+        
+        // Renderizar seção
+        this.renderSection('sabado-noite', 'Sábado a noite merece', sabadoNoiteContent);
+        
+        // Ajustar outras seções para subir/descer e não deixar espaço vazio
+        this.adjustSectionsForSabadoNoite();
+    }
+
+    // Ajustar outras seções quando Sábado a Noite está ativo
+    adjustSectionsForSabadoNoite() {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        
+        const isSabadoNoiteAtivo = (dayOfWeek === 6 && (hour > 16 || (hour === 16 && minute >= 49))) ||
+                                      (dayOfWeek === 0 && (hour < 11 || (hour === 11 && minute < 59)));
+        
+        // Se Sábado a Noite está ativo, ajustar o espaçamento das outras seções
+        if (isSabadoNoiteAtivo) {
+            // Adicionar classe especial ao container para ajuste de layout
+            const container = document.getElementById('content-container');
+            container.classList.add('sabado-noite-active');
+        }
+    }
     getRandomLancamentos2026(count) {
         // Filtrar todos os conteúdos de 2026
         const lancamentos2026 = [
