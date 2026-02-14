@@ -188,16 +188,16 @@ class PaixaoFlix {
         this.renderSection('criancas-amam', 'As crianças amam', criancas);
         
         // 8. Romances para inspirações - 5 capas da categoria Romance
-        const romances = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Romance']).slice(0, 5);
-        this.renderSection('romances', 'Histórias que aceleram o coração...', romances);
+        const romances = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Romance'] || [];
+        this.renderSection('romances', 'Histórias que aceleram o coração...', romances.slice(0, 5));
         
         // 9. Nostalgias que aquecem o coração (Categoria Clássicos) - Atualizar a cada reinício
-        const nostalgias = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Clássicos']).slice(0, 5);
-        this.renderSection('nostalgias', 'Nostalgias que aquecem o coração', nostalgias);
+        const nostalgias = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Clássicos'] || [];
+        this.renderSection('nostalgias', 'Nostalgias que aquecem o coração', nostalgias.slice(0, 5));
         
         // 10. Os melhores de 2025 (Categoria Lançamento 2025) - Atualizar a cada reinício
-        const lancamentos2025 = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Lançamento 2025']).slice(0, 5);
-        this.renderSection('melhores-2025', 'Os melhores de 2025', lancamentos2025);
+        const lancamentos2025 = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Lançamento 2025'] || [];
+        this.renderSection('melhores-2025', 'Os melhores de 2025', lancamentos2025.slice(0, 5));
         
         // 11. Prepare a pipoca e venha maratonar (Categoria Séries) - Atualizar a cada reinício
         const allSeries = [...this.seriesData, ...this.seriesKidsData];
@@ -205,8 +205,8 @@ class PaixaoFlix {
         this.renderSection('maratonar', 'Prepare a pipoca e venha maratonar', uniqueSeries.slice(0, 5));
         
         // 12. Novela é sempre bom (Gênero: Novela) - Atualizar a cada reinício
-        const novelas = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Novela']).slice(0, 5);
-        this.renderSection('novelas', 'Novela é sempre bom', novelas);
+        const novelas = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Novela'] || [];
+        this.renderSection('novelas', 'Novela é sempre bom', novelas.slice(0, 5));
         
         // Atualizar outras seções para subir/descer e não deixar espaço vazio quando Sábado a Noite estiver ativo
         this.adjustSectionsForSabadoNoite();
