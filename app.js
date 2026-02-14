@@ -208,6 +208,82 @@ class PaixaoFlix {
         const novelas = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Novela'] || [];
         this.renderSection('novelas', 'Novela é sempre bom', novelas.slice(0, 5));
         
+        // 13. Ação - 5 capas da categoria Ação
+        const acao = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Ação'] || [];
+        this.renderSection('acao', 'Ação', acao.slice(0, 5));
+        
+        // 14. Aventura - 5 capas da categoria Aventura
+        const aventura = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Aventura'] || [];
+        this.renderSection('aventura', 'Aventura', aventura.slice(0, 5));
+        
+        // 15. Anime - 5 capas da categoria Anime
+        const anime = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Anime'] || [];
+        this.renderSection('anime', 'Anime', anime.slice(0, 5));
+        
+        // 16. Animação - 5 capas da categoria Animação
+        const animacao = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Animação'] || [];
+        this.renderSection('animacao', 'Animação', animacao.slice(0, 5));
+        
+        // 17. Comédia - 5 capas da categoria Comédia
+        const comedia = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Comédia'] || [];
+        this.renderSection('comedia', 'Comédia', comedia.slice(0, 5));
+        
+        // 18. Drama - 5 capas da categoria Drama
+        const drama = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Drama'] || [];
+        this.renderSection('drama', 'Drama', drama.slice(0, 5));
+        
+        // 19. Dorama - 5 capas da categoria Dorama
+        const dorama = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Dorama'] || [];
+        this.renderSection('dorama', 'Dorama', dorama.slice(0, 5));
+        
+        // 20. Crime - 5 capas da categoria Crime
+        const crime = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Crime'] || [];
+        this.renderSection('crime', 'Crime', crime.slice(0, 5));
+        
+        // 21. Policial - 5 capas da categoria Policial
+        const policial = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Policial'] || [];
+        this.renderSection('policial', 'Policial', policial.slice(0, 5));
+        
+        // 22. Família - 5 capas da categoria Família
+        const familia = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Família'] || [];
+        this.renderSection('familia', 'Família', familia.slice(0, 5));
+        
+        // 23. Musical - 5 capas da categoria Musical
+        const musical = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Musical'] || [];
+        this.renderSection('musical', 'Musical', musical.slice(0, 5));
+        
+        // 24. Documentário - 5 capas da categoria Documentário
+        const documentario = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Documentário'] || [];
+        this.renderSection('documentario', 'Documentário', documentario.slice(0, 5));
+        
+        // 25. Faroeste - 5 capas da categoria Faroeste
+        const faroeste = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Faroeste'] || [];
+        this.renderSection('faroeste', 'Faroeste', faroeste.slice(0, 5));
+        
+        // 26. Ficção - 5 capas da categoria Ficção
+        const ficcao = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Ficção'] || [];
+        this.renderSection('ficcao', 'Ficção', ficcao.slice(0, 5));
+        
+        // 27. Nacional - 5 capas da categoria Nacional
+        const nacional = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Nacional'] || [];
+        this.renderSection('nacional', 'Nacional', nacional.slice(0, 5));
+        
+        // 28. Religioso - 5 capas da categoria Religioso
+        const religioso = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Religioso'] || [];
+        this.renderSection('religioso', 'Religioso', religioso.slice(0, 5));
+        
+        // 29. Terror - 5 capas da categoria Terror
+        const terror = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Terror'] || [];
+        this.renderSection('terror', 'Terror', terror.slice(0, 5));
+        
+        // 30. Suspense - 5 capas da categoria Suspense
+        const suspense = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Suspense'] || [];
+        this.renderSection('suspense', 'Suspense', suspense.slice(0, 5));
+        
+        // 31. Adulto - 5 capas da categoria Adulto
+        const adulto = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Adulto'] || [];
+        this.renderSection('adulto', 'Adulto', adulto.slice(0, 5));
+        
         // Atualizar outras seções para subir/descer e não deixar espaço vazio quando Sábado a Noite estiver ativo
         this.adjustSectionsForSabadoNoite();
     }    
@@ -568,6 +644,90 @@ class PaixaoFlix {
                 break;
             case 'favoritos':
                 this.renderSection('favoritos', 'Minha Lista', this.favoritos);
+                break;
+            case 'acao':
+                const acao = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Ação'] || [];
+                this.renderSection('acao', 'Ação', acao.slice(0, 5));
+                break;
+            case 'aventura':
+                const aventura = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Aventura'] || [];
+                this.renderSection('aventura', 'Aventura', aventura.slice(0, 5));
+                break;
+            case 'anime':
+                const anime = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Anime'] || [];
+                this.renderSection('anime', 'Anime', anime.slice(0, 5));
+                break;
+            case 'animacao':
+                const animacao = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Animação'] || [];
+                this.renderSection('animacao', 'Animação', animacao.slice(0, 5));
+                break;
+            case 'comedia':
+                const comedia = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Comédia'] || [];
+                this.renderSection('comedia', 'Comédia', comedia.slice(0, 5));
+                break;
+            case 'drama':
+                const drama = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Drama'] || [];
+                this.renderSection('drama', 'Drama', drama.slice(0, 5));
+                break;
+            case 'dorama':
+                const dorama = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Dorama'] || [];
+                this.renderSection('dorama', 'Dorama', dorama.slice(0, 5));
+                break;
+            case 'classicos':
+                const classicos = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Clássicos'] || [];
+                this.renderSection('classicos', 'Clássicos', classicos.slice(0, 5));
+                break;
+            case 'crime':
+                const crime = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Crime'] || [];
+                this.renderSection('crime', 'Crime', crime.slice(0, 5));
+                break;
+            case 'policial':
+                const policial = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Policial'] || [];
+                this.renderSection('policial', 'Policial', policial.slice(0, 5));
+                break;
+            case 'familia':
+                const familia = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Família'] || [];
+                this.renderSection('familia', 'Família', familia.slice(0, 5));
+                break;
+            case 'musical':
+                const musical = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Musical'] || [];
+                this.renderSection('musical', 'Musical', musical.slice(0, 5));
+                break;
+            case 'documentario':
+                const documentario = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Documentário'] || [];
+                this.renderSection('documentario', 'Documentário', documentario.slice(0, 5));
+                break;
+            case 'faroeste':
+                const faroeste = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Faroeste'] || [];
+                this.renderSection('faroeste', 'Faroeste', faroeste.slice(0, 5));
+                break;
+            case 'ficcao':
+                const ficcao = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Ficção'] || [];
+                this.renderSection('ficcao', 'Ficção', ficcao.slice(0, 5));
+                break;
+            case 'nacional':
+                const nacional = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Nacional'] || [];
+                this.renderSection('nacional', 'Nacional', nacional.slice(0, 5));
+                break;
+            case 'religioso':
+                const religioso = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Religioso'] || [];
+                this.renderSection('religioso', 'Religioso', religioso.slice(0, 5));
+                break;
+            case 'romance':
+                const romance = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Romance'] || [];
+                this.renderSection('romance', 'Romance', romance.slice(0, 5));
+                break;
+            case 'terror':
+                const terror = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Terror'] || [];
+                this.renderSection('terror', 'Terror', terror.slice(0, 5));
+                break;
+            case 'suspense':
+                const suspense = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Suspense'] || [];
+                this.renderSection('suspense', 'Suspense', suspense.slice(0, 5));
+                break;
+            case 'adulto':
+                const adulto = this.categorizeContent([...this.cinemaData, ...this.seriesData])['Adulto'] || [];
+                this.renderSection('adulto', 'Adulto', adulto.slice(0, 5));
                 break;
         }
         
