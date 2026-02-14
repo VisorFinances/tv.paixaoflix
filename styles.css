@@ -253,26 +253,21 @@ body::-webkit-scrollbar {
     gap: 20px;
 }
 
-/* Cards Aspect Ratio 2:3 - 600x900 pixels */
+/* Cards Aspect Ratio 2:3 - Estilo Netflix */
 .card {
-    position: relative;
-    width: 200px;
-    height: 300px;
-    max-width: 600px;
-    max-height: 900px;
-    aspect-ratio: 2/3;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    width: 100%; /* O container dita o tamanho */
+    aspect-ratio: 2 / 3; /* Trava a proporção independente da imagem */
+    border-radius: 4px;
+    object-fit: cover; /* Garante que a capa preencha o card sem distorcer */
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     background: #2a2a2a;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-.card:hover {
-    transform: scale(1.2);
+.card:focus, .card:hover {
+    transform: scale(1.1); /* Zoom elegante da Netflix */
     z-index: 10;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    outline: 3px solid white; /* Foco visível a 20 passos */
 }
 
 .card img {
