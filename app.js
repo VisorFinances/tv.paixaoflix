@@ -169,9 +169,9 @@ class PaixaoFlix {
         // 4. Cards de Menu
         this.renderMenuCards();
         
-        // 5. Não deixe de ver essa seleção
-        const randomSelection = this.getRandomItems([...this.cinemaData, ...this.seriesData], 10);
-        this.renderSection('selecao', 'Não deixe de ver essa seleção', randomSelection);
+        // 5. Não deixe de ver essa seleção (Apenas Lançamento 2026)
+        const lancamentos2026 = this.getRandomLancamentos2026(5);
+        this.renderSection('selecao', 'Não deixe de ver essa seleção', lancamentos2026);
         
         // 6. Sábado a noite merece (Gênero: Ação/Aventura)
         const acaoAventura = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Ação', 'Aventura']);
@@ -451,12 +451,42 @@ class PaixaoFlix {
             } else {
                 this.assistindo.push(mediaData);
             }
-            
-            // Manter apenas os 3 mais recentes
+        }
+    }
+
+    // Obter lançamentos aleatórios de 2026
+    getRandomLancamentos2026(count) {
+        // Filtrar todos os conteúdos de 2026
+        const lancamentos2026 = [
+            ...this.cinemaData.filter(item => item.year === '2026'),
+            ...this.seriesData.filter(item => item.year === '2026'),
+            ...this.kidsData.filter(item => item.year === '2026'),
+            ...this.seriesKidsData.filter(item => item.year === '2026')
+        ];
+        
+        // Se não tiver lançamentos 2026, retornar array vazio
+        if (lancamentos2026.length === 0) {
+            return [];
+        }
+        
+        // Embaralhar e pegar quantidade solicitada
+        const shuffled = [...lancamentos2026].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, Math.min(count, lancamentos2026.length));
+    }
+
+    // Obter itens aleatórios
+
+            // Obter itens aleatórios 3 mais recentes
             this.assistindo.sort((a, b) => 
                 new Date(b.lastWatched) - new Date(a.lastWatched)
             );
             this.assistindo = this.assistindo.slice(0, 3);
+            
+            // Manter apenas os 3 mais recentes
+            // this.assistindo.sort((a, b) => 
+            //     new Date(b.lastWatched) - new Date(a.lastWatched)
+            // );
+            // this.assistindo = this.assistindo.slice(0, 3);
             
             // Salvar no localStorage
             localStorage.setItem('paixaoflix-continuar', JSON.stringify(this.assistindo));
