@@ -637,10 +637,12 @@ class PaixaoFlix {
         const usedItems = new Set();
 
         content.forEach(item => {
-            const itemKey = `${item.titulo || item.nome}_${item.year}`;
+            const itemKey = `${item.titulo || item.nome}_${item.year || 'semano'}`;
             
-            // Se já foi categorizado, pular
-            if (usedItems.has(itemKey)) return;
+            // Se já foi categorizado, pular completamente
+            if (usedItems.has(itemKey)) {
+                return;
+            }
             
             let assigned = false;
             
@@ -649,10 +651,14 @@ class PaixaoFlix {
                 categories['Lançamento 2026'].push(item);
                 usedItems.add(itemKey);
                 assigned = true;
-            } else if (item.year === '2025' && !assigned) {
+                return; // Sair imediatamente após atribuir
+            }
+            
+            if (item.year === '2025' && !assigned) {
                 categories['Lançamento 2025'].push(item);
                 usedItems.add(itemKey);
                 assigned = true;
+                return; // Sair imediatamente após atribuir
             }
             
             // Prioridade 2: Gêneros exatos
@@ -664,95 +670,100 @@ class PaixaoFlix {
                     categories[genre].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
-                } else {
-                    // Verificar correspondências parciais (apenas uma categoria por item)
-                    const genreLower = genre.toLowerCase();
-                    
-                    if (genreLower.includes('ação') && !assigned) {
-                        categories['Ação'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('aventura') && !assigned) {
-                        categories['Aventura'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('anime') && !assigned) {
-                        categories['Anime'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('animação') && !assigned) {
-                        categories['Animação'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('comédia') && !assigned) {
-                        categories['Comédia'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('drama') && !assigned) {
-                        categories['Drama'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('dorama') && !assigned) {
-                        categories['Dorama'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('clássico') && !assigned) {
-                        categories['Clássicos'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('crime') && !assigned) {
-                        categories['Crime'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('policial') && !assigned) {
-                        categories['Policial'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('família') && !assigned) {
-                        categories['Família'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('musical') && !assigned) {
-                        categories['Musical'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('documentário') && !assigned) {
-                        categories['Documentário'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('faroeste') && !assigned) {
-                        categories['Faroeste'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('ficção') && !assigned) {
-                        categories['Ficção'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('nacional') && !assigned) {
-                        categories['Nacional'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('religioso') && !assigned) {
-                        categories['Religioso'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('romance') && !assigned) {
-                        categories['Romance'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('terror') && !assigned) {
-                        categories['Terror'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('suspense') && !assigned) {
-                        categories['Suspense'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    } else if (genreLower.includes('adulto') && !assigned) {
-                        categories['Adulto'].push(item);
-                        usedItems.add(itemKey);
-                        assigned = true;
-                    }
+                    return; // Sair imediatamente após atribuir
+                }
+                
+                // Verificar correspondências parciais (apenas uma categoria por item)
+                const genreLower = genre.toLowerCase();
+                
+                if (genreLower.includes('ação') && !assigned) {
+                    categories['Ação'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('aventura') && !assigned) {
+                    categories['Aventura'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('anime') && !assigned) {
+                    categories['Anime'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('animação') && !assigned) {
+                    categories['Animação'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('comédia') && !assigned) {
+                    categories['Comédia'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('drama') && !assigned) {
+                    categories['Drama'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('dorama') && !assigned) {
+                    categories['Dorama'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('clássico') && !assigned) {
+                    categories['Clássicos'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('crime') && !assigned) {
+                    categories['Crime'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('policial') && !assigned) {
+                    categories['Policial'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('família') && !assigned) {
+                    categories['Família'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('musical') && !assigned) {
+                    categories['Musical'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('documentário') && !assigned) {
+                    categories['Documentário'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('faroeste') && !assigned) {
+                    categories['Faroeste'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('ficção') && !assigned) {
+                    categories['Ficção'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('nacional') && !assigned) {
+                    categories['Nacional'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('religioso') && !assigned) {
+                    categories['Religioso'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('romance') && !assigned) {
+                    categories['Romance'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('terror') && !assigned) {
+                    categories['Terror'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('suspense') && !assigned) {
+                    categories['Suspense'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('adulto') && !assigned) {
+                    categories['Adulto'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                }
+                
+                if (assigned) {
+                    usedItems.add(itemKey);
                 }
             }
         });

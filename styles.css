@@ -347,7 +347,7 @@ body {
 }
 
 .menu-card {
-    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+    background: #E50914; /* Vermelho Netflix */
     padding: 30px;
     border-radius: 15px;
     text-align: center;
@@ -356,12 +356,13 @@ body {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
 }
 
 .menu-card:hover {
+    background: #F40612; /* Vermelho Netflix mais claro no hover */
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+    box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
 }
 
 /* Categorias Verticais */
