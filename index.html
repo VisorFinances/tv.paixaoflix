@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaixãoFlix - Sua Plataforma de Streaming</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logoof512.png">
+</head>
+<body>
+    <!-- Sidebar Disney+ Style -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <img src="logoof512.png" alt="PaixãoFlix" class="logo">
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#" class="nav-item active" data-section="home">🏠 Início</a></li>
+                <li><a href="#" class="nav-item" data-section="cinema">🎬 Cinema</a></li>
+                <li><a href="#" class="nav-item" data-section="series">📺 Séries</a></li>
+                <li><a href="#" class="nav-item" data-section="canais">📡 Canais ao Vivo</a></li>
+                <li><a href="#" class="nav-item" data-section="kids">🧸 Kids</a></li>
+                <li><a href="#" class="nav-item" data-section="series-kids">🎈 Séries Kids</a></li>
+                <li><a href="#" class="nav-item" data-section="favoritos">❤️ Minha Lista</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Buscar filmes, séries, canais..." class="search-input">
+                    <button id="search-btn" class="search-btn">🔍</button>
+                </div>
+                <div class="user-menu">
+                    <span>👤 Usuário</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Container -->
+        <div id="content-container" class="content-container">
+            <!-- Hero Banner -->
+            <section id="hero-banner" class="hero-banner">
+                <div class="hero-content">
+                    <h1 id="hero-title">Bem-vindo à PaixãoFlix</h1>
+                    <p id="hero-description">Sua plataforma de streaming com milhares de opções</p>
+                    <button class="hero-btn">▶️ Assistir Agora</button>
+                </div>
+            </section>
+
+            <!-- As 12 seções serão renderizadas aqui dinamicamente -->
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="player-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="player-container"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@clappr/core@latest/dist/clappr.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
