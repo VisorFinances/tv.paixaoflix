@@ -527,22 +527,13 @@ class PaixaoFlix {
     }
 
     // Obter itens aleatórios
-
-            // Obter itens aleatórios 3 mais recentes
-            this.assistindo.sort((a, b) => 
-                new Date(b.lastWatched) - new Date(a.lastWatched)
-            );
-            this.assistindo = this.assistindo.slice(0, 3);
-            
-            // Manter apenas os 3 mais recentes
-            // this.assistindo.sort((a, b) => 
-            //     new Date(b.lastWatched) - new Date(a.lastWatched)
-            // );
-            // this.assistindo = this.assistindo.slice(0, 3);
-            
-            // Salvar no localStorage
-            localStorage.setItem('paixaoflix-continuar', JSON.stringify(this.assistindo));
+    getRandomItems(allData, count) {
+        if (allData.length === 0) {
+            return [];
         }
+        
+        const shuffled = [...allData].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, Math.min(count, allData.length));
     }
 
     addToContinueWatching(media) {
