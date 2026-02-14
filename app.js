@@ -195,8 +195,8 @@ class PaixaoFlix {
         const nostalgias = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Clássicos']).slice(0, 5);
         this.renderSection('nostalgias', 'Nostalgias que aquecem o coração', nostalgias);
         
-        // 10. Os melhores de 2025 (Lançamento 2025) - Atualizar a cada reinício
-        const lancamentos2025 = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) === 2025).slice(0, 5);
+        // 10. Os melhores de 2025 (Categoria Lançamento 2025) - Atualizar a cada reinício
+        const lancamentos2025 = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Lançamento 2025']).slice(0, 5);
         this.renderSection('melhores-2025', 'Os melhores de 2025', lancamentos2025);
         
         // 11. Prepare a pipoca e venha maratonar (Type = series) - Atualizar a cada reinício
