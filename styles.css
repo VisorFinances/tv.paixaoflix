@@ -10,6 +10,29 @@ body {
     background-color: #141414; /* Netflix Black */
     color: white;
     overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Esconder barra de rolagem em todos os navegadores */
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+/* Esconder barra de rolagem em todos os elementos */
+*::-webkit-scrollbar {
+    display: none;
+}
+
+/* Esconder barra de rolagem em Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* Esconder barra de rolagem em IE e Edge */
+* {
+    -ms-overflow-style: none;
 }
 
 /* Sidebar Disney+ Style */
