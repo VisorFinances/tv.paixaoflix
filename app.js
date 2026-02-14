@@ -717,12 +717,16 @@ class PaixaoFlix {
         };
 
         const usedItems = new Set();
+        let totalProcessados = 0;
+        let totalNaoCategorizados = 0;
 
         content.forEach(item => {
+            totalProcessados++;
             const itemKey = `${item.titulo || item.nome}_${item.year || 'semano'}`;
             
             // Se já foi categorizado, pular completamente
             if (usedItems.has(itemKey)) {
+                console.log('Item já processado:', itemKey);
                 return;
             }
             
@@ -733,6 +737,7 @@ class PaixaoFlix {
                 categories['Lançamento 2026'].push(item);
                 usedItems.add(itemKey);
                 assigned = true;
+                console.log('Item categorizado como Lançamento 2026:', item.titulo);
                 return; // Sair imediatamente após atribuir
             }
             
@@ -740,6 +745,7 @@ class PaixaoFlix {
                 categories['Lançamento 2025'].push(item);
                 usedItems.add(itemKey);
                 assigned = true;
+                console.log('Item categorizado como Lançamento 2025:', item.titulo);
                 return; // Sair imediatamente após atribuir
             }
             
@@ -752,6 +758,7 @@ class PaixaoFlix {
                     categories[genre].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado exatamente como', genre, ':', item.titulo);
                     return; // Sair imediatamente após atribuir
                 }
                 
@@ -762,92 +769,126 @@ class PaixaoFlix {
                     categories['Ação'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Ação:', item.titulo);
                 } else if (genreLower.includes('aventura') && !assigned) {
                     categories['Aventura'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Aventura:', item.titulo);
                 } else if (genreLower.includes('anime') && !assigned) {
                     categories['Anime'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Anime:', item.titulo);
                 } else if (genreLower.includes('animação') && !assigned) {
                     categories['Animação'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Animação:', item.titulo);
                 } else if (genreLower.includes('comédia') && !assigned) {
                     categories['Comédia'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Comédia:', item.titulo);
                 } else if (genreLower.includes('drama') && !assigned) {
                     categories['Drama'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Drama:', item.titulo);
                 } else if (genreLower.includes('dorama') && !assigned) {
                     categories['Dorama'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Dorama:', item.titulo);
                 } else if (genreLower.includes('clássico') && !assigned) {
                     categories['Clássicos'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Clássicos:', item.titulo);
                 } else if (genreLower.includes('crime') && !assigned) {
                     categories['Crime'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Crime:', item.titulo);
                 } else if (genreLower.includes('policial') && !assigned) {
                     categories['Policial'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Policial:', item.titulo);
                 } else if (genreLower.includes('família') && !assigned) {
                     categories['Família'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Família:', item.titulo);
                 } else if (genreLower.includes('musical') && !assigned) {
                     categories['Musical'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Musical:', item.titulo);
                 } else if (genreLower.includes('documentário') && !assigned) {
                     categories['Documentário'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Documentário:', item.titulo);
                 } else if (genreLower.includes('faroeste') && !assigned) {
                     categories['Faroeste'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Faroeste:', item.titulo);
                 } else if (genreLower.includes('ficção') && !assigned) {
                     categories['Ficção'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Ficção:', item.titulo);
                 } else if (genreLower.includes('nacional') && !assigned) {
                     categories['Nacional'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Nacional:', item.titulo);
                 } else if (genreLower.includes('religioso') && !assigned) {
                     categories['Religioso'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Religioso:', item.titulo);
                 } else if (genreLower.includes('romance') && !assigned) {
                     categories['Romance'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Romance:', item.titulo);
                 } else if (genreLower.includes('terror') && !assigned) {
                     categories['Terror'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Terror:', item.titulo);
                 } else if (genreLower.includes('suspense') && !assigned) {
                     categories['Suspense'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Suspense:', item.titulo);
                 } else if (genreLower.includes('adulto') && !assigned) {
                     categories['Adulto'].push(item);
                     usedItems.add(itemKey);
                     assigned = true;
+                    console.log('Item categorizado como Adulto:', item.titulo);
                 }
                 
                 if (assigned) {
                     usedItems.add(itemKey);
+                } else {
+                    totalNaoCategorizados++;
+                    console.log('Item NÃO categorizado:', item.titulo, '| Gênero:', item.genero);
                 }
             }
+        });
+
+        console.log('=== RESUMO DA CATEGORIZAÇÃO ===');
+        console.log('Total processados:', totalProcessados);
+        console.log('Total não categorizados:', totalNaoCategorizados);
+        console.log('Total usados:', usedItems.size);
+        
+        // Mostrar totais por categoria
+        Object.keys(categories).forEach(cat => {
+            console.log(`${cat}: ${categories[cat].length} itens`);
         });
 
         return categories;
