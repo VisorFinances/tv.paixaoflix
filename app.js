@@ -190,19 +190,19 @@ class PaixaoFlix {
         this.renderSection('romances', 'Histórias que aceleram o coração...', romances);
         
         // 9. Nostalgias que aquecem o coração (Ano < 2010) - Atualizar a cada reinício
-        const nostalgias = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) < 2010);
+        const nostalgias = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) < 2010).slice(0, 5);
         this.renderSection('nostalgias', 'Nostalgias que aquecem o coração', nostalgias);
         
-        // 10. Os melhores de 2025 (Ano = 2025)
-        const melhores2025 = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) === 2025);
+        // 10. Os melhores de 2025 (Ano = 2025) - Atualizar a cada reinício
+        const melhores2025 = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) === 2025).slice(0, 5);
         this.renderSection('melhores-2025', 'Os melhores de 2025', melhores2025);
         
         // 11. Prepare a pipoca e venha maratonar (Type = series) - Atualizar a cada reinício
         const series = [...this.seriesData, ...this.seriesKidsData];
         this.renderSection('maratonar', 'Prepare a pipoca e venha maratonar', series.slice(0, 5));
         
-        // 12. Novela é sempre bom (Gênero: Novela)
-        const novelas = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Novela']);
+        // 12. Novela é sempre bom (Gênero: Novela) - Atualizar a cada reinício
+        const novelas = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Novela']).slice(0, 5);
         this.renderSection('novelas', 'Novela é sempre bom', novelas);
         
         // Atualizar outras seções para subir/descer e não deixar espaço vazio quando Sábado a Noite estiver ativo
