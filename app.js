@@ -377,7 +377,7 @@ class PaixaoFlix {
                 this.renderCinemaByGenre();
                 break;
             case 'series':
-                this.renderSection('series', 'Séries', this.seriesData);
+                this.renderSeriesByGenre();
                 break;
             case 'canais':
                 this.renderSection('canais', 'Canais ao Vivo', this.canaisAoVivo);
@@ -533,8 +533,13 @@ class PaixaoFlix {
     renderCinemaByGenre() {
         const container = document.getElementById('content-container');
         
-        // Obter todos os gêneros únicos
-        const genres = this.getUniqueGenres(this.cinemaData);
+        // Categorias específicas definidas pelo usuário
+        const categories = [
+            'Lançamento 2026', 'Lançamento 2025', 'Ação', 'Aventura', 'Anime', 
+            'Animação', 'Comédia', 'Drama', 'Dorama', 'Clássicos', 'Crime', 
+            'Policial', 'Família', 'Musical', 'Documentário', 'Faroeste', 
+            'Ficção', 'Nacional', 'Religioso', 'Romance', 'Terror', 'Suspense', 'Adulto'
+        ];
         
         // Criar container principal
         const categoriesContainer = document.createElement('div');
@@ -549,11 +554,16 @@ class PaixaoFlix {
                 <li class="category-item active" data-genre="all">
                     Todos <span class="category-count">${this.cinemaData.length}</span>
                 </li>
-                ${genres.map(genre => {
-                    const count = this.cinemaData.filter(item => item.genero === genre).length;
+                ${categories.map(category => {
+                    const count = this.cinemaData.filter(item => 
+                        item.genero === category || 
+                        item.genero.includes(category) ||
+                        (category === 'Lançamento 2026' && item.year === '2026') ||
+                        (category === 'Lançamento 2025' && item.year === '2025')
+                    ).length;
                     return `
-                        <li class="category-item" data-genre="${genre}">
-                            ${genre} <span class="category-count">${count}</span>
+                        <li class="category-item" data-genre="${category}">
+                            ${category} <span class="category-count">${count}</span>
                         </li>
                     `;
                 }).join('')}
@@ -620,6 +630,129 @@ class PaixaoFlix {
         });
     }
 
+    // Renderizar Séries por Gênero (Vertical)
+    renderSeriesByGenre() {
+        const container = document.getElementById('content-container');
+        
+        // Categorias específicas definidas pelo usuário
+        const categories = [
+            'Lançamento 2026', 'Lançamento 2025', 'Ação', 'Aventura', 'Anime', 
+            'Animação', 'Comédia', 'Drama', 'Dorama', 'Clássicos', 'Crime', 
+            'Policial', 'Família', 'Musical', 'Documentário', 'Faroeste', 
+            'Ficção', 'Nacional', 'Religioso', 'Romance', 'Terror', 'Suspense', 'Adulto'
+        ];
+        
+        // Criar container principal
+        const categoriesContainer = document.createElement('div');
+        categoriesContainer.className = 'categories-container';
+        
+        // Criar sidebar de categorias
+        const sidebar = document.createElement('div');
+        sidebar.className = 'category-sidebar';
+        sidebar.innerHTML = `
+            <div class="category-title">📺 Gêneros</div>
+            <ul class="category-list">
+                <li class="category-item active" data-genre="all">
+                    Todos <span class="category-count">${this.seriesData.length}</span>
+                </li>
+                ${categories.map(category => {
+                    const count = this.seriesData.filter(item => 
+                        item.genero === category || 
+                        item.genero.includes(category) ||
+                        (category === 'Lançamento 2026' && item.year === '2026') ||
+                        (category === 'Lançamento 2025' && item.year === '2025')
+                    ).length;
+                    return `
+                        <li class="category-item" data-genre="${category}">
+                            ${category} <span class="category-count">${count}</span>
+                        </li>
+                    `;
+                }).join('')}
+            </ul>
+        `;
+        
+        // Criar conteúdo principal
+        const content = document.createElement('div');
+        content.className = 'category-content';
+        
+        // Header das séries
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `
+            <h2>📺 Séries</h2>
+            <p>Explore nossa coleção de séries por gênero</p>
+        `;
+        
+        content.appendChild(header);
+        
+        // Container das séries
+        const seriesContainer = document.createElement('div');
+        seriesContainer.id = 'series-container';
+        seriesContainer.innerHTML = `
+            <div class="cards-container">
+                ${this.seriesData.map(item => this.createCard(item)).join('')}
+            </div>
+        `;
+        
+        content.appendChild(seriesContainer);
+        
+        // Montar estrutura
+        categoriesContainer.appendChild(sidebar);
+        categoriesContainer.appendChild(content);
+        container.appendChild(categoriesContainer);
+        
+        // Adicionar event listeners
+        this.addSeriesCategoryListeners();
+        this.addCardListeners();
+    }
+
+    // Adicionar listeners às categorias de séries
+    addSeriesCategoryListeners() {
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Remover classe active de todos
+                document.querySelectorAll('.category-item').forEach(cat => {
+                    cat.classList.remove('active');
+                });
+                
+                // Adicionar classe active ao item clicado
+                e.target.classList.add('active');
+                
+                // Filtrar séries por gênero
+                const genre = e.target.dataset.genre;
+                this.filterSeriesByGenre(genre);
+            });
+        });
+    }
+
+    // Filtrar séries por gênero
+    filterSeriesByGenre(genre) {
+        const seriesContainer = document.getElementById('series-container');
+        
+        let filteredSeries;
+        if (genre === 'all') {
+            filteredSeries = this.seriesData;
+        } else if (genre === 'Lançamento 2026') {
+            filteredSeries = this.seriesData.filter(item => item.year === '2026');
+        } else if (genre === 'Lançamento 2025') {
+            filteredSeries = this.seriesData.filter(item => item.year === '2025');
+        } else {
+            filteredSeries = this.seriesData.filter(item => 
+                item.genero === genre || 
+                item.genero.includes(genre)
+            );
+        }
+        
+        seriesContainer.innerHTML = `
+            <div class="cards-container">
+                ${filteredSeries.map(item => this.createCard(item)).join('')}
+            </div>
+        `;
+        
+        // Adicionar listeners aos novos cards
+        this.addCardListeners();
+    }
+
     // Filtrar filmes por gênero
     filterMoviesByGenre(genre) {
         const moviesContainer = document.getElementById('movies-container');
@@ -627,8 +760,15 @@ class PaixaoFlix {
         let filteredMovies;
         if (genre === 'all') {
             filteredMovies = this.cinemaData;
+        } else if (genre === 'Lançamento 2026') {
+            filteredMovies = this.cinemaData.filter(item => item.year === '2026');
+        } else if (genre === 'Lançamento 2025') {
+            filteredMovies = this.cinemaData.filter(item => item.year === '2025');
         } else {
-            filteredMovies = this.cinemaData.filter(item => item.genero === genre);
+            filteredMovies = this.cinemaData.filter(item => 
+                item.genero === genre || 
+                item.genero.includes(genre)
+            );
         }
         
         moviesContainer.innerHTML = `
