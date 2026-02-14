@@ -181,11 +181,13 @@ class PaixaoFlix {
         // 6. Sábado a noite merece (Apenas aos sábados após 16:49)
         this.renderSabadoNoite();
         
-        // 7. As crianças amam (Gênero: Animação/Kids)
-        const criancas = [...this.kidsData, ...this.seriesKidsData];
-        this.renderSection('criancas-amam', 'As crianças amam', criancas.slice(0, 5));
+        // 7. As crianças amam (Gênero: Animação/Kids) - 3 filmes + 2 séries
+        const kidsFilmes = this.kidsData.slice(0, 3);
+        const kidsSeries = this.seriesKidsData.slice(0, 2);
+        const criancas = [...kidsFilmes, ...kidsSeries];
+        this.renderSection('criancas-amam', 'As crianças amam', criancas);
         
-        // 8. Romances para inspirações
+        // 8. Romances para inspirações - 5 capas da categoria Romance
         const romances = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Romance']).slice(0, 5);
         this.renderSection('romances', 'Histórias que aceleram o coração...', romances);
         
@@ -193,9 +195,9 @@ class PaixaoFlix {
         const nostalgias = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) < 2010).slice(0, 5);
         this.renderSection('nostalgias', 'Nostalgias que aquecem o coração', nostalgias);
         
-        // 10. Os melhores de 2025 (Ano = 2025) - Atualizar a cada reinício
-        const melhores2025 = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) === 2025).slice(0, 5);
-        this.renderSection('melhores-2025', 'Os melhores de 2025', melhores2025);
+        // 10. Os melhores de 2025 (Lançamento 2025) - Atualizar a cada reinício
+        const lancamentos2025 = this.filterByYear([...this.cinemaData, ...this.seriesData], (year) => parseInt(year) === 2025).slice(0, 5);
+        this.renderSection('melhores-2025', 'Os melhores de 2025', lancamentos2025);
         
         // 11. Prepare a pipoca e venha maratonar (Type = series) - Atualizar a cada reinício
         const series = [...this.seriesData, ...this.seriesKidsData];
