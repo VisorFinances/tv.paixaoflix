@@ -183,7 +183,7 @@ class PaixaoFlix {
         
         // 7. As crianças amam (Gênero: Animação/Kids)
         const criancas = [...this.kidsData, ...this.seriesKidsData];
-        this.renderSection('criancas-amam', 'As crianças amam', criancas);
+        this.renderSection('criancas-amam', 'As crianças amam', criancas.slice(0, 5));
         
         // 8. Romances para inspirações
         const romances = this.filterByGenre([...this.cinemaData, ...this.seriesData], ['Romance']);
