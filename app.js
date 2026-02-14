@@ -541,6 +541,9 @@ class PaixaoFlix {
             'Ficção', 'Nacional', 'Religioso', 'Romance', 'Terror', 'Suspense', 'Adulto'
         ];
         
+        // Categorizar conteúdos de forma exclusiva
+        const categorizedContent = this.categorizeContent(this.cinemaData);
+        
         // Criar container principal
         const categoriesContainer = document.createElement('div');
         categoriesContainer.className = 'categories-container';
@@ -555,12 +558,7 @@ class PaixaoFlix {
                     Todos <span class="category-count">${this.cinemaData.length}</span>
                 </li>
                 ${categories.map(category => {
-                    const count = this.cinemaData.filter(item => 
-                        item.genero === category || 
-                        item.genero.includes(category) ||
-                        (category === 'Lançamento 2026' && item.year === '2026') ||
-                        (category === 'Lançamento 2025' && item.year === '2025')
-                    ).length;
+                    const count = categorizedContent[category] ? categorizedContent[category].length : 0;
                     return `
                         <li class="category-item" data-genre="${category}">
                             ${category} <span class="category-count">${count}</span>
@@ -600,15 +598,166 @@ class PaixaoFlix {
         categoriesContainer.appendChild(content);
         container.appendChild(categoriesContainer);
         
+        // Armazenar conteúdo categorizado para uso posterior
+        this.categorizedCinema = categorizedContent;
+        
         // Adicionar event listeners
         this.addCategoryListeners();
         this.addCardListeners();
     }
 
-    // Obter gêneros únicos
-    getUniqueGenres(movies) {
-        const genres = [...new Set(movies.map(item => item.genero).filter(Boolean))];
-        return genres.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    // Sistema de categorização exclusiva
+    categorizeContent(content) {
+        const categories = {
+            'Lançamento 2026': [],
+            'Lançamento 2025': [],
+            'Ação': [],
+            'Aventura': [],
+            'Anime': [],
+            'Animação': [],
+            'Comédia': [],
+            'Drama': [],
+            'Dorama': [],
+            'Clássicos': [],
+            'Crime': [],
+            'Policial': [],
+            'Família': [],
+            'Musical': [],
+            'Documentário': [],
+            'Faroeste': [],
+            'Ficção': [],
+            'Nacional': [],
+            'Religioso': [],
+            'Romance': [],
+            'Terror': [],
+            'Suspense': [],
+            'Adulto': []
+        };
+
+        const usedItems = new Set();
+
+        content.forEach(item => {
+            const itemKey = `${item.titulo || item.nome}_${item.year}`;
+            
+            // Se já foi categorizado, pular
+            if (usedItems.has(itemKey)) return;
+            
+            let assigned = false;
+            
+            // Prioridade 1: Lançamentos por ano
+            if (item.year === '2026' && !assigned) {
+                categories['Lançamento 2026'].push(item);
+                usedItems.add(itemKey);
+                assigned = true;
+            } else if (item.year === '2025' && !assigned) {
+                categories['Lançamento 2025'].push(item);
+                usedItems.add(itemKey);
+                assigned = true;
+            }
+            
+            // Prioridade 2: Gêneros exatos
+            if (!assigned && item.genero) {
+                const genre = item.genero.trim();
+                
+                // Verificar correspondência exata primeiro
+                if (categories.hasOwnProperty(genre)) {
+                    categories[genre].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else {
+                    // Verificar correspondências parciais (apenas uma categoria por item)
+                    const genreLower = genre.toLowerCase();
+                    
+                    if (genreLower.includes('ação') && !assigned) {
+                        categories['Ação'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('aventura') && !assigned) {
+                        categories['Aventura'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('anime') && !assigned) {
+                        categories['Anime'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('animação') && !assigned) {
+                        categories['Animação'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('comédia') && !assigned) {
+                        categories['Comédia'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('drama') && !assigned) {
+                        categories['Drama'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('dorama') && !assigned) {
+                        categories['Dorama'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('clássico') && !assigned) {
+                        categories['Clássicos'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('crime') && !assigned) {
+                        categories['Crime'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('policial') && !assigned) {
+                        categories['Policial'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('família') && !assigned) {
+                        categories['Família'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('musical') && !assigned) {
+                        categories['Musical'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('documentário') && !assigned) {
+                        categories['Documentário'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('faroeste') && !assigned) {
+                        categories['Faroeste'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('ficção') && !assigned) {
+                        categories['Ficção'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('nacional') && !assigned) {
+                        categories['Nacional'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('religioso') && !assigned) {
+                        categories['Religioso'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('romance') && !assigned) {
+                        categories['Romance'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('terror') && !assigned) {
+                        categories['Terror'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('suspense') && !assigned) {
+                        categories['Suspense'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    } else if (genreLower.includes('adulto') && !assigned) {
+                        categories['Adulto'].push(item);
+                        usedItems.add(itemKey);
+                        assigned = true;
+                    }
+                }
+            }
+        });
+
+        return categories;
     }
 
     // Adicionar listeners às categorias
@@ -642,6 +791,9 @@ class PaixaoFlix {
             'Ficção', 'Nacional', 'Religioso', 'Romance', 'Terror', 'Suspense', 'Adulto'
         ];
         
+        // Categorizar conteúdos de forma exclusiva
+        const categorizedContent = this.categorizeContent(this.seriesData);
+        
         // Criar container principal
         const categoriesContainer = document.createElement('div');
         categoriesContainer.className = 'categories-container';
@@ -656,12 +808,7 @@ class PaixaoFlix {
                     Todos <span class="category-count">${this.seriesData.length}</span>
                 </li>
                 ${categories.map(category => {
-                    const count = this.seriesData.filter(item => 
-                        item.genero === category || 
-                        item.genero.includes(category) ||
-                        (category === 'Lançamento 2026' && item.year === '2026') ||
-                        (category === 'Lançamento 2025' && item.year === '2025')
-                    ).length;
+                    const count = categorizedContent[category] ? categorizedContent[category].length : 0;
                     return `
                         <li class="category-item" data-genre="${category}">
                             ${category} <span class="category-count">${count}</span>
@@ -701,6 +848,9 @@ class PaixaoFlix {
         categoriesContainer.appendChild(content);
         container.appendChild(categoriesContainer);
         
+        // Armazenar conteúdo categorizado para uso posterior
+        this.categorizedSeries = categorizedContent;
+        
         // Adicionar event listeners
         this.addSeriesCategoryListeners();
         this.addCardListeners();
@@ -732,15 +882,9 @@ class PaixaoFlix {
         let filteredSeries;
         if (genre === 'all') {
             filteredSeries = this.seriesData;
-        } else if (genre === 'Lançamento 2026') {
-            filteredSeries = this.seriesData.filter(item => item.year === '2026');
-        } else if (genre === 'Lançamento 2025') {
-            filteredSeries = this.seriesData.filter(item => item.year === '2025');
         } else {
-            filteredSeries = this.seriesData.filter(item => 
-                item.genero === genre || 
-                item.genero.includes(genre)
-            );
+            // Usar conteúdo categorizado para evitar duplicações
+            filteredSeries = this.categorizedSeries[genre] || [];
         }
         
         seriesContainer.innerHTML = `
@@ -760,15 +904,9 @@ class PaixaoFlix {
         let filteredMovies;
         if (genre === 'all') {
             filteredMovies = this.cinemaData;
-        } else if (genre === 'Lançamento 2026') {
-            filteredMovies = this.cinemaData.filter(item => item.year === '2026');
-        } else if (genre === 'Lançamento 2025') {
-            filteredMovies = this.cinemaData.filter(item => item.year === '2025');
         } else {
-            filteredMovies = this.cinemaData.filter(item => 
-                item.genero === genre || 
-                item.genero.includes(genre)
-            );
+            // Usar conteúdo categorizado para evitar duplicações
+            filteredMovies = this.categorizedCinema[genre] || [];
         }
         
         moviesContainer.innerHTML = `
