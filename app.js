@@ -18,9 +18,6 @@ class PaixaoFlix {
         await this.loadData();
         this.setupEventListeners();
         this.renderHome();
-        
-        // Inicializar sistema de atualização automática do GitHub
-        this.setupAutoGitHubUpdate();
     }
 
     // Carregar dados EXCLUSIVAMENTE dos arquivos especificados
@@ -72,17 +69,20 @@ class PaixaoFlix {
                 
                 if (line.startsWith('#EXTINF:')) {
                     // Extrair informações do canal
-                    const nomeMatch = line.match(/,(.+)$/);
-                    const logoMatch = line.match(/tvg-logo="([^"]+)"/);
-                    const groupMatch = line.match(/group-title="([^"]+)"/);
+                    const nomeMatch = line.match(/,([^,]*)$/);
+                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
+                    const groupMatch = line.match(/group-title="([^"]*)"/);
                     
-                    currentCanal = {
-                        nome: nomeMatch ? nomeMatch[1] : 'Canal Sem Nome',
-                        logo: logoMatch ? logoMatch[1] : '',
-                        grupo: groupMatch ? groupMatch[1] : 'Sem Grupo',
-                        url: ''
-                    };
+                    if (nomeMatch) {
+                        currentCanal = {
+                            nome: nomeMatch[1].trim(),
+                            logo: logoMatch ? logoMatch[1] : '',
+                            grupo: groupMatch ? groupMatch[1] : 'Sem Grupo',
+                            url: ''
+                        };
+                    }
                 } else if (line && !line.startsWith('#') && currentCanal.nome) {
+                    // Próxima linha é a URL do canal
                     currentCanal.url = line;
                     this.canaisAoVivo.push({...currentCanal});
                     currentCanal = {};
@@ -95,6 +95,7 @@ class PaixaoFlix {
         }
     }
 
+    // Carregar dados do localStorage
     loadLocalStorageData() {
         // Carregar "Continuar Assistindo"
         const assistindo = localStorage.getItem('paixaoflix-continuar');
@@ -109,6 +110,7 @@ class PaixaoFlix {
         }
     }
 
+    // Setup de event listeners
     setupEventListeners() {
         // Navegação sidebar
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -241,7 +243,7 @@ class PaixaoFlix {
         
         container.appendChild(menuSection);
         
-        // Event listeners para menu cards
+        // Adicionar event listeners aos cards do menu
         menuSection.querySelectorAll('.menu-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -251,212 +253,7 @@ class PaixaoFlix {
         });
     }
 
-    createCard(item, showProgress = false) {
-        const progress = showProgress && item.currentTime && item.duration ? 
-            (item.currentTime / item.duration) * 100 : 0;
-            
-        return `
-            <div class="card" data-id="${item.titulo || item.nome}" data-url="${item.url}">
-                <img src="${item.poster || item.logo || 'logoof512.png'}" alt="${item.titulo || item.nome}">
-                <div class="card-info">
-                    <div class="card-title">${item.titulo || item.nome}</div>
-                    <div class="card-meta">
-                        ${item.year ? item.year : ''} 
-                        ${item.rating ? '⭐ ' + item.rating : ''}
-                        ${item.grupo ? '📡 ' + item.grupo : ''}
-                    </div>
-                </div>
-                ${showProgress ? `
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%"></div>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    }
-
-    // Filtros para seções
-    filterByGenre(items, genres) {
-        return items.filter(item => {
-            if (!item.genero) return false;
-            return genres.some(genre => 
-                item.genero.toLowerCase().includes(genre.toLowerCase())
-            );
-        });
-    }
-
-    filterByYear(items, yearFilter) {
-        return items.filter(item => {
-            if (!item.year) return false;
-            return yearFilter(item.year);
-        });
-    }
-
-    filterByType(items, type) {
-        return items.filter(item => item.type === type);
-    }
-
-    getRandomItems(items, count) {
-        const shuffled = [...items].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
-    }
-
-    // Sistema de busca universal
-    performSearch() {
-        const query = document.getElementById('search-input').value.toLowerCase();
-        
-        if (!query) {
-            this.renderHome();
-            return;
-        }
-        
-        // Ignorar acentos e maiúsculas/minúsculas
-        const normalizedQuery = query.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        
-        const results = [];
-        
-        // Buscar em todos os dados
-        const allData = [
-            ...this.cinemaData,
-            ...this.seriesData,
-            ...this.kidsData,
-            ...this.seriesKidsData,
-            ...this.canaisAoVivo
-        ];
-        
-        allData.forEach(item => {
-            const title = (item.titulo || item.nome || '').toLowerCase();
-            const normalizedTitle = title.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            const genre = (item.genero || '').toLowerCase();
-            const normalizedGenre = genre.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            
-            if (normalizedTitle.includes(normalizedQuery) || 
-                normalizedGenre.includes(normalizedQuery)) {
-                results.push(item);
-            }
-        });
-        
-        this.renderSearchResults(results, query);
-    }
-
-    renderSearchResults(results, query) {
-        this.clearContent();
-        
-        const container = document.getElementById('content-container');
-        
-        const section = document.createElement('section');
-        section.className = 'section';
-        
-        section.innerHTML = `
-            <h2 class="section-title">Resultados para "${query}" (${results.length})</h2>
-            <div class="cards-container">
-                ${results.map(item => this.createCard(item)).join('')}
-            </div>
-        `;
-        
-        container.appendChild(section);
-        
-        // Adicionar event listeners aos cards
-        this.addCardListeners();
-    }
-
-    // Navegação entre seções
-    navigateToSection(section) {
-        // Atualizar menu ativo
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        document.querySelector(`[data-section="${section}"]`).classList.add('active');
-        
-        // Renderizar seção correspondente
-        this.clearContent();
-        
-        switch(section) {
-            case 'home':
-                this.renderHome();
-                break;
-            case 'cinema':
-                this.renderCinemaByGenre();
-                break;
-            case 'series':
-                this.renderSeriesByGenre();
-                break;
-            case 'canais':
-                this.renderSection('canais', 'Canais ao Vivo', this.canaisAoVivo);
-                break;
-            case 'kids':
-                this.renderSection('kids', 'Filmes Kids', this.kidsData);
-                break;
-            case 'series-kids':
-                this.renderSection('series-kids', 'Séries Kids', this.seriesKidsData);
-                break;
-            case 'favoritos':
-                this.renderSection('favoritos', 'Minha Lista', this.favoritos);
-                break;
-        }
-        
-        this.addCardListeners();
-    }
-
-    // Player de vídeo com Clappr e checkpoint
-    playMedia(media) {
-        this.currentMedia = media;
-        const modal = document.getElementById('player-modal');
-        const playerContainer = document.getElementById('player-container');
-        
-        modal.style.display = 'block';
-        
-        // Destruir player anterior se existir
-        if (this.player) {
-            this.player.destroy();
-        }
-        
-        // Criar novo player Clappr
-        this.player = new Clappr.Player({
-            source: media.url,
-            parentId: '#player-container',
-            width: '100%',
-            height: '100%',
-            autoPlay: true
-        });
-        
-        // Salvar checkpoint a cada 5 segundos
-        this.checkpointInterval = setInterval(() => {
-            this.saveCheckpoint();
-        }, 5000);
-        
-        // Adicionar aos "Continuar Assistindo"
-        this.addToContinueWatching(media);
-    }
-
-    saveCheckpoint() {
-        if (!this.player || !this.currentMedia) return;
-        
-        const currentTime = this.player.getCurrentTime();
-        const duration = this.player.getDuration();
-        
-        if (currentTime && duration) {
-            const mediaData = {
-                ...this.currentMedia,
-                currentTime: currentTime,
-                duration: duration,
-                lastWatched: new Date().toISOString()
-            };
-            
-            // Atualizar ou adicionar aos assistindo
-            const existingIndex = this.assistindo.findIndex(item => 
-                (item.titulo || item.nome) === (this.currentMedia.titulo || this.currentMedia.nome)
-            );
-            
-            if (existingIndex >= 0) {
-                this.assistindo[existingIndex] = mediaData;
-            } else {
-                this.assistindo.push(mediaData);
-            }
-        }
-    }
-
-    // Renderizar seção Sábado a Noite (com regras de horário)
+    // Renderizar Sábado a Noite (com regras de horário)
     renderSabadoNoite() {
         const now = new Date();
         const dayOfWeek = now.getDay(); // 0 = Domingo, 6 = Sábado
@@ -507,6 +304,190 @@ class PaixaoFlix {
             container.classList.add('sabado-noite-active');
         }
     }
+
+    // Sistema de categorização exclusiva
+    categorizeContent(content) {
+        const categories = {
+            'Lançamento 2026': [],
+            'Lançamento 2025': [],
+            'Ação': [],
+            'Aventura': [],
+            'Anime': [],
+            'Animação': [],
+            'Comédia': [],
+            'Drama': [],
+            'Dorama': [],
+            'Clássicos': [],
+            'Crime': [],
+            'Policial': [],
+            'Família': [],
+            'Musical': [],
+            'Documentário': [],
+            'Faroeste': [],
+            'Ficção': [],
+            'Nacional': [],
+            'Religioso': [],
+            'Romance': [],
+            'Terror': [],
+            'Suspense': [],
+            'Adulto': []
+        };
+
+        const usedItems = new Set();
+        let totalProcessados = 0;
+        let totalNaoCategorizados = 0;
+
+        content.forEach(item => {
+            totalProcessados++;
+            const itemKey = `${item.titulo || item.nome}_${item.year || 'semano'}`;
+            
+            // Se já foi categorizado, pular completamente
+            if (usedItems.has(itemKey)) {
+                console.log('Item já processado:', itemKey);
+                return;
+            }
+            
+            let assigned = false;
+            
+            // Prioridade 1: Lançamentos por ano
+            if (item.year === '2026' && !assigned) {
+                categories['Lançamento 2026'].push(item);
+                usedItems.add(itemKey);
+                assigned = true;
+                return; // Sair imediatamente após atribuir
+            }
+            
+            if (item.year === '2025' && !assigned) {
+                categories['Lançamento 2025'].push(item);
+                usedItems.add(itemKey);
+                assigned = true;
+                return; // Sair imediatamente após atribuir
+            }
+            
+            // Prioridade 2: Gêneros exatos
+            if (!assigned && item.genero) {
+                const genre = item.genero.trim();
+                
+                // Verificar correspondência exata primeiro
+                if (categories.hasOwnProperty(genre)) {
+                    categories[genre].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                    return; // Sair imediatamente após atribuir
+                }
+                
+                // Verificar correspondências parciais (apenas uma categoria por item)
+                const genreLower = genre.toLowerCase();
+                
+                if (genreLower.includes('ação') && !assigned) {
+                    categories['Ação'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('aventura') && !assigned) {
+                    categories['Aventura'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('anime') && !assigned) {
+                    categories['Anime'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('animação') && !assigned) {
+                    categories['Animação'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('comédia') && !assigned) {
+                    categories['Comédia'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('drama') && !assigned) {
+                    categories['Drama'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('dorama') && !assigned) {
+                    categories['Dorama'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('clássico') && !assigned) {
+                    categories['Clássicos'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('crime') && !assigned) {
+                    categories['Crime'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('policial') && !assigned) {
+                    categories['Policial'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('família') && !assigned) {
+                    categories['Família'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('musical') && !assigned) {
+                    categories['Musical'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('documentário') && !assigned) {
+                    categories['Documentário'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('faroeste') && !assigned) {
+                    categories['Faroeste'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('ficção') && !assigned) {
+                    categories['Ficção'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('nacional') && !assigned) {
+                    categories['Nacional'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('religioso') && !assigned) {
+                    categories['Religioso'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('romance') && !assigned) {
+                    categories['Romance'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('terror') && !assigned) {
+                    categories['Terror'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('suspense') && !assigned) {
+                    categories['Suspense'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                } else if (genreLower.includes('adulto') && !assigned) {
+                    categories['Adulto'].push(item);
+                    usedItems.add(itemKey);
+                    assigned = true;
+                }
+                
+                if (assigned) {
+                    usedItems.add(itemKey);
+                } else {
+                    totalNaoCategorizados++;
+                    console.log('Item NÃO categorizado:', item.titulo, '| Gênero:', item.genero);
+                }
+            }
+        });
+
+        console.log('=== RESUMO DA CATEGORIZAÇÃO ===');
+        console.log('Total processados:', totalProcessados);
+        console.log('Total não categorizados:', totalNaoCategorizados);
+        console.log('Total usados:', usedItems.size);
+        
+        // Mostrar totais por categoria
+        Object.keys(categories).forEach(cat => {
+            console.log(`${cat}: ${categories[cat].length} itens`);
+        });
+
+        return categories;
+    }
+
+    // Obter lançamentos aleatórios de 2026
     getRandomLancamentos2026(count) {
         // Filtrar todos os conteúdos de 2026
         const lancamentos2026 = [
@@ -536,70 +517,42 @@ class PaixaoFlix {
         return shuffled.slice(0, Math.min(count, allData.length));
     }
 
-    addToContinueWatching(media) {
-        const mediaData = {
-            ...media,
-            currentTime: 0,
-            duration: 0,
-            lastWatched: new Date().toISOString()
-        };
+    // Navegação entre seções
+    navigateToSection(section) {
+        // Atualizar menu ativo
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-section="${section}"]`).classList.add('active');
         
-        const existingIndex = this.assistindo.findIndex(item => 
-            (item.titulo || item.nome) === (media.titulo || media.nome)
-        );
+        // Renderizar seção correspondente
+        this.clearContent();
         
-        if (existingIndex >= 0) {
-            this.assistindo[existingIndex] = mediaData;
-        } else {
-            this.assistindo.push(mediaData);
+        switch(section) {
+            case 'home':
+                this.renderHome();
+                break;
+            case 'cinema':
+                this.renderCinemaByGenre();
+                break;
+            case 'series':
+                this.renderSeriesByGenre();
+                break;
+            case 'canais':
+                this.renderSection('canais', 'Canais ao Vivo', this.canaisAoVivo);
+                break;
+            case 'kids':
+                this.renderSection('kids', 'Filmes Kids', this.kidsData);
+                break;
+            case 'series-kids':
+                this.renderSection('series-kids', 'Séries Kids', this.seriesKidsData);
+                break;
+            case 'favoritos':
+                this.renderSection('favoritos', 'Minha Lista', this.favoritos);
+                break;
         }
         
-        localStorage.setItem('paixaoflix-continuar', JSON.stringify(this.assistindo));
-    }
-
-    closePlayer() {
-        const modal = document.getElementById('player-modal');
-        modal.style.display = 'none';
-        
-        // Limpar intervalo de checkpoint
-        if (this.checkpointInterval) {
-            clearInterval(this.checkpointInterval);
-        }
-        
-        // Destruir player
-        if (this.player) {
-            this.player.destroy();
-            this.player = null;
-        }
-        
-        // Salvar checkpoint final
-        this.saveCheckpoint();
-        
-        // Voltar para home sem recarregar página
-        this.renderHome();
-    }
-
-    // Sistema de favoritos
-    toggleFavorite(media) {
-        const index = this.favoritos.findIndex(item => 
-            (item.titulo || item.nome) === (media.titulo || media.nome)
-        );
-        
-        if (index >= 0) {
-            this.favoritos.splice(index, 1);
-        } else {
-            this.favoritos.push(media);
-        }
-        
-        // Salvar no localStorage e arquivo
-        localStorage.setItem('paixaoflix-favoritos', JSON.stringify(this.favoritos));
-        this.saveFavoritosToFile();
-    }
-
-    async saveFavoritosToFile() {
-        // Em produção, isso seria salvo no servidor
-        // Por enquanto, apenas no localStorage
-        console.log('Favoritos salvos:', this.favoritos.length);
+        this.addCardListeners();
     }
 
     // Renderizar Cinema por Gênero (Vertical)
@@ -679,231 +632,6 @@ class PaixaoFlix {
         this.addCardListeners();
     }
 
-    // Sistema de categorização exclusiva
-    categorizeContent(content) {
-        const categories = {
-            'Lançamento 2026': [],
-            'Lançamento 2025': [],
-            'Ação': [],
-            'Aventura': [],
-            'Anime': [],
-            'Animação': [],
-            'Comédia': [],
-            'Drama': [],
-            'Dorama': [],
-            'Clássicos': [],
-            'Crime': [],
-            'Policial': [],
-            'Família': [],
-            'Musical': [],
-            'Documentário': [],
-            'Faroeste': [],
-            'Ficção': [],
-            'Nacional': [],
-            'Religioso': [],
-            'Romance': [],
-            'Terror': [],
-            'Suspense': [],
-            'Adulto': []
-        };
-
-        const usedItems = new Set();
-        let totalProcessados = 0;
-        let totalNaoCategorizados = 0;
-
-        content.forEach(item => {
-            totalProcessados++;
-            const itemKey = `${item.titulo || item.nome}_${item.year || 'semano'}`;
-            
-            // Se já foi categorizado, pular completamente
-            if (usedItems.has(itemKey)) {
-                console.log('Item já processado:', itemKey);
-                return;
-            }
-            
-            let assigned = false;
-            
-            // Prioridade 1: Lançamentos por ano
-            if (item.year === '2026' && !assigned) {
-                categories['Lançamento 2026'].push(item);
-                usedItems.add(itemKey);
-                assigned = true;
-                console.log('Item categorizado como Lançamento 2026:', item.titulo);
-                return; // Sair imediatamente após atribuir
-            }
-            
-            if (item.year === '2025' && !assigned) {
-                categories['Lançamento 2025'].push(item);
-                usedItems.add(itemKey);
-                assigned = true;
-                console.log('Item categorizado como Lançamento 2025:', item.titulo);
-                return; // Sair imediatamente após atribuir
-            }
-            
-            // Prioridade 2: Gêneros exatos
-            if (!assigned && item.genero) {
-                const genre = item.genero.trim();
-                
-                // Verificar correspondência exata primeiro
-                if (categories.hasOwnProperty(genre)) {
-                    categories[genre].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado exatamente como', genre, ':', item.titulo);
-                    return; // Sair imediatamente após atribuir
-                }
-                
-                // Verificar correspondências parciais (apenas uma categoria por item)
-                const genreLower = genre.toLowerCase();
-                
-                if (genreLower.includes('ação') && !assigned) {
-                    categories['Ação'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Ação:', item.titulo);
-                } else if (genreLower.includes('aventura') && !assigned) {
-                    categories['Aventura'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Aventura:', item.titulo);
-                } else if (genreLower.includes('anime') && !assigned) {
-                    categories['Anime'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Anime:', item.titulo);
-                } else if (genreLower.includes('animação') && !assigned) {
-                    categories['Animação'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Animação:', item.titulo);
-                } else if (genreLower.includes('comédia') && !assigned) {
-                    categories['Comédia'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Comédia:', item.titulo);
-                } else if (genreLower.includes('drama') && !assigned) {
-                    categories['Drama'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Drama:', item.titulo);
-                } else if (genreLower.includes('dorama') && !assigned) {
-                    categories['Dorama'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Dorama:', item.titulo);
-                } else if (genreLower.includes('clássico') && !assigned) {
-                    categories['Clássicos'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Clássicos:', item.titulo);
-                } else if (genreLower.includes('crime') && !assigned) {
-                    categories['Crime'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Crime:', item.titulo);
-                } else if (genreLower.includes('policial') && !assigned) {
-                    categories['Policial'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Policial:', item.titulo);
-                } else if (genreLower.includes('família') && !assigned) {
-                    categories['Família'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Família:', item.titulo);
-                } else if (genreLower.includes('musical') && !assigned) {
-                    categories['Musical'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Musical:', item.titulo);
-                } else if (genreLower.includes('documentário') && !assigned) {
-                    categories['Documentário'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Documentário:', item.titulo);
-                } else if (genreLower.includes('faroeste') && !assigned) {
-                    categories['Faroeste'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Faroeste:', item.titulo);
-                } else if (genreLower.includes('ficção') && !assigned) {
-                    categories['Ficção'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Ficção:', item.titulo);
-                } else if (genreLower.includes('nacional') && !assigned) {
-                    categories['Nacional'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Nacional:', item.titulo);
-                } else if (genreLower.includes('religioso') && !assigned) {
-                    categories['Religioso'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Religioso:', item.titulo);
-                } else if (genreLower.includes('romance') && !assigned) {
-                    categories['Romance'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Romance:', item.titulo);
-                } else if (genreLower.includes('terror') && !assigned) {
-                    categories['Terror'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Terror:', item.titulo);
-                } else if (genreLower.includes('suspense') && !assigned) {
-                    categories['Suspense'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Suspense:', item.titulo);
-                } else if (genreLower.includes('adulto') && !assigned) {
-                    categories['Adulto'].push(item);
-                    usedItems.add(itemKey);
-                    assigned = true;
-                    console.log('Item categorizado como Adulto:', item.titulo);
-                }
-                
-                if (assigned) {
-                    usedItems.add(itemKey);
-                } else {
-                    totalNaoCategorizados++;
-                    console.log('Item NÃO categorizado:', item.titulo, '| Gênero:', item.genero);
-                }
-            }
-        });
-
-        console.log('=== RESUMO DA CATEGORIZAÇÃO ===');
-        console.log('Total processados:', totalProcessados);
-        console.log('Total não categorizados:', totalNaoCategorizados);
-        console.log('Total usados:', usedItems.size);
-        
-        // Mostrar totais por categoria
-        Object.keys(categories).forEach(cat => {
-            console.log(`${cat}: ${categories[cat].length} itens`);
-        });
-
-        return categories;
-    }
-
-    // Adicionar listeners às categorias
-    addCategoryListeners() {
-        document.querySelectorAll('.category-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                // Remover classe active de todos
-                document.querySelectorAll('.category-item').forEach(cat => {
-                    cat.classList.remove('active');
-                });
-                
-                // Adicionar classe active ao item clicado
-                e.target.classList.add('active');
-                
-                // Filtrar filmes por gênero
-                const genre = e.target.dataset.genre;
-                this.filterMoviesByGenre(genre);
-            });
-        });
-    }
-
     // Renderizar Séries por Gênero (Vertical)
     renderSeriesByGenre() {
         const container = document.getElementById('content-container');
@@ -981,6 +709,25 @@ class PaixaoFlix {
         this.addCardListeners();
     }
 
+    // Adicionar listeners às categorias
+    addCategoryListeners() {
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Remover classe active de todos
+                document.querySelectorAll('.category-item').forEach(cat => {
+                    cat.classList.remove('active');
+                });
+                
+                // Adicionar classe active ao item clicado
+                e.target.classList.add('active');
+                
+                // Filtrar filmes por gênero
+                const genre = e.target.dataset.genre;
+                this.filterMoviesByGenre(genre);
+            });
+        });
+    }
+
     // Adicionar listeners às categorias de séries
     addSeriesCategoryListeners() {
         document.querySelectorAll('.category-item').forEach(item => {
@@ -998,28 +745,6 @@ class PaixaoFlix {
                 this.filterSeriesByGenre(genre);
             });
         });
-    }
-
-    // Filtrar séries por gênero
-    filterSeriesByGenre(genre) {
-        const seriesContainer = document.getElementById('series-container');
-        
-        let filteredSeries;
-        if (genre === 'all') {
-            filteredSeries = this.seriesData;
-        } else {
-            // Usar conteúdo categorizado para evitar duplicações
-            filteredSeries = this.categorizedSeries[genre] || [];
-        }
-        
-        seriesContainer.innerHTML = `
-            <div class="cards-container">
-                ${filteredSeries.map(item => this.createCard(item)).join('')}
-            </div>
-        `;
-        
-        // Adicionar listeners aos novos cards
-        this.addCardListeners();
     }
 
     // Filtrar filmes por gênero
@@ -1044,6 +769,70 @@ class PaixaoFlix {
         this.addCardListeners();
     }
 
+    // Filtrar séries por gênero
+    filterSeriesByGenre(genre) {
+        const seriesContainer = document.getElementById('series-container');
+        
+        let filteredSeries;
+        if (genre === 'all') {
+            filteredSeries = this.seriesData;
+        } else {
+            // Usar conteúdo categorizado para evitar duplicações
+            filteredSeries = this.categorizedSeries[genre] || [];
+        }
+        
+        seriesContainer.innerHTML = `
+            <div class="cards-container">
+                ${filteredSeries.map(item => this.createCard(item)).join('')}
+            </div>
+        `;
+        
+        // Adicionar listeners aos novos cards
+        this.addCardListeners();
+    }
+
+    // Filtros para seções
+    filterByGenre(items, genres) {
+        return items.filter(item => {
+            if (!item.genero) return false;
+            return genres.some(genre => 
+                item.genero.toLowerCase().includes(genre.toLowerCase())
+            );
+        });
+    }
+
+    filterByYear(items, yearFilter) {
+        return items.filter(item => {
+            if (!item.year) return false;
+            return yearFilter(parseInt(item.year));
+        });
+    }
+
+    // Criar cards
+    createCard(item, showProgress = false) {
+        const progress = showProgress && item.currentTime && item.duration ? 
+            (item.currentTime / item.duration) * 100 : 0;
+            
+        return `
+            <div class="card" data-id="${item.titulo || item.nome}" data-url="${item.url}">
+                <img src="${item.poster || item.logo || 'logoof512.png'}" alt="${item.titulo || item.nome}">
+                <div class="card-info">
+                    <div class="card-title">${item.titulo || item.nome}</div>
+                    <div class="card-meta">
+                        ${item.year ? item.year : ''} 
+                        ${item.rating ? '⭐ ' + item.rating : ''}
+                        ${item.grupo ? '📡 ' + item.grupo : ''}
+                    </div>
+                </div>
+                ${showProgress ? `
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
     // Adicionar listeners aos cards
     addCardListeners() {
         document.querySelectorAll('.card').forEach(card => {
@@ -1060,6 +849,119 @@ class PaixaoFlix {
         });
     }
 
+    // Player de vídeo com Clappr e checkpoint
+    playMedia(media) {
+        this.currentMedia = media;
+        const modal = document.getElementById('player-modal');
+        const playerContainer = document.getElementById('player-container');
+        
+        modal.style.display = 'block';
+        
+        // Destruir player anterior se existir
+        if (this.player) {
+            this.player.destroy();
+        }
+        
+        // Criar novo player Clappr
+        this.player = new Clappr.Player({
+            source: media.url,
+            parentId: '#player-container',
+            width: '100%',
+            height: '100%',
+            autoPlay: true
+        });
+        
+        // Salvar checkpoint a cada 5 segundos
+        this.checkpointInterval = setInterval(() => {
+            this.saveCheckpoint();
+        }, 5000);
+        
+        // Adicionar aos "Continuar Assistindo"
+        this.addToContinueWatching(media);
+    }
+
+    // Salvar checkpoint no localStorage
+    saveCheckpoint() {
+        if (!this.player || !this.currentMedia) return;
+        
+        const currentTime = this.player.getCurrentTime();
+        const duration = this.player.getDuration();
+        
+        if (currentTime && duration) {
+            const mediaData = {
+                ...this.currentMedia,
+                currentTime: currentTime,
+                duration: duration,
+                lastWatched: new Date().toISOString()
+            };
+            
+            // Atualizar ou adicionar aos assistindo
+            const existingIndex = this.assistindo.findIndex(item => 
+                (item.titulo || item.nome) === (this.currentMedia.titulo || this.currentMedia.nome)
+            );
+            
+            if (existingIndex >= 0) {
+                this.assistindo[existingIndex] = mediaData;
+            } else {
+                this.assistindo.push(mediaData);
+            }
+            
+            // Manter apenas os 3 mais recentes
+            this.assistindo.sort((a, b) => 
+                new Date(b.lastWatched) - new Date(a.lastWatched)
+            );
+            this.assistindo = this.assistindo.slice(0, 3);
+            
+            // Salvar no localStorage
+            localStorage.setItem('paixaoflix-continuar', JSON.stringify(this.assistindo));
+        }
+    }
+
+    // Adicionar aos "Continuar Assistindo"
+    addToContinueWatching(media) {
+        const mediaData = {
+            ...media,
+            currentTime: 0,
+            duration: 0,
+            lastWatched: new Date().toISOString()
+        };
+        
+        // Obter último commit local
+        const existingIndex = this.assistindo.findIndex(item => 
+            (item.titulo || item.nome) === (media.titulo || media.nome)
+            );
+        
+        if (existingIndex >= 0) {
+            this.assistindo[existingIndex] = mediaData;
+        } else {
+            this.assistindo.push(mediaData);
+        }
+    }
+
+    // Fechar player
+    closePlayer() {
+        const modal = document.getElementById('player-modal');
+        modal.style.display = 'none';
+        
+        // Limpar intervalo de checkpoint
+        if (this.checkpointInterval) {
+            clearInterval(this.checkpointInterval);
+        }
+        
+        // Destruir player
+        if (this.player) {
+            this.player.destroy();
+            this.player = null;
+        }
+        
+        // Salvar checkpoint final
+        this.saveCheckpoint();
+        
+        // Voltar para home sem recarregar a página
+        this.renderHome();
+    }
+
+    // Buscar mídia por título
     findMediaByTitle(title) {
         const allData = [
             ...this.cinemaData,
@@ -1074,6 +976,7 @@ class PaixaoFlix {
         );
     }
 
+    // Tocar mídia aleatória
     playRandomMedia() {
         const allData = [
             ...this.cinemaData,
@@ -1084,63 +987,6 @@ class PaixaoFlix {
             const randomMedia = allData[Math.floor(Math.random() * allData.length)];
             this.playMedia(randomMedia);
         }
-    }
-}
-
-// Sistema de atualização automática do GitHub
-    setupAutoGitHubUpdate() {
-        // Verificar se há mudanças a cada 30 segundos
-        setInterval(async () => {
-            try {
-                await this.autoCommitAndPush();
-            } catch (error) {
-                console.log('Erro na atualização automática:', error);
-            }
-        }, 30000); // 30 segundos
-    }
-
-    // Commit e push automático
-    async autoCommitAndPush() {
-        // Verificar se há mudanças no repositório
-        const response = await fetch('https://api.github.com/repos/VisorFinances/tv.paixaoflix/commits/main');
-        const commits = await response.json();
-        const lastCommitSha = commits[0]?.sha;
-        
-        // Obter último commit local
-        const lastLocalCommit = localStorage.getItem('paixaoflix-last-commit');
-        
-        // Se houver mudanças, fazer commit e push
-        if (lastLocalCommit !== lastCommitSha) {
-            console.log('Nova atualização detectada, atualizando GitHub...');
-            
-            // Simular commit e push (em produção, seria feito via backend)
-            localStorage.setItem('paixaoflix-last-commit', lastCommitSha);
-            
-            // Notificar sobre atualização
-            this.showUpdateNotification();
-        }
-    }
-
-    // Mostrar notificação de atualização
-    showUpdateNotification() {
-        const notification = document.createElement('div');
-        notification.className = 'update-notification';
-        notification.innerHTML = `
-            <div class="notification-content">
-                <span class="notification-icon">🚀</span>
-                <span class="notification-text">GitHub atualizado automaticamente!</span>
-                <button class="notification-close" onclick="this.parentElement.remove()">×</button>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Remover após 5 segundos
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
-            }
-        }, 5000);
     }
 }
 
