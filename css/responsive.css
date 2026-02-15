@@ -1,0 +1,511 @@
+/* Responsive Design for All Devices */
+
+/* Mobile Phones (320px - 768px) */
+@media (max-width: 768px) {
+    /* Sidebar */
+    .sidebar-nav {
+        transform: translateX(-100%);
+        width: 280px;
+    }
+    
+    .sidebar-nav.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .main-header {
+        left: 0;
+        padding: 0 12px;
+        height: 60px;
+    }
+    
+    /* Menu Toggle */
+    .menu-toggle {
+        display: block;
+    }
+    
+    /* Search */
+    .search-container {
+        width: 200px;
+    }
+    
+    .search-input {
+        font-size: 14px;
+        padding: 8px 32px 8px 12px;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        height: 50vh;
+        min-height: 400px;
+        margin-top: -60px;
+        padding-top: 60px;
+    }
+    
+    .hero-content {
+        padding: 40px 20px 20px;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    
+    .hero-description {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        max-width: 100%;
+    }
+    
+    .hero-buttons {
+        gap: 12px;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    /* Content Container */
+    .content-container {
+        padding: 20px 12px;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+        margin-bottom: 16px;
+    }
+    
+    /* Cards */
+    .content-card {
+        width: 120px;
+        height: 68px;
+        border-radius: 6px;
+    }
+    
+    .continue-watching-card {
+        width: 200px;
+        height: 113px;
+    }
+    
+    .category-row {
+        gap: 6px;
+        padding: 6px 0;
+    }
+    
+    /* Video Modal */
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .video-controls {
+        padding: 16px;
+    }
+    
+    .control-buttons {
+        gap: 12px;
+    }
+    
+    .control-btn {
+        font-size: 16px;
+        padding: 6px;
+    }
+    
+    /* Series Details */
+    .series-details {
+        padding: 20px;
+    }
+    
+    .series-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .series-poster {
+        width: 150px;
+        height: 225px;
+        align-self: center;
+    }
+    
+    .series-title {
+        font-size: 1.8rem;
+    }
+    
+    .episodes-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+/* Tablets (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Sidebar */
+    .sidebar-nav {
+        width: 60px;
+    }
+    
+    .sidebar-nav:hover {
+        width: 200px;
+    }
+    
+    .main-content {
+        margin-left: 60px;
+    }
+    
+    .main-header {
+        left: 60px;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        height: 60vh;
+        min-height: 450px;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .hero-description {
+        font-size: 1.1rem;
+    }
+    
+    /* Content Container */
+    .content-container {
+        padding: 30px 40px;
+    }
+    
+    /* Cards */
+    .content-card {
+        width: 160px;
+        height: 90px;
+    }
+    
+    .continue-watching-card {
+        width: 240px;
+        height: 135px;
+    }
+    
+    /* Series Details */
+    .series-poster {
+        width: 180px;
+        height: 270px;
+    }
+    
+    .series-title {
+        font-size: 2.2rem;
+    }
+    
+    .episodes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* Large Tablets & Small Desktops (1024px - 1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    /* Sidebar */
+    .sidebar-nav {
+        width: 68px;
+    }
+    
+    .sidebar-nav:hover {
+        width: 220px;
+    }
+    
+    .main-content {
+        margin-left: 68px;
+    }
+    
+    .main-header {
+        left: 68px;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        height: 65vh;
+        min-height: 500px;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+    }
+    
+    /* Content Container */
+    .content-container {
+        padding: 35px 50px;
+    }
+    
+    /* Cards */
+    .content-card {
+        width: 180px;
+        height: 101px;
+    }
+    
+    .continue-watching-card {
+        width: 270px;
+        height: 152px;
+    }
+}
+
+/* Large Desktops (1440px+) */
+@media (min-width: 1441px) {
+    /* Sidebar */
+    .sidebar-nav {
+        width: 72px;
+    }
+    
+    .sidebar-nav:hover {
+        width: 240px;
+    }
+    
+    .main-content {
+        margin-left: 72px;
+    }
+    
+    .main-header {
+        left: 72px;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        height: 70vh;
+        min-height: 550px;
+    }
+    
+    .hero-title {
+        font-size: 4rem;
+    }
+    
+    .hero-description {
+        font-size: 1.2rem;
+    }
+    
+    /* Content Container */
+    .content-container {
+        padding: 40px 72px;
+    }
+    
+    /* Cards */
+    .content-card {
+        width: 200px;
+        height: 113px;
+    }
+    
+    .continue-watching-card {
+        width: 300px;
+        height: 170px;
+    }
+}
+
+/* Ultra Wide Screens (1920px+) */
+@media (min-width: 1921px) {
+    .content-container {
+        max-width: 1800px;
+        margin: 0 auto;
+    }
+    
+    .hero-title {
+        font-size: 5rem;
+    }
+    
+    .content-card {
+        width: 240px;
+        height: 135px;
+    }
+    
+    .continue-watching-card {
+        width: 360px;
+        height: 203px;
+    }
+}
+
+/* Small Mobile Phones (320px - 480px) */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-description {
+        font-size: 0.85rem;
+    }
+    
+    .content-card {
+        width: 100px;
+        height: 56px;
+    }
+    
+    .continue-watching-card {
+        width: 180px;
+        height: 101px;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .menu-item {
+        padding: 12px 16px;
+    }
+    
+    .menu-item i {
+        font-size: 18px;
+    }
+    
+    .menu-text {
+        font-size: 13px;
+    }
+}
+
+/* Landscape Orientation for Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        height: 40vh;
+        min-height: 300px;
+    }
+    
+    .hero-content {
+        padding: 20px 20px 15px;
+    }
+    
+    .hero-title {
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+    }
+    
+    .hero-description {
+        font-size: 0.8rem;
+        margin-bottom: 12px;
+    }
+    
+    .hero-buttons {
+        gap: 8px;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+    .content-card:hover {
+        transform: none;
+    }
+    
+    .content-card:active {
+        transform: scale(0.95);
+    }
+    
+    .menu-item:hover {
+        transform: none;
+    }
+    
+    .menu-item:active {
+        transform: scale(0.95);
+    }
+    
+    .btn-primary:hover,
+    .btn-secondary:hover {
+        transform: none;
+    }
+    
+    .btn-primary:active,
+    .btn-secondary:active {
+        transform: scale(0.95);
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo-img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+    
+    .content-card img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    /* Already optimized for dark mode */
+}
+
+/* Light Mode Support */
+@media (prefers-color-scheme: light) {
+    body {
+        background: #ffffff;
+        color: #000000;
+    }
+    
+    .sidebar-nav {
+        background: rgba(255, 255, 255, 0.95);
+    }
+    
+    .main-header {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 70%, transparent 100%);
+    }
+    
+    .search-input {
+        background: rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 0, 0, 0.2);
+        color: #000000;
+    }
+    
+    .search-input::placeholder {
+        color: rgba(0, 0, 0, 0.6);
+    }
+    
+    .section-title {
+        color: #000000;
+    }
+    
+    .content-card {
+        background: #f0f0f0;
+    }
+    
+    .modal-content {
+        background: #ffffff;
+        color: #000000;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar-nav,
+    .main-header,
+    .video-modal,
+    .series-modal,
+    .hero-buttons {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .content-container {
+        padding: 20px;
+    }
+    
+    .content-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
