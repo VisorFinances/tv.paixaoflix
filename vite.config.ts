@@ -1,29 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ mode }) => ({
   server: {
-    port: 5173,
-    strictPort: true,
-    host: true,
-  },
-  preview: {
-    port: 5173,
-    strictPort: true,
-    host: true,
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
-      },
+    host: "::",
+    port: 8080,
+    hmr: {
+      overlay: false,
     },
   },
-  define: {
-    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
   },
-})
+}));
