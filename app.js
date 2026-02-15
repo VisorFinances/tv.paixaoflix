@@ -52,9 +52,106 @@ class PaixaoFlix {
         this.checkAndAddNovelaSection();
         
         // Configurar verificação a cada 1h (3600000ms)
-        setInterval(() => {
+        this.novelaInterval = setInterval(() => {
             this.checkAndAddNovelaSection();
         }, 3600000);
+        
+        // Adicionar notificação visual
+        this.showNovelaCheckNotification();
+    }
+
+    // Mostrar notificação de verificação de novelas
+    showNovelaCheckNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'novela-check-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">🎭</span>
+                <span class="notification-text">Verificação automática de novelas ativada</span>
+                <span class="notification-time">Próxima verificação em 1 hora</span>
+            </div>
+        `;
+        
+        // Estilos da notificação
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #E50914 0%, #F40612 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.3);
+            z-index: 10000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            animation: slideIn 0.5s ease-out;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remover após 5 segundos
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.5s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }, 5000);
+        
+        // Adicionar animações CSS
+        if (!document.getElementById('novela-notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'novela-notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOut {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+                
+                .notification-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                
+                .notification-icon {
+                    font-size: 20px;
+                }
+                
+                .notification-text {
+                    flex: 1;
+                    font-weight: 500;
+                }
+                
+                .notification-time {
+                    font-size: 12px;
+                    opacity: 0.8;
+                    display: block;
+                    margin-top: 2px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
     }
 
     // Verificar e adicionar seção de novelas
@@ -66,12 +163,139 @@ class PaixaoFlix {
         );
         
         if (novelas.length > 0) {
-            console.log(` Encontradas ${novelas.length} novelas. Adicionando seção...`);
+            console.log(`🎭 Encontradas ${novelas.length} novelas. Adicionando seção...`);
             
             // Adicionar seção de novelas como última seção da Home
             this.addNovelaSectionToHome(novelas);
+            
+            // Mostrar notificação de novelas encontradas
+            this.showNovelasFoundNotification(novelas.length);
         } else {
-            console.log(' Nenhuma novela encontrada nesta verificação.');
+            console.log('📭 Nenhuma novela encontrada nesta verificação.');
+            this.showNoNovelasNotification();
+        }
+    }
+
+    // Mostrar notificação de novelas encontradas
+    showNovelasFoundNotification(count) {
+        const notification = document.createElement('div');
+        notification.className = 'novelas-found-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">🎭</span>
+                <div class="notification-details">
+                    <span class="notification-text">${count} novelas encontradas!</span>
+                    <span class="notification-time">Adicionadas à Home</span>
+                </div>
+            </div>
+        `;
+        
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+            z-index: 10000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            animation: slideUp 0.5s ease-out;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remover após 8 segundos
+        setTimeout(() => {
+            notification.style.animation = 'slideDown 0.5s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }, 8000);
+        
+        // Adicionar animações CSS
+        this.addNotificationAnimations();
+    }
+
+    // Mostrar notificação de nenhuma novela
+    showNoNovelasNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'no-novelas-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">📭</span>
+                <div class="notification-details">
+                    <span class="notification-text">Nenhuma novela encontrada</span>
+                    <span class="notification-time">Próxima verificação em 1 hora</span>
+                </div>
+            </div>
+        `;
+        
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(108, 117, 125, 0.3);
+            z-index: 10000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            animation: slideUp 0.5s ease-out;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remover após 5 segundos
+        setTimeout(() => {
+            notification.style.animation = 'slideDown 0.5s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }, 5000);
+        
+        this.addNotificationAnimations();
+    }
+
+    // Adicionar animações de notificação
+    addNotificationAnimations() {
+        if (!document.getElementById('notification-animations')) {
+            const style = document.createElement('style');
+            style.id = 'notification-animations';
+            style.textContent = `
+                @keyframes slideUp {
+                    from {
+                        transform: translateY(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideDown {
+                    from {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateY(100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
         }
     }
 
