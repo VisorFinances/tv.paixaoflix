@@ -1,0 +1,349 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+.pnpm
+.yarn
+.yarn-integrity
+
+# Build outputs
+dist
+dist-ssr
+*.local
+.next
+out
+build
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# IDE and Editor files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+.eslintcache
+
+# Optional eslint cache
+.cache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/*
+.idea
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons)
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+.idea
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PaixãoFlix specific files
+app_clean.js
+app_final.js
+*.backup
+*.old
+*.bak
+*.tmp
+
+# Development files
+*.dev
+*.local
+*.test
+*.spec
+*.mock
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Media files (keep originals in source control)
+*.mp4
+*.webm
+*.ogg
+*.mp3
+*.wav
+*.flac
+*.aac
+*.m4a
+
+# Image optimization cache
+.image-cache
+
+# Font files
+*.ttf
+*.otf
+*.woff
+*.woff2
+*.eot
+
+# Documentation build
+docs/build
+docs/.vitepress/dist
+
+# Testing
+coverage/
+test-results/
+junit.xml
+
+# Local development
+.local
+*.local.*
+
+# Production files
+*.prod
+*.production
+
+# Security files
+*.pem
+*.key
+*.crt
+*.p12
+
+# Configuration files (keep templates, ignore generated)
+config/local.js
+config/production.js
+config/development.js
+
+# Backup files
+backup/
+backups/
+*.backup
+
+# Archive files
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+
+# Lock files (keep package-lock.json, ignore others)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# TypeScript
+*.tsbuildinfo
+
+# Husky
+.husky/_
+
+# Lint-staged
+.lintstagedrc
+
+# Prettier
+.prettierignore
+.prettierrc
+
+# ESLint
+.eslintignore
+
+# Stylelint
+.stylelintcache
+.stylelintignore
+
+# PostCSS
+.postcssrc
+
+# Tailwind CSS
+.tailwindcache
+
+# Vite
+.vite/
+
+# Rollup
+.rollup.cache
+
+# Webpack
+.webpack/
+
+# Parcel
+.parcel-cache
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Turbo
+.turbo
