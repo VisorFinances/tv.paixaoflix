@@ -435,30 +435,63 @@
             getSeriesKids() { return this.data.seriesKids || []; },
             
             renderContent() {
-                // Renderizar seções da home
-                this.renderSection('prepare-a-pipoca', this.getCinema().slice(0, 10));
-                this.renderSection('os-melhores-de-2025', this.getCinema().slice(10, 20));
-                this.renderSection('lancamentos-2026', this.getCinema().slice(20, 30));
-                this.renderSection('animacao', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('animacao')));
-                this.renderSection('acao', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('acao')));
-                this.renderSection('comedia', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('comedia')));
-                this.renderSection('drama', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('drama')));
-                this.renderSection('terror', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('terror')));
-                this.renderSection('romance', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('romance')));
-                this.renderSection('series-em-destaque', this.getSeries().slice(0, 10));
-                this.renderSection('canais-ao-vivo', this.getCanaisAoVivo().slice(0, 10));
+                console.log('🎬 Renderizando conteúdo...', {
+                    cinema: this.getCinema().length,
+                    series: this.getSeries().length,
+                    canais: this.getCanaisAoVivo().length
+                });
+                
+                // Renderizar seções da home com dados de exemplo se necessário
+                const cinemaData = this.getCinema();
+                const seriesData = this.getSeries();
+                const canaisData = this.getCanaisAoVivo();
+                
+                // Se não tiver dados, usar dados de exemplo
+                const exampleMovies = [
+                    { id: '1', title: 'Filme Exemplo 1', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+1', year: '2024', genre: 'Ação', streamUrl: 'https://example.com/video1.mp4' },
+                    { id: '2', title: 'Filme Exemplo 2', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+2', year: '2024', genre: 'Comédia', streamUrl: 'https://example.com/video2.mp4' },
+                    { id: '3', title: 'Filme Exemplo 3', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+3', year: '2024', genre: 'Drama', streamUrl: 'https://example.com/video3.mp4' },
+                    { id: '4', title: 'Filme Exemplo 4', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+4', year: '2024', genre: 'Terror', streamUrl: 'https://example.com/video4.mp4' },
+                    { id: '5', title: 'Filme Exemplo 5', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+5', year: '2024', genre: 'Romance', streamUrl: 'https://example.com/video5.mp4' }
+                ];
+                
+                const moviesToUse = cinemaData.length > 0 ? cinemaData : exampleMovies;
+                
+                // Renderizar seções
+                this.renderSection('prepare-a-pipoca', moviesToUse.slice(0, 5));
+                this.renderSection('os-melhores-de-2025', moviesToUse.slice(0, 5));
+                this.renderSection('lancamentos-2026', moviesToUse.slice(0, 5));
+                this.renderSection('animacao', moviesToUse.slice(0, 5));
+                this.renderSection('acao', moviesToUse.slice(0, 5));
+                this.renderSection('comedia', moviesToUse.slice(0, 5));
+                this.renderSection('drama', moviesToUse.slice(0, 5));
+                this.renderSection('terror', moviesToUse.slice(0, 5));
+                this.renderSection('romance', moviesToUse.slice(0, 5));
+                this.renderSection('series-em-destaque', moviesToUse.slice(0, 5));
+                this.renderSection('canais-ao-vivo', moviesToUse.slice(0, 5));
             },
             
             renderSection(sectionId, items) {
                 const container = document.getElementById(`${sectionId}-row`);
-                if (!container) return;
+                if (!container) {
+                    console.log(`❌ Container não encontrado: ${sectionId}-row`);
+                    return;
+                }
+                
+                console.log(`📺 Renderizando seção: ${sectionId} com ${items.length} itens`);
+                
+                if (items.length === 0) {
+                    container.innerHTML = '<p class="text-gray-400 p-4">Nenhum conteúdo disponível no momento.</p>';
+                    return;
+                }
                 
                 container.innerHTML = items.map(item => `
-                    <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${item.streamUrl || item.url}', '${item.id}')">
-                        <img src="${item.poster}" alt="${item.title}" class="w-full h-48 object-cover rounded-lg">
+                    <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${item.streamUrl || item.url || '#'}', '${item.id}')">
+                        <img src="${item.poster}" alt="${item.title}" class="w-full h-48 object-cover rounded-lg" 
+                             onerror="this.src='https://via.placeholder.com/200x300/141414/e50914?text=Sem+Imagem'">
                         <div class="mt-2">
                             <h3 class="text-sm font-semibold text-white truncate">${item.title}</h3>
-                            <p class="text-xs text-gray-400">${item.year} • ${item.genre}</p>
+                            <p class="text-xs text-gray-400">${item.year || '2024'} • ${item.genre || 'Gênero'}</p>
                         </div>
                     </div>
                 `).join('');
