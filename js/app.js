@@ -159,6 +159,8 @@ class PaixaoFlixApp {
             // Load from GitHub
             const baseUrl = 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/';
             
+            console.log('🌐 Buscando dados do GitHub...');
+            
             const [
                 cinemaData,
                 seriesData,
@@ -174,6 +176,15 @@ class PaixaoFlixApp {
                 this.fetchJson(baseUrl + 'filmeskids.json'),
                 this.fetchJson(baseUrl + 's%C3%A9rieskids.json')
             ]);
+            
+            console.log('✅ Dados brutos recebidos:', {
+                cinema: cinemaData?.length || 0,
+                series: seriesData?.length || 0,
+                channels: channelsData?.length || 0,
+                favorites: favoritesData?.length || 0,
+                kidsMovies: kidsMoviesData?.length || 0,
+                kidsSeries: kidsSeriesData?.length || 0
+            });
             
             // Process and categorize content
             this.data = {
@@ -192,7 +203,7 @@ class PaixaoFlixApp {
                 kids: window.dataManager.categorizeContent([...this.data.kidsMovies, ...this.data.kidsSeries])
             };
             
-            console.log('✅ Dados carregados e categorizados:', {
+            console.log('✅ Dados processados e categorizados:', {
                 cinema: this.data.cinema.length,
                 series: this.data.series.length,
                 channels: this.data.channels.length,
@@ -203,14 +214,32 @@ class PaixaoFlixApp {
             
         } catch (error) {
             console.error('❌ Erro ao carregar dados:', error);
+            console.log('🔄 Usando dados de exemplo...');
             this.loadFallbackData();
         }
     }
     
     async fetchJson(url) {
+        console.log(`🌐 Buscando: ${url}`);
         const response = await fetch(url);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return await response.json();
+        
+        const text = await response.text();
+        console.log(`📄 Resposta recebida: ${text.length} caracteres`);
+        
+        if (text.trim() === '') {
+            throw new Error('Resposta vazia');
+        }
+        
+        try {
+            const data = JSON.parse(text);
+            console.log(`✅ JSON parseado: ${data?.length || 0} itens`);
+            return data;
+        } catch (error) {
+            console.error('❌ JSON Parse Error:', error);
+            console.log('📄 Primeiros 100 caracteres:', text.substring(0, 100));
+            throw new Error(`JSON inválido: ${error.message}`);
+        }
     }
     
     async fetchM3U8(url) {
