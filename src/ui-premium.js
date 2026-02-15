@@ -329,7 +329,7 @@ class PaixaoFlixUI {
 
   renderMovieCards(movies) {
     return movies.map(movie => `
-      <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${movie.streamUrl}', '${movie.id}')">
+      <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${movie.streamUrl || movie.url}', '${movie.id}')">
         <img src="${movie.poster}" alt="${movie.title}" class="w-full h-48 object-cover">
         <div class="movie-card-info">
           <h3 class="card-title">${movie.title}</h3>
@@ -339,7 +339,7 @@ class PaixaoFlixUI {
             <span class="text-sm">${movie.rating}</span>
           </div>
           <div class="flex gap-2 mt-2">
-            <button class="text-xs bg-red-600 text-white px-2 py-1 rounded" onclick="event.stopPropagation(); window.paixaoFlixPlayer.initPlayer('${movie.streamUrl}', '${movie.id}')">
+            <button class="text-xs bg-red-600 text-white px-2 py-1 rounded" onclick="event.stopPropagation(); window.paixaoFlixPlayer.initPlayer('${movie.streamUrl || movie.url}', '${movie.id}')">
               ▶️ Play
             </button>
             <button class="text-xs bg-gray-600 text-white px-2 py-1 rounded" onclick="event.stopPropagation(); window.showTrailer('${movie.title}')">
@@ -377,7 +377,7 @@ class PaixaoFlixUI {
 
   renderChannelCards(channels) {
     return channels.map(channel => `
-      <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${channel.streamUrl}', '${channel.id}')">
+      <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${channel.streamUrl || channel.url}', '${channel.id}')">
         <img src="${channel.logo}" alt="${channel.name}" class="w-full h-32 object-contain">
         <div class="movie-card-info">
           <h3 class="card-title">${channel.name}</h3>
@@ -389,7 +389,7 @@ class PaixaoFlixUI {
 
   renderChannelGrid(channels) {
     return channels.map(channel => `
-      <div class="channel-card bg-card border border-border rounded-lg p-4 text-center cursor-pointer hover:bg-accent transition-colors focusable" onclick="window.paixaoFlixPlayer.initPlayer('${channel.streamUrl}', '${channel.id}')">
+      <div class="channel-card bg-card border border-border rounded-lg p-4 text-center cursor-pointer hover:bg-accent transition-colors focusable" onclick="window.paixaoFlixPlayer.initPlayer('${channel.streamUrl || channel.url}', '${channel.id}')">
         <img src="${channel.logo}" alt="${channel.name}" class="w-full h-16 object-contain mb-2">
         <h4 class="text-sm font-medium text-foreground truncate">${channel.name}</h4>
         <p class="text-xs text-muted-foreground">${channel.group}</p>

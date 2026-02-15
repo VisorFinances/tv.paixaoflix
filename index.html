@@ -168,36 +168,43 @@
 </head>
 <body class="bg-background text-foreground">
     <!-- Logo Fixo -->
-    <img src="logoof512.png" alt="${window.APP_NAME || 'PaixãoFlix'}" class="brand-logo">
+    <img src="/logoof512.png" alt="PaixãoFlix" class="brand-logo">
 
     <!-- Sidebar -->
     <div id="sidebar" class="fixed left-0 top-0 h-full w-16 bg-sidebar-background border-r border-sidebar-border z-50 transition-all duration-300">
         <div class="p-4">
             <div class="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
-                <img src="logoof512.png" alt="PaixãoFlix" class="w-6 h-6 rounded">
+                <img src="/logoof512.png" alt="PaixãoFlix" class="w-6 h-6 rounded">
             </div>
         </div>
         <nav class="sidebar-nav mt-8">
             <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="home">
                 <i class="fas fa-home text-sidebar-accent-foreground"></i>
+                <span class="menu-text">Início</span>
             </div>
             <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="cinema">
                 <i class="fas fa-film text-sidebar-accent-foreground"></i>
+                <span class="menu-text">Cinema</span>
             </div>
             <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="series">
                 <i class="fas fa-tv text-sidebar-accent-foreground"></i>
+                <span class="menu-text">Séries</span>
             </div>
             <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="canais">
                 <i class="fas fa-broadcast-tower text-sidebar-accent-foreground"></i>
+                <span class="menu-text">Canais</span>
             </div>
             <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="kids">
                 <i class="fas fa-child text-sidebar-accent-foreground"></i>
+                <span class="menu-text">Kids</span>
             </div>
             <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="series-kids">
                 <i class="fas fa-baby text-sidebar-accent-foreground"></i>
+                <span class="menu-text">Séries Kids</span>
             </div>
             <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="favoritos">
                 <i class="fas fa-heart text-sidebar-accent-foreground"></i>
+                <span class="menu-text">Favoritos</span>
             </div>
         </nav>
     </div>
@@ -211,7 +218,7 @@
                     <div class="relative">
                         <input type="text" placeholder="Buscar filmes, séries..." class="w-64 bg-input border border-border rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
                     </div>
-                    <img src="logoof512.png" alt="PaixãoFlix" class="w-8 h-8 rounded">
+                    <img src="/logoof512.png" alt="PaixãoFlix" class="w-8 h-8 rounded">
                 </div>
                 <div class="flex items-center space-x-4">
                     <button class="p-2 rounded-md hover:bg-accent">
@@ -228,7 +235,7 @@
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-center max-w-4xl mx-auto px-4">
                     <h1 class="hero-title text-6xl md:text-8xl font-bold text-foreground mb-6">
-                        ${window.APP_NAME || 'PaixãoFlix'}
+                        PaixãoFlix
                     </h1>
                     <p class="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                         Sua plataforma de streaming com milhares de opções

@@ -1,6 +1,6 @@
 // Arquivo principal de inicialização do sistema de dados
-import DataManager from './data/DataManager.js';
-import './ui.js';
+import DataManager from './data/DataManager.ts';
+import './ui-premium.js';
 
 // Inicializar o sistema de dados quando o módulo for carregado
 document.addEventListener('DOMContentLoaded', () => {
