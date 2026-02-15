@@ -40,10 +40,72 @@ class PaixaoFlix {
     async init() {
         await this.loadData();
         this.setupEventListeners();
-        this.setupSecurity();
-        this.setupNavigation();
         this.renderHome();
-        this.loadAllSections();
+        
+        // Iniciar verificação automática de novelas a cada 1h
+        this.startNovelaCheck();
+    }
+
+    // Sistema de verificação automática de novelas a cada 1h
+    startNovelaCheck() {
+        // Verificar imediatamente ao iniciar
+        this.checkAndAddNovelaSection();
+        
+        // Configurar verificação a cada 1h (3600000ms)
+        setInterval(() => {
+            this.checkAndAddNovelaSection();
+        }, 3600000);
+    }
+
+    // Verificar e adicionar seção de novelas
+    checkAndAddNovelaSection() {
+        // Procurar por novelas em todos os dados
+        const allData = [...this.cinemaData, ...this.seriesData, ...this.kidsData, ...this.seriesKidsData];
+        const novelas = allData.filter(item => 
+            item.genero && item.genero.toLowerCase().includes('novela')
+        );
+        
+        if (novelas.length > 0) {
+            console.log(` Encontradas ${novelas.length} novelas. Adicionando seção...`);
+            
+            // Adicionar seção de novelas como última seção da Home
+            this.addNovelaSectionToHome(novelas);
+        } else {
+            console.log(' Nenhuma novela encontrada nesta verificação.');
+        }
+    }
+
+    // Adicionar seção de novelas à Home
+    addNovelaSectionToHome(novelas) {
+        const container = document.getElementById('content-container');
+        
+        // Verificar se a seção já existe
+        let novelaSection = document.getElementById('novela-dinamica');
+        
+        if (novelaSection) {
+            // Atualizar seção existente
+            const cardsContainer = novelaSection.querySelector('.cards-container');
+            cardsContainer.innerHTML = novelas.slice(0, 5).map(item => this.createCard(item)).join('');
+        } else {
+            // Criar nova seção
+            novelaSection = document.createElement('section');
+            novelaSection.id = 'novela-dinamica';
+            novelaSection.className = 'section';
+            novelaSection.innerHTML = `
+                <h2 class="section-title"> Novelas Encontradas</h2>
+                <div class="cards-container">
+                    ${novelas.slice(0, 5).map(item => this.createCard(item)).join('')}
+                </div>
+            `;
+            
+            // Adicionar como última seção
+            container.appendChild(novelaSection);
+        }
+        
+        // Adicionar listeners aos novos cards
+        this.addCardListeners();
+        
+        console.log(' Seção de novelas atualizada com sucesso!');
     }
 
     // Carregar dados EXCLUSIVAMENTE dos arquivos especificados
