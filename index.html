@@ -48,121 +48,238 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap');
 
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-
-        @layer base {
-          :root {
-            --background: 0 0% 8%;
-            --foreground: 0 0% 95%;
-
-            --card: 0 0% 11%;
-            --card-foreground: 0 0% 95%;
-
-            --popover: 0 0% 11%;
-            --popover-foreground: 0 0% 95%;
-
-            --primary: 0 85% 50%;
-            --primary-foreground: 0 0% 100%;
-
-            --secondary: 0 0% 16%;
-            --secondary-foreground: 0 0% 90%;
-
-            --muted: 0 0% 18%;
-            --muted-foreground: 0 0% 55%;
-
-            --accent: 0 0% 20%;
-            --accent-foreground: 0 0% 95%;
-
-            --destructive: 0 84.2% 60.2%;
-            --destructive-foreground: 0 0% 100%;
-
-            --border: 0 0% 20%;
-            --input: 0 0% 20%;
-            --ring: 0 85% 50%;
-
-            --radius: 0.5rem;
-
-            --sidebar-background: 0 0% 6%;
-            --sidebar-foreground: 0 0% 80%;
-            --sidebar-primary: 0 85% 50%;
-            --sidebar-primary-foreground: 0 0% 100%;
-            --sidebar-accent: 0 0% 14%;
-            --sidebar-accent-foreground: 0 0% 95%;
-            --sidebar-border: 0 0% 15%;
-            --sidebar-ring: 0 85% 50%;
-
-            --progress-bar: 210 100% 55%;
-            --hero-gradient: linear-gradient(to top, hsl(0 0% 8%) 0%, transparent 60%);
-            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-          }
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        @layer base {
-          * {
-            @apply border-border;
-          }
-
-          body {
-            @apply bg-background text-foreground font-sans;
+        body {
+            background-color: #141414;
+            color: #ffffff;
             font-family: 'Inter', sans-serif;
-          }
-
-          h1, h2, h3, .font-display {
-            font-family: 'Bebas Neue', sans-serif;
-          }
-
-          /* Scrollbar */
-          ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-          }
-          ::-webkit-scrollbar-track {
-            background: hsl(var(--background));
-          }
-          ::-webkit-scrollbar-thumb {
-            background: hsl(var(--muted));
-            border-radius: 3px;
-          }
+            overflow-x: hidden;
+            user-select: none;
         }
 
-        @layer components {
-          .movie-card {
-            @apply relative rounded-md overflow-hidden cursor-pointer transition-all duration-300 ease-out;
-          }
-          .movie-card:hover {
+        /* Hero Section */
+        .hero-container {
+            width: 100%;
+            height: 85vh;
+            margin-bottom: 60px;
+            position: relative;
+            background: linear-gradient(to top, #141414 5%, transparent 40%);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-size: cover;
+            background-position: center;
+            background-image: url('https://via.placeholder.com/1920x1080/141414/e50914?text=PAIXÃOFLIX');
+        }
+
+        .hero-title {
+            font-size: 4rem !important;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Sidebar */
+        .sidebar-nav {
+            width: 64px;
+            transition: width 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            background: rgba(20, 20, 20, 0.95);
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .sidebar-nav:hover,
+        .sidebar-nav:focus-within {
+            width: 240px;
+        }
+
+        .menu-tile {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .menu-tile:hover,
+        .menu-tile:focus {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-tile i {
+            min-width: 24px;
+            margin-right: 1rem;
+        }
+
+        .menu-text {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        .sidebar-nav:hover .menu-text,
+        .sidebar-nav:focus-within .menu-text {
+            opacity: 1;
+        }
+
+        /* Seções */
+        .section-title {
+            font-size: 2.2rem !important;
+            margin-left: 4%;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #e5e5e5;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Cards */
+        .movie-card {
+            position: relative;
+            margin: 0 5px;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+            min-width: 200px;
+            background: #1f1f1f;
+        }
+
+        .movie-card:hover {
             transform: scale(1.2);
             z-index: 30;
-            box-shadow: var(--card-shadow);
-          }
-          .movie-card:hover .movie-card-info {
-            @apply opacity-100 translate-y-0;
-          }
-          .movie-card-info {
-            @apply absolute bottom-0 left-0 right-0 p-3 opacity-0 translate-y-2 transition-all duration-300;
-            background: linear-gradient(to top, hsl(0 0% 5% / 0.95), transparent);
-          }
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
 
-          .sidebar-nav {
-            @apply transition-all duration-300 ease-in-out;
-          }
+        .movie-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
 
-          .category-row {
-            @apply flex gap-2 overflow-x-auto pb-4;
+        .movie-card h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 8px 4px 4px;
+            color: white;
+        }
+
+        .movie-card p {
+            font-size: 0.8rem;
+            color: #999;
+            margin: 0 4px 8px;
+        }
+
+        /* Category rows */
+        .category-row {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 8px 0;
             -ms-overflow-style: none;
             scrollbar-width: none;
-          }
-          .category-row::-webkit-scrollbar {
-            display: none;
-          }
+        }
 
-          .menu-tile {
-            @apply relative rounded-lg overflow-hidden cursor-pointer transition-transform duration-300;
-          }
-          .menu-tile:hover {
-            transform: scale(1.05);
-          }
+        .category-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Foco */
+        .focused {
+            outline: 4px solid #ffffff;
+            outline-offset: 2px;
+        }
+
+        .focusable:focus {
+            outline: 4px solid #ffffff;
+            outline-offset: 2px;
+        }
+
+        /* Logo fixo */
+        .brand-logo {
+            position: fixed;
+            top: 20px;
+            left: 4%;
+            z-index: 1000;
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 4%;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 64px;
+            right: 0;
+            height: 60px;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 998;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        main {
+            margin-left: 64px;
+            padding-top: 60px;
+        }
+
+        /* Botões */
+        button {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #f40612;
+        }
+
+        /* Input */
+        input[type="text"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input[type="text"]:focus {
+            border-color: #e50914;
         }
     </style>
 </head>
@@ -171,82 +288,77 @@
     <img src="/logoof512.png" alt="PaixãoFlix" class="brand-logo">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed left-0 top-0 h-full w-16 bg-sidebar-background border-r border-sidebar-border z-50 transition-all duration-300">
+    <div class="sidebar-nav">
         <div class="p-4">
-            <div class="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
+            <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center">
                 <img src="/logoof512.png" alt="PaixãoFlix" class="w-6 h-6 rounded">
             </div>
         </div>
-        <nav class="sidebar-nav mt-8">
-            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="home">
-                <i class="fas fa-home text-sidebar-accent-foreground"></i>
+        <nav class="mt-8">
+            <div class="menu-tile" data-section="home" onclick="window.navigateToSection('home')">
+                <i class="fas fa-home"></i>
                 <span class="menu-text">Início</span>
             </div>
-            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="cinema">
-                <i class="fas fa-film text-sidebar-accent-foreground"></i>
+            <div class="menu-tile" data-section="cinema" onclick="window.navigateToSection('cinema')">
+                <i class="fas fa-film"></i>
                 <span class="menu-text">Cinema</span>
             </div>
-            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="series">
-                <i class="fas fa-tv text-sidebar-accent-foreground"></i>
+            <div class="menu-tile" data-section="series" onclick="window.navigateToSection('series')">
+                <i class="fas fa-tv"></i>
                 <span class="menu-text">Séries</span>
             </div>
-            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="canais">
-                <i class="fas fa-broadcast-tower text-sidebar-accent-foreground"></i>
+            <div class="menu-tile" data-section="canais" onclick="window.navigateToSection('canais')">
+                <i class="fas fa-broadcast-tower"></i>
                 <span class="menu-text">Canais</span>
             </div>
-            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="kids">
-                <i class="fas fa-child text-sidebar-accent-foreground"></i>
+            <div class="menu-tile" data-section="kids" onclick="window.navigateToSection('kids')">
+                <i class="fas fa-child"></i>
                 <span class="menu-text">Kids</span>
             </div>
-            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="series-kids">
-                <i class="fas fa-baby text-sidebar-accent-foreground"></i>
+            <div class="menu-tile" data-section="series-kids" onclick="window.navigateToSection('series-kids')">
+                <i class="fas fa-baby"></i>
                 <span class="menu-text">Séries Kids</span>
             </div>
-            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="favoritos">
-                <i class="fas fa-heart text-sidebar-accent-foreground"></i>
+            <div class="menu-tile" data-section="favoritos" onclick="window.navigateToSection('favoritos')">
+                <i class="fas fa-heart"></i>
                 <span class="menu-text">Favoritos</span>
             </div>
         </nav>
     </div>
 
     <!-- Main Content -->
-    <main class="ml-16 min-h-screen bg-background">
+    <main>
         <!-- Header -->
-        <header class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div class="container h-16 flex items-center justify-between px-4">
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Buscar filmes, séries..." class="w-64 bg-input border border-border rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                    </div>
-                    <img src="/logoof512.png" alt="PaixãoFlix" class="w-8 h-8 rounded">
+        <header>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="position: relative;">
+                    <input type="text" placeholder="Buscar filmes, séries..." style="width: 300px;">
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button class="p-2 rounded-md hover:bg-accent">
-                        <i class="fas fa-user text-accent-foreground"></i>
-                    </button>
-                </div>
+                <img src="/logoof512.png" alt="PaixãoFlix" style="width: 32px; height: 32px; border-radius: 4px;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button style="padding: 8px; border-radius: 4px;">
+                    <i class="fas fa-user"></i>
+                </button>
             </div>
         </header>
 
         <!-- Hero Section -->
         <section class="hero-container">
-            <div class="hero-image" style="background-image: url('https://via.placeholder.com/1920x1080/141414/e50914?text=PAIXÃOFLIX');">
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <div class="text-center max-w-4xl mx-auto px-4">
-                    <h1 class="hero-title text-6xl md:text-8xl font-bold text-foreground mb-6">
-                        PaixãoFlix
-                    </h1>
-                    <p class="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <div class="hero-image"></div>
+            <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-center;">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto; padding: 0 20px;">
+                    <h1 class="hero-title">PaixãoFlix</h1>
+                    <p style="font-size: 1.5rem; color: #ccc; margin-bottom: 2rem;">
                         Sua plataforma de streaming com milhares de opções
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button class="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-md text-lg font-semibold transition-colors">
-                            <i class="fas fa-play mr-2"></i>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                        <button style="font-size: 1.2rem; padding: 12px 32px;">
+                            <i class="fas fa-play" style="margin-right: 8px;"></i>
                             Assistir Agora
                         </button>
-                        <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-3 rounded-md text-lg font-semibold transition-colors">
-                            <i class="fas fa-info-circle mr-2"></i>
+                        <button style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.5);">
+                            <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
                             Saiba Mais
                         </button>
                     </div>
@@ -255,112 +367,81 @@
         </section>
 
         <!-- Content Container -->
-        <div class="container px-4 py-8">
+        <div class="container">
             <!-- As 12 seções principais -->
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🍿 Prepare a Pipoca
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">🍿 Prepare a Pipoca</h2>
                 <div class="category-row" id="prepare-a-pipoca-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🔥 Os Melhores de 2025
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">🔥 Os Melhores de 2025</h2>
                 <div class="category-row" id="os-melhores-de-2025-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🚀 Lançamentos 2026
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">🚀 Lançamentos 2026</h2>
                 <div class="category-row" id="lancamentos-2026-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🎨 Animação
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">🎨 Animação</h2>
                 <div class="category-row" id="animacao-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    💥 Ação
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">💥 Ação</h2>
                 <div class="category-row" id="acao-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    😂 Comédia
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">😂 Comédia</h2>
                 <div class="category-row" id="comedia-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🎭 Drama
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">🎭 Drama</h2>
                 <div class="category-row" id="drama-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    😱 Terror
-                </h2>
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">😱 Terror</h2>
                 <div class="category-row" id="terror-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🛸 Ficção Científica
-                </h2>
-                <div class="category-row" id="ficcao-row">
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">� Romance</h2>
+                <div class="category-row" id="romance-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🇧🇷 Nacional
-                </h2>
-                <div class="category-row" id="nacional-row">
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">📺 Séries em Destaque</h2>
+                <div class="category-row" id="series-em-destaque-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    📹 Documentário
-                </h2>
-                <div class="category-row" id="documentario-row">
-                    <!-- Conteúdo será carregado dinamicamente -->
-                </div>
-            </section>
-
-            <section class="mb-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
-                    🧸 Kids
-                </h2>
-                <div class="category-row" id="kids-row">
+            <section style="margin-bottom: 3rem;">
+                <h2 class="section-title">� Canais ao Vivo</h2>
+                <div class="category-row" id="canais-ao-vivo-row">
                     <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
@@ -385,7 +466,7 @@
     <script type="module" src="/src/ui-premium.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Sistema de dados simplificado
+        // Sistema de dados com TMDB e GitHub
         window.PaixaoFlixDataManager = {
             data: {
                 cinema: [],
@@ -396,16 +477,23 @@
                 seriesKids: []
             },
             
+            // Configurações
+            GITHUB_BASE_URL: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/',
+            TMDB_API_KEY: 'b275ce8e1a6b3d5d879bb0907e4f56ad',
+            TMDB_BASE_URL: 'https://api.themoviedb.org/3',
+            
             async loadData() {
+                console.log('🚀 Carregando dados do PaixãoFlix...');
+                
                 try {
                     // Carregar dados do GitHub
                     const urls = {
-                        cinema: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/cinema.json',
-                        series: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/series.json',
-                        canaisAoVivo: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/canais.json',
-                        favoritos: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/favoritos.json',
-                        filmesKids: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/filmes-kids.json',
-                        seriesKids: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/series-kids.json'
+                        cinema: this.GITHUB_BASE_URL + 'cinema.json',
+                        series: this.GITHUB_BASE_URL + 'series.json',
+                        canaisAoVivo: this.GITHUB_BASE_URL + 'canais.json',
+                        favoritos: this.GITHUB_BASE_URL + 'favoritos.json',
+                        filmesKids: this.GITHUB_BASE_URL + 'filmes-kids.json',
+                        seriesKids: this.GITHUB_BASE_URL + 'series-kids.json'
                     };
                     
                     for (const [key, url] of Object.entries(urls)) {
@@ -413,9 +501,10 @@
                             const response = await fetch(url);
                             if (response.ok) {
                                 this.data[key] = await response.json();
+                                console.log(`✅ ${key}: ${this.data[key].length} itens carregados`);
                             }
                         } catch (error) {
-                            console.log(`Erro ao carregar ${key}:`, error);
+                            console.log(`❌ Erro ao carregar ${key}:`, error);
                         }
                     }
                     
@@ -423,8 +512,27 @@
                     this.renderContent();
                     
                 } catch (error) {
-                    console.error('Erro ao carregar dados:', error);
+                    console.error('❌ Erro ao carregar dados:', error);
+                    // Usar dados de exemplo
+                    this.loadExampleData();
                 }
+            },
+            
+            loadExampleData() {
+                console.log('📺 Usando dados de exemplo...');
+                const exampleMovies = [
+                    { id: '1', title: 'Filme Ação 2024', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Ação+2024', year: '2024', genre: 'Ação', streamUrl: 'https://example.com/video1.mp4' },
+                    { id: '2', title: 'Comédia Romântica', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Comédia', year: '2024', genre: 'Comédia', streamUrl: 'https://example.com/video2.mp4' },
+                    { id: '3', title: 'Terror Psicológico', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Terror', year: '2024', genre: 'Terror', streamUrl: 'https://example.com/video3.mp4' },
+                    { id: '4', title: 'Drama Intenso', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Drama', year: '2024', genre: 'Drama', streamUrl: 'https://example.com/video4.mp4' },
+                    { id: '5', title: 'Animação Família', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Animação', year: '2024', genre: 'Animação', streamUrl: 'https://example.com/video5.mp4' }
+                ];
+                
+                this.data.cinema = exampleMovies;
+                this.data.series = exampleMovies.map(m => ({...m, id: m.id + '_s', seasons: 3}));
+                this.data.canaisAoVivo = exampleMovies.map(m => ({...m, id: m.id + '_c', name: 'Canal ' + m.title, logo: m.poster}));
+                
+                this.renderContent();
             },
             
             getCinema() { return this.data.cinema || []; },
@@ -441,34 +549,31 @@
                     canais: this.getCanaisAoVivo().length
                 });
                 
-                // Renderizar seções da home com dados de exemplo se necessário
                 const cinemaData = this.getCinema();
-                const seriesData = this.getSeries();
-                const canaisData = this.getCanaisAoVivo();
+                const moviesToUse = cinemaData.length > 0 ? cinemaData : this.getExampleMovies();
                 
-                // Se não tiver dados, usar dados de exemplo
-                const exampleMovies = [
+                // Renderizar seções
+                this.renderSection('prepare-a-pipoca', moviesToUse.slice(0, 5));
+                this.renderSection('os-melhores-de-2025', moviesToUse.slice(0, 5));
+                this.renderSection('lancamentos-2026', moviesToUse.slice(0, 5));
+                this.renderSection('animacao', moviesToUse.filter(m => m.genre && m.genre.toLowerCase().includes('animacao')));
+                this.renderSection('acao', moviesToUse.filter(m => m.genre && m.genre.toLowerCase().includes('acao')));
+                this.renderSection('comedia', moviesToUse.filter(m => m.genre && m.genre.toLowerCase().includes('comedia')));
+                this.renderSection('drama', moviesToUse.filter(m => m.genre && m.genre.toLowerCase().includes('drama')));
+                this.renderSection('terror', moviesToUse.filter(m => m.genre && m.genre.toLowerCase().includes('terror')));
+                this.renderSection('romance', moviesToUse.filter(m => m.genre && m.genre.toLowerCase().includes('romance')));
+                this.renderSection('series-em-destaque', this.getSeries().slice(0, 5));
+                this.renderSection('canais-ao-vivo', this.getCanaisAoVivo().slice(0, 5));
+            },
+            
+            getExampleMovies() {
+                return [
                     { id: '1', title: 'Filme Exemplo 1', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+1', year: '2024', genre: 'Ação', streamUrl: 'https://example.com/video1.mp4' },
                     { id: '2', title: 'Filme Exemplo 2', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+2', year: '2024', genre: 'Comédia', streamUrl: 'https://example.com/video2.mp4' },
                     { id: '3', title: 'Filme Exemplo 3', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+3', year: '2024', genre: 'Drama', streamUrl: 'https://example.com/video3.mp4' },
                     { id: '4', title: 'Filme Exemplo 4', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+4', year: '2024', genre: 'Terror', streamUrl: 'https://example.com/video4.mp4' },
                     { id: '5', title: 'Filme Exemplo 5', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Filme+5', year: '2024', genre: 'Romance', streamUrl: 'https://example.com/video5.mp4' }
                 ];
-                
-                const moviesToUse = cinemaData.length > 0 ? cinemaData : exampleMovies;
-                
-                // Renderizar seções
-                this.renderSection('prepare-a-pipoca', moviesToUse.slice(0, 5));
-                this.renderSection('os-melhores-de-2025', moviesToUse.slice(0, 5));
-                this.renderSection('lancamentos-2026', moviesToUse.slice(0, 5));
-                this.renderSection('animacao', moviesToUse.slice(0, 5));
-                this.renderSection('acao', moviesToUse.slice(0, 5));
-                this.renderSection('comedia', moviesToUse.slice(0, 5));
-                this.renderSection('drama', moviesToUse.slice(0, 5));
-                this.renderSection('terror', moviesToUse.slice(0, 5));
-                this.renderSection('romance', moviesToUse.slice(0, 5));
-                this.renderSection('series-em-destaque', moviesToUse.slice(0, 5));
-                this.renderSection('canais-ao-vivo', moviesToUse.slice(0, 5));
             },
             
             renderSection(sectionId, items) {
@@ -481,20 +586,59 @@
                 console.log(`📺 Renderizando seção: ${sectionId} com ${items.length} itens`);
                 
                 if (items.length === 0) {
-                    container.innerHTML = '<p class="text-gray-400 p-4">Nenhum conteúdo disponível no momento.</p>';
+                    container.innerHTML = '<p style="color: #999; padding: 20px;">Nenhum conteúdo disponível no momento.</p>';
                     return;
                 }
                 
                 container.innerHTML = items.map(item => `
                     <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${item.streamUrl || item.url || '#'}', '${item.id}')">
-                        <img src="${item.poster}" alt="${item.title}" class="w-full h-48 object-cover rounded-lg" 
+                        <img src="${item.poster}" alt="${item.title}" style="width: 100%; height: 150px; object-fit: cover;" 
                              onerror="this.src='https://via.placeholder.com/200x300/141414/e50914?text=Sem+Imagem'">
-                        <div class="mt-2">
-                            <h3 class="text-sm font-semibold text-white truncate">${item.title}</h3>
-                            <p class="text-xs text-gray-400">${item.year || '2024'} • ${item.genre || 'Gênero'}</p>
+                        <div style="margin-top: 8px;">
+                            <h3 style="font-size: 0.9rem; font-weight: 600; margin: 8px 4px 4px; color: white;">${item.title}</h3>
+                            <p style="font-size: 0.8rem; color: #999; margin: 0 4px 8px;">${item.year || '2024'} • ${item.genre || 'Gênero'}</p>
                         </div>
                     </div>
                 `).join('');
+            },
+            
+            // Função TMDB
+            async getTMDBData(title, type = 'movie') {
+                try {
+                    const searchUrl = `${this.TMDB_BASE_URL}/search/${type}?api_key=${this.TMDB_API_KEY}&query=${encodeURIComponent(title)}&language=pt-BR`;
+                    const response = await fetch(searchUrl);
+                    const data = await response.json();
+                    
+                    if (data.results && data.results.length > 0) {
+                        const result = data.results[0];
+                        return {
+                            title: result.title || result.name,
+                            overview: result.overview,
+                            poster: `https://image.tmdb.org/t/p/w500${result.poster_path}`,
+                            backdrop: `https://image.tmdb.org/t/p/w1280${result.backdrop_path}`,
+                            rating: result.vote_average,
+                            year: new Date(result.release_date || result.first_air_date).getFullYear(),
+                            trailer: await this.getTrailer(result.id, type)
+                        };
+                    }
+                } catch (error) {
+                    console.error('❌ Erro ao buscar dados TMDB:', error);
+                }
+                return null;
+            },
+            
+            async getTrailer(id, type) {
+                try {
+                    const videosUrl = `${this.TMDB_BASE_URL}/${type}/${id}/videos?api_key=${this.TMDB_API_KEY}`;
+                    const response = await fetch(videosUrl);
+                    const data = await response.json();
+                    
+                    const trailer = data.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+                    return trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
+                } catch (error) {
+                    console.error('❌ Erro ao buscar trailer:', error);
+                }
+                return null;
             },
             
             searchMovies(query) {
@@ -514,6 +658,12 @@
                     channel.name.toLowerCase().includes(query.toLowerCase())
                 );
             }
+        };
+        
+        // Navegação
+        window.navigateToSection = function(section) {
+            console.log(`📍 Navegando para: ${section}`);
+            // Implementar navegação entre seções
         };
         
         // Inicializar quando o DOM estiver pronto
