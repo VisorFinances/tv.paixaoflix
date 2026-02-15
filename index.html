@@ -383,7 +383,112 @@
     <script type="module" src="/src/config.js"></script>
     <script type="module" src="/src/player.js"></script>
     <script type="module" src="/src/ui-premium.js"></script>
-    <script type="module" src="/src/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Sistema de dados simplificado
+        window.PaixaoFlixDataManager = {
+            data: {
+                cinema: [],
+                series: [],
+                canaisAoVivo: [],
+                favoritos: [],
+                filmesKids: [],
+                seriesKids: []
+            },
+            
+            async loadData() {
+                try {
+                    // Carregar dados do GitHub
+                    const urls = {
+                        cinema: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/cinema.json',
+                        series: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/series.json',
+                        canaisAoVivo: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/canais.json',
+                        favoritos: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/favoritos.json',
+                        filmesKids: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/filmes-kids.json',
+                        seriesKids: 'https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/main/data/series-kids.json'
+                    };
+                    
+                    for (const [key, url] of Object.entries(urls)) {
+                        try {
+                            const response = await fetch(url);
+                            if (response.ok) {
+                                this.data[key] = await response.json();
+                            }
+                        } catch (error) {
+                            console.log(`Erro ao carregar ${key}:`, error);
+                        }
+                    }
+                    
+                    // Renderizar conteúdo
+                    this.renderContent();
+                    
+                } catch (error) {
+                    console.error('Erro ao carregar dados:', error);
+                }
+            },
+            
+            getCinema() { return this.data.cinema || []; },
+            getSeries() { return this.data.series || []; },
+            getCanaisAoVivo() { return this.data.canaisAoVivo || []; },
+            getFavoritos() { return this.data.favoritos || []; },
+            getFilmesKids() { return this.data.filmesKids || []; },
+            getSeriesKids() { return this.data.seriesKids || []; },
+            
+            renderContent() {
+                // Renderizar seções da home
+                this.renderSection('prepare-a-pipoca', this.getCinema().slice(0, 10));
+                this.renderSection('os-melhores-de-2025', this.getCinema().slice(10, 20));
+                this.renderSection('lancamentos-2026', this.getCinema().slice(20, 30));
+                this.renderSection('animacao', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('animacao')));
+                this.renderSection('acao', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('acao')));
+                this.renderSection('comedia', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('comedia')));
+                this.renderSection('drama', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('drama')));
+                this.renderSection('terror', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('terror')));
+                this.renderSection('romance', this.getCinema().filter(m => m.genre && m.genre.toLowerCase().includes('romance')));
+                this.renderSection('series-em-destaque', this.getSeries().slice(0, 10));
+                this.renderSection('canais-ao-vivo', this.getCanaisAoVivo().slice(0, 10));
+            },
+            
+            renderSection(sectionId, items) {
+                const container = document.getElementById(`${sectionId}-row`);
+                if (!container) return;
+                
+                container.innerHTML = items.map(item => `
+                    <div class="movie-card focusable" onclick="window.paixaoFlixPlayer.initPlayer('${item.streamUrl || item.url}', '${item.id}')">
+                        <img src="${item.poster}" alt="${item.title}" class="w-full h-48 object-cover rounded-lg">
+                        <div class="mt-2">
+                            <h3 class="text-sm font-semibold text-white truncate">${item.title}</h3>
+                            <p class="text-xs text-gray-400">${item.year} • ${item.genre}</p>
+                        </div>
+                    </div>
+                `).join('');
+            },
+            
+            searchMovies(query) {
+                return this.getCinema().filter(movie => 
+                    movie.title.toLowerCase().includes(query.toLowerCase())
+                );
+            },
+            
+            searchSeries(query) {
+                return this.getSeries().filter(serie => 
+                    serie.title.toLowerCase().includes(query.toLowerCase())
+                );
+            },
+            
+            searchChannels(query) {
+                return this.getCanaisAoVivo().filter(channel => 
+                    channel.name.toLowerCase().includes(query.toLowerCase())
+                );
+            }
+        };
+        
+        // Inicializar quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Iniciando PaixãoFlix...');
+            window.PaixaoFlixDataManager.loadData();
+        });
+    </script>
     
     <!-- Status de Conexão -->
     <div id="connection-status" class="fixed bottom-4 right-4 bg-card border border-border rounded-lg p-3 shadow-lg z-50">
