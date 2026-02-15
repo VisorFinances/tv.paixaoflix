@@ -87,5 +87,29 @@
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19",
     "vitest": "^3.2.4"
-  }
+  },
+  "homepage": "http://tv.paixaoflix.vip",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VisorFinances/tv.paixaoflix.git"
+  },
+  "keywords": [
+    "paixaoflix",
+    "streaming",
+    "netflix",
+    "disney+",
+    "filmes",
+    "séries",
+    "tv",
+    "online",
+    "plataforma",
+    "vídeo",
+    "entretenimento",
+    "brasileiro",
+    "português",
+    "vip"
+  ],
+  "author": "PaixãoFlix Team",
+  "license": "MIT",
+  "description": "PaixãoFlix - Plataforma de streaming com milhares de filmes e séries. A melhor experiência de streaming em português brasileiro."
 }
