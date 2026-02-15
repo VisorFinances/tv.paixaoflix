@@ -1,4 +1,269 @@
-/* Reset e Base */
+/* 1. RESET E FONTES PREMIUM */
+:root {
+  --netflix-black: #141414;
+  --netflix-red: #e50914;
+  --text-main: #ffffff;
+  --text-secondary: #e5e5e5;
+  --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), -1px -1px 0 rgba(0,0,0,0.5);
+  --overlay-gradient: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+}
+
+body {
+  background-color: var(--netflix-black);
+  color: var(--text-main);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* 2. LEITURA A DISTÂNCIA (20 PASSOS) */
+h1, .hero-title {
+  font-size: 4rem !important;
+  font-weight: 800;
+  text-shadow: var(--text-shadow);
+}
+
+h2, .section-title {
+  font-size: 2.2rem !important;
+  margin-left: 4%;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-shadow: var(--text-shadow);
+}
+
+.card-title, .movie-title {
+  font-size: 1.4rem !important;
+  font-weight: 600;
+  text-shadow: var(--text-shadow);
+}
+
+/* 3. BANNER E ESPAÇAMENTO */
+.hero-banner {
+  width: 100%;
+  height: 85vh;
+  margin-bottom: 60px;
+  position: relative;
+  object-fit: contain;
+  background: linear-gradient(to top, var(--netflix-black) 5%, transparent 40%);
+}
+
+/* 4. CAPAS E CONTRASTE */
+.movie-card {
+  position: relative;
+  margin: 0 5px;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.4s ease;
+  cursor: pointer;
+}
+
+/* Overlay escuro na base da capa */
+.movie-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: var(--overlay-gradient);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(229, 9, 20, 0.5);
+  z-index: 10;
+}
+
+/* 5. CONTINUAR ASSISTINDO (PADRÃO HORIZONTAL) */
+.continue-watching-card {
+  aspect-ratio: 16 / 9;
+  width: 350px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.3);
+  z-index: 5;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #0071eb;
+  box-shadow: 0 0 10px rgba(0, 113, 235, 0.8);
+}
+
+/* 6. LOGOTIPO FIXO */
+.brand-logo {
+  position: fixed;
+  top: 20px;
+  left: 4%;
+  z-index: 1000;
+  height: 50px;
+  filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+}
+
+/* 7. PLAYER - BLOQUEIO DE DOWNLOAD */
+video::-webkit-media-controls-enclosure {
+  display: flex !important;
+}
+video::-internal-media-controls-download-button {
+  display: none;
+}
+video::-webkit-media-controls-panel {
+  display: flex !important;
+}
+
+/* 8. EPISÓDIOS LAYOUT NETFLIX */
+.episode-item {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  transition: background 0.3s;
+  gap: 20px;
+}
+
+.episode-item:hover, .episode-item:focus {
+  background-color: #333;
+  outline: 4px solid white;
+}
+
+.episode-number {
+  font-size: 1.8rem;
+  color: #808080;
+  min-width: 40px;
+  text-align: center;
+}
+
+.episode-thumbnail {
+  width: 200px;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  border-radius: 4px;
+  position: relative;
+}
+
+.episode-info {
+  flex: 1;
+}
+
+.episode-title {
+  font-size: 1.4rem !important;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.episode-description {
+  font-size: 1.1rem;
+  color: #d2d2d2;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 9. SÉRIES DETAILS */
+.series-details {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.series-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(229,9,20,0.1) 0%, rgba(0,0,0,0.9) 100%);
+  border-radius: 15px;
+}
+
+.series-header h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.series-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: var(--netflix-red);
+  color: white;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* 10. CARROSSEL INFINITO */
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-row {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.movie-card {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* 11. FOCO DE CONTROLE REMOTO */
+.movie-card:focus, .episode-item:focus, .nav-item:focus {
+  outline: 4px solid white;
+  outline-offset: 2px;
+}
+
+/* 12. SIDBAR EXPANSIVA */
+.sidebar {
+  transition: width 0.3s ease;
+}
+
+.sidebar:hover, .sidebar:focus-within {
+  width: 250px;
+}
+
+/* Esconder scrollbar global */
 * {
     margin: 0;
     padding: 0;

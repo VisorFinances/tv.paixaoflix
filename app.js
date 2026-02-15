@@ -1,4 +1,27 @@
 // PaixãoFlix - Sistema de Streaming
+// CONFIGURAÇÃO CENTRALIZADA
+const APP_NAME = "PaixãoFlix";
+const PaixaoConfig = {
+    username: "VisorFinances",
+    repo: "tv.paixaoflix",
+    branch: "main",
+    
+    getRawBase() {
+        return `https://raw.githubusercontent.com/${this.username}/${this.repo}/${this.branch}/data/`;
+    }
+};
+
+// URL BASE DO ARCHIVE
+const ARCHIVE_BASE_URL = 'https://archive.org/download/';
+
+// ORDEM DAS CATEGORIAS
+const ORDER_LIST = [
+    "Lançamento 2026", "2025", "Ação", "Aventura", "Anime", "Animação", 
+    "Comédia", "Drama", "Dorama", "Clássicos", "Crime", "Policial", 
+    "Família", "Musical", "Documentário", "Faroeste", "Ficção", 
+    "Nacional", "Religioso", "Romance", "Terror", "Suspense", "Adulto"
+];
+
 class PaixaoFlix {
     constructor() {
         this.cinemaData = [];
@@ -17,6 +40,8 @@ class PaixaoFlix {
     async init() {
         await this.loadData();
         this.setupEventListeners();
+        this.setupSecurity();
+        this.setupNavigation();
         this.renderHome();
         this.loadAllSections();
     }
@@ -24,27 +49,27 @@ class PaixaoFlix {
     // Carregar dados EXCLUSIVAMENTE dos arquivos especificados
     async loadData() {
         try {
-            // Cinema - Ler EXCLUSIVAMENTE de data/cinema.json
-            const cinemaResponse = await fetch('data/cinema.json');
+            // Cinema - Usar URL dinâmica
+            const cinemaResponse = await fetch(`${PaixaoConfig.getRawBase()}cinema.json`);
             this.cinemaData = await cinemaResponse.json();
             
             // Séries
-            const seriesResponse = await fetch('data/séries.json');
+            const seriesResponse = await fetch(`${PaixaoConfig.getRawBase()}s%C3%A9ries.json`);
             this.seriesData = await seriesResponse.json();
             
             // Kids
-            const kidsResponse = await fetch('data/filmeskids.json');
+            const kidsResponse = await fetch(`${PaixaoConfig.getRawBase()}filmeskids.json`);
             this.kidsData = await kidsResponse.json();
             
             // Séries Kids
-            const seriesKidsResponse = await fetch('data/sérieskids.json');
+            const seriesKidsResponse = await fetch(`${PaixaoConfig.getRawBase()}s%C3%A9rieskids.json`);
             this.seriesKidsData = await seriesKidsResponse.json();
             
             // Canais ao Vivo - Ler EXCLUSIVAMENTE de data/canaisaovivo.m3u8
             await this.loadM3U8Data();
             
             // Favoritos
-            const favoritosResponse = await fetch('data/favoritos.json');
+            const favoritosResponse = await fetch(`${PaixaoConfig.getRawBase()}favoritos.json`);
             this.favoritos = await favoritosResponse.json();
             
             // Carregar dados do localStorage
@@ -1118,7 +1143,183 @@ class PaixaoFlix {
         }
     }
 
-    // Carregar todas as 12 seções da home
+    // Configurar segurança e bloqueios
+    setupSecurity() {
+        // 1. Bloqueio de botão direito
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        
+        // 2. Bloqueio de teclas de inspeção
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === "F12" || 
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) || 
+                (e.ctrlKey && e.key === "U")
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // 3. Auto-hide cursor (efeito Smart TV)
+        let mouseTimer;
+        document.addEventListener('mousemove', () => {
+            document.body.style.cursor = 'default';
+            clearTimeout(mouseTimer);
+            mouseTimer = setTimeout(() => {
+                document.body.style.cursor = 'none';
+            }, 3000);
+        });
+        
+        // 4. Prevenção de drag
+        document.addEventListener('dragstart', (e) => e.preventDefault());
+        
+        // 5. Bloqueio de seleção de texto
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitUserSelect = 'none';
+        document.body.style.webkitTouchCallout = 'none';
+    }
+
+    // Configurar navegação por controle remoto/teclado
+    setupNavigation() {
+        document.addEventListener('keydown', (e) => {
+            const currentFocus = document.activeElement;
+            let nextFocus;
+            
+            switch(e.key) {
+                case 'ArrowRight':
+                    nextFocus = currentFocus.nextElementSibling || currentFocus.parentElement.nextElementSibling?.firstElementChild;
+                    break;
+                case 'ArrowLeft':
+                    nextFocus = currentFocus.previousElementSibling || currentFocus.parentElement.previousElementSibling?.lastElementChild;
+                    break;
+                case 'ArrowDown':
+                    const currentSection = currentFocus.closest('.content-section');
+                    const nextSection = currentSection?.nextElementSibling;
+                    if (nextSection) nextFocus = nextSection.querySelector('.movie-card');
+                    break;
+                case 'ArrowUp':
+                    const prevSection = currentFocus.closest('.content-section')?.previousElementSibling;
+                    if (prevSection) nextFocus = prevSection.querySelector('.movie-card');
+                    break;
+                case 'Enter':
+                    if (currentFocus) currentFocus.click();
+                    break;
+            }
+            
+            if (nextFocus && nextFocus.classList.contains('movie-card')) {
+                nextFocus.focus();
+                nextFocus.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+            }
+        });
+    }
+
+    // Gerador de URL do Archive
+    getArchiveFileUrl(id, filename) {
+        return `${ARCHIVE_BASE_URL}${id}/${encodeURIComponent(filename)}`;
+    }
+
+    // Limpeza de gêneros
+    cleanGenres(genreData) {
+        if (Array.isArray(genreData)) return genreData.map(g => g.replace('[', '').trim());
+        if (typeof genreData === 'string') return genreData.replace('[', '').split(',').map(g => g.trim());
+        return [];
+    }
+
+    // Diferenciar filme de série
+    playContent(item) {
+        if (item.type === 'movie') {
+            this.initPlayer(item.url);
+        } else if (item.type === 'serie' || item.type === 'series') {
+            const archiveID = item.identificador_archive;
+            this.openEpisodesPage(archiveID, item.titulo);
+        }
+    }
+
+    // Abrir página de episódios
+    async openEpisodesPage(archiveID, title) {
+        try {
+            const response = await fetch(`https://archive.org/metadata/${archiveID}`);
+            const data = await response.json();
+            
+            const episodes = data.files.filter(file => 
+                file.name.endsWith('.mp4') || file.name.endsWith('.mkv')
+            );
+
+            this.renderSeriesDetails(title, episodes, archiveID);
+        } catch (error) {
+            console.error("Erro ao conectar com Archive.org", error);
+            this.showError('Conteúdo em processamento no servidor');
+        }
+    }
+
+    // Renderizar detalhes da série
+    renderSeriesDetails(title, episodes, archiveID) {
+        const mainContent = document.getElementById('content-container');
+        mainContent.innerHTML = `
+            <div class="series-details">
+                <div class="series-header">
+                    <h1>${title}</h1>
+                    <div class="series-actions">
+                        <button class="btn-primary" onclick="paixaoflix.playFirstEpisode('${archiveID}')">
+                            ▶️ Assistir
+                        </button>
+                        <button class="btn-secondary" onclick="paixaoflix.playTrailer('${title}')">
+                            🎬 Trailer
+                        </button>
+                        <button class="btn-secondary" onclick="paixaoflix.addToFavorites('${title}')">
+                            ❤️ + Minha Lista
+                        </button>
+                    </div>
+                </div>
+                <div class="episodes-list">
+                    ${episodes.map((ep, index) => `
+                        <div class="episode-item" onclick="paixaoflix.playEpisode('${archiveID}', '${ep.name}')">
+                            <div class="episode-number">Episódio ${index + 1}</div>
+                            <div class="episode-thumbnail">
+                                <img src="https://via.placeholder.com/200x112/333/fff?text=EP${index + 1}" alt="Episódio ${index + 1}">
+                            </div>
+                            <div class="episode-info">
+                                <div class="episode-title">${this.extractEpisodeTitle(ep.name)}</div>
+                                <div class="episode-description">Duração: ${this.formatDuration(ep.size || 0)}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // Extrair título do episódio
+    extractEpisodeTitle(filename) {
+        const match = filename.match(/S(\d+)E(\d+)/i);
+        if (match) {
+            return `Episódio ${parseInt(match[2])}`;
+        }
+        return `Episódio`;
+    }
+
+    // Formatar duração
+    formatDuration(bytes) {
+        // Estimativa baseada no tamanho (simplificada)
+        const minutes = Math.round(bytes / (1024 * 1024 * 2)); // ~2MB por minuto
+        return `${minutes} min`;
+    }
+
+    // Salvar progresso
+    salvarProgresso(videoID, tempoAtual, total) {
+        let progresso = JSON.parse(localStorage.getItem('paixaoflix_progress')) || [];
+        
+        progresso = progresso.filter(item => item.id !== videoID);
+        
+        const percent = (tempoAtual / total) * 100;
+        
+        if (percent < 98) {
+            progresso.unshift({ id: videoID, time: tempoAtual, p: percent });
+            if (progresso.length > 3) progresso.pop();
+        }
+        
+        localStorage.setItem('paixaoflix_progress', JSON.stringify(progresso));
+    }
     loadAllSections() {
         // Dados de exemplo para cada seção
         const sectionsData = {
