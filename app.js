@@ -18,6 +18,7 @@ class PaixaoFlix {
         await this.loadData();
         this.setupEventListeners();
         this.renderHome();
+        this.loadAllSections();
     }
 
     // Carregar dados EXCLUSIVAMENTE dos arquivos especificados
@@ -1115,6 +1116,109 @@ class PaixaoFlix {
         } else {
             this.assistindo.push(mediaData);
         }
+    }
+
+    // Carregar todas as 12 seções da home
+    loadAllSections() {
+        // Dados de exemplo para cada seção
+        const sectionsData = {
+            'prepare-a-pipoca': [
+                { title: 'Avatar - Fogo e Cinzas', year: 2025, rating: 9.1, type: 'movie' },
+                { title: 'Capitão América', year: 2025, rating: 8.7, type: 'movie' },
+                { title: 'Mundo Jurássico', year: 2025, rating: 8.4, type: 'movie' },
+                { title: 'Bob Esponja', year: 2025, rating: 8.9, type: 'kids' }
+            ],
+            'os-melhores-de-2025': [
+                { title: 'Davi - Nasce Um Rei', year: 2025, rating: 8.6, type: 'movie' },
+                { title: 'O Falsário', year: 2025, rating: 8.2, type: 'movie' },
+                { title: 'Nossa Vizinhança', year: 2025, rating: 8.5, type: 'movie' },
+                { title: 'Lupin - Série', year: 2025, rating: 8.8, type: 'series' }
+            ],
+            'lancamentos-2026': [
+                { title: 'Novo Filme 2026', year: 2026, rating: 9.0, type: 'movie' },
+                { title: 'Série Inédita', year: 2026, rating: 8.9, type: 'series' },
+                { title: 'Animção 2026', year: 2026, rating: 8.7, type: 'kids' }
+            ],
+            'animacao': [
+                { title: 'Bob Esponja', year: 2025, rating: 8.9, type: 'kids' },
+                { title: 'Patrulha Canina', year: 2025, rating: 8.2, type: 'kids' },
+                { title: 'Homem-Aranha', year: 2025, rating: 9.2, type: 'movie' }
+            ],
+            'acao': [
+                { title: 'Capitão América', year: 2025, rating: 8.7, type: 'movie' },
+                { title: 'Vingadores', year: 2025, rating: 9.0, type: 'movie' },
+                { title: 'Missão Impossível', year: 2025, rating: 8.8, type: 'movie' }
+            ],
+            'comedia': [
+                { title: 'Comédia 2025', year: 2025, rating: 8.3, type: 'movie' },
+                { title: 'Série de Comédia', year: 2025, rating: 8.5, type: 'series' }
+            ],
+            'drama': [
+                { title: 'Drama Intenso', year: 2025, rating: 8.7, type: 'movie' },
+                { title: 'Série Dramática', year: 2025, rating: 8.9, type: 'series' }
+            ],
+            'terror': [
+                { title: 'Terror 2025', year: 2025, rating: 7.8, type: 'movie' },
+                { title: 'Série de Terror', year: 2025, rating: 8.1, type: 'series' }
+            ],
+            'ficcao': [
+                { title: 'Ficção Científica', year: 2025, rating: 8.6, type: 'movie' },
+                { title: 'Série de Ficção', year: 2025, rating: 8.8, type: 'series' }
+            ],
+            'nacional': [
+                { title: 'Filme Brasileiro', year: 2025, rating: 8.4, type: 'movie' },
+                { title: 'Série Nacional', year: 2025, rating: 8.6, type: 'series' }
+            ],
+            'documentario': [
+                { title: 'Documentário 2025', year: 2025, rating: 8.5, type: 'documentary' },
+                { title: 'Doc Série', year: 2025, rating: 8.7, type: 'documentary' }
+            ],
+            'kids': [
+                { title: 'Desenho Infantil', year: 2025, rating: 8.8, type: 'kids' },
+                { title: 'Série Kids', year: 2025, rating: 8.9, type: 'kids' },
+                { title: 'Educativo', year: 2025, rating: 8.6, type: 'kids' }
+            ]
+        };
+
+        // Renderizar cada seção
+        Object.keys(sectionsData).forEach(sectionKey => {
+            this.renderSection(sectionKey, sectionsData[sectionKey]);
+        });
+    }
+
+    // Renderizar seção específica
+    renderSection(sectionKey, movies) {
+        const grid = document.getElementById(`${sectionKey}-grid`);
+        if (!grid) return;
+
+        grid.innerHTML = movies.map(movie => `
+            <div class="movie-card" onclick="paixaoflix.playMedia('${movie.title}')">
+                <div class="movie-thumbnail">
+                    <div class="movie-overlay">
+                        <div class="play-btn">▶️</div>
+                    </div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">${movie.title}</div>
+                    <div class="movie-meta">
+                        ${movie.rating ? `<span>⭐ ${movie.rating}</span>` : ''}
+                        ${movie.year ? `<span>${movie.year}</span>` : ''}
+                        ${movie.type ? `<span>${this.getTypeLabel(movie.type)}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Obter label do tipo
+    getTypeLabel(type) {
+        const labels = {
+            'movie': 'Filme',
+            'series': 'Série',
+            'kids': 'Kids',
+            'documentary': 'Doc'
+        };
+        return labels[type] || type;
     }
 
     // Fechar player
