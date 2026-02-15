@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaixãoFlix - Sua Central de Streaming</title>
+    <meta name="description" content="PaixãoFlix - Sua central de entretenimento com filmes, séries, canais ao vivo e conteúdo infantil">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* Sidebar */
+        #sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            border-right: 1px solid #333;
+        }
+        
+        .nav-item {
+            padding: 20px 15px;
+            color: #ffffff;
+            text-align: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            margin: 5px 10px;
+        }
+        
+        .nav-item:hover {
+            background: #ffc107;
+            color: #000;
+            transform: scale(1.1);
+        }
+        
+        .nav-item.active {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        /* Main Content */
+        #main-content {
+            margin-left: 80px;
+            min-height: 100vh;
+        }
+        
+        /* Hero Section */
+        #hero {
+            height: 80vh;
+            background: linear-gradient(135deg, rgba(255,193,7,0.1) 0%, rgba(0,0,0,0.9) 100%);
+            display: flex;
+            align-items: center;
+            padding: 100px;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+        }
+        
+        .hero-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #cccccc;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            background: #e0a800;
+            transform: scale(1.05);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Content Sections */
+        .content-section {
+            padding: 60px 100px;
+        }
+        
+        .category-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #ffc107;
+        }
+        
+        .movie-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .movie-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .movie-thumbnail {
+            position: relative;
+            height: 280px;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.3);
+        }
+        
+        .movie-info {
+            padding: 15px;
+        }
+        
+        .movie-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        
+        .rating {
+            color: #ffc107;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 60px;
+            }
+            
+            #main-content {
+                margin-left: 60px;
+            }
+            
+            #hero {
+                padding: 50px 20px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .content-section {
+                padding: 40px 20px;
+            }
+            
+            .movie-row {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="nav-item active" onclick="showSection('home')">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="nav-item" onclick="showSection('movies')">
+            <i class="fas fa-film"></i>
+        </div>
+        <div class="nav-item" onclick="showSection('series')">
+            <i class="fas fa-tv"></i>
+        </div>
+        <div class="nav-item" onclick="showSection('kids')">
+            <i class="fas fa-child"></i>
+        </div>
+        <div class="nav-item" onclick="showSection('live')">
+            <i class="fas fa-broadcast-tower"></i>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">PaixãoFlix</h1>
+                <p class="hero-description">Sua central de entretenimento definitiva com filmes, séries, canais ao vivo e conteúdo infantil</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="showSection('movies')">
+                        <i class="fas fa-play"></i>
+                        Começar a Assistir
+                    </button>
+                    <button class="btn btn-secondary" onclick="showMoreInfo()">
+                        <i class="fas fa-info-circle"></i>
+                        Saiba Mais
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Navigation
+        function showSection(section) {
+            // Update active nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Load content based on section
+            const mainContent = document.getElementById('main-content');
+            
+            switch(section) {
+                case 'home':
+                    mainContent.innerHTML = `
+                        <section id="hero">
+                            <div class="hero-content">
+                                <h1 class="hero-title">PaixãoFlix</h1>
+                                <p class="hero-description">Sua central de entretenimento definitiva com filmes, séries, canais ao vivo e conteúdo infantil</p>
+                                <div class="hero-buttons">
+                                    <button class="btn btn-primary" onclick="showSection('movies')">
+                                        <i class="fas fa-play"></i>
+                                        Começar a Assistir
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="showMoreInfo()">
+                                        <i class="fas fa-info-circle"></i>
+                                        Saiba Mais
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                    `;
+                    break;
+                    
+                case 'movies':
+                    mainContent.innerHTML = `
+                        <section class="content-section">
+                            <h2 class="category-title">
+                                <i class="fas fa-film"></i> Filmes
+                            </h2>
+                            <div class="movie-row">
+                                ${generateMovieCards([
+                                    { title: "Avatar - Fogo e Cinzas", rating: 9.1, year: 2025 },
+                                    { title: "Capitão América", rating: 8.7, year: 2025 },
+                                    { title: "Mundo Jurássico", rating: 8.4, year: 2025 },
+                                    { title: "Bob Esponja", rating: 8.9, year: 2025 }
+                                ])}
+                            </div>
+                        </section>
+                    `;
+                    break;
+                    
+                case 'series':
+                    mainContent.innerHTML = `
+                        <section class="content-section">
+                            <h2 class="category-title">
+                                <i class="fas fa-tv"></i> Séries
+                            </h2>
+                            <div class="movie-row">
+                                ${generateMovieCards([
+                                    { title: "Lupin - 1ª Temporada", rating: 8.5, year: 2025 },
+                                    { title: "Lupin - 2ª Temporada", rating: 8.7, year: 2025 },
+                                    { title: "Lupin - 3ª Temporada", rating: 8.9, year: 2025 }
+                                ])}
+                            </div>
+                        </section>
+                    `;
+                    break;
+                    
+                case 'kids':
+                    mainContent.innerHTML = `
+                        <section class="content-section">
+                            <h2 class="category-title">
+                                <i class="fas fa-child"></i> Kids
+                            </h2>
+                            <div class="movie-row">
+                                ${generateMovieCards([
+                                    { title: "Bob Esponja", rating: 8.9, year: 2025 },
+                                    { title: "Patrulha Canina", rating: 8.2, year: 2025 }
+                                ])}
+                            </div>
+                        </section>
+                    `;
+                    break;
+                    
+                case 'live':
+                    mainContent.innerHTML = `
+                        <section class="content-section">
+                            <h2 class="category-title">
+                                <i class="fas fa-broadcast-tower"></i> Canais ao Vivo
+                            </h2>
+                            <div class="movie-row">
+                                ${generateMovieCards([
+                                    { title: "Canal de Filmes", rating: null, year: null, live: true },
+                                    { title: "Séries 24h", rating: null, year: null, live: true }
+                                ])}
+                            </div>
+                        </section>
+                    `;
+                    break;
+            }
+        }
+
+        function generateMovieCards(movies) {
+            return movies.map(movie => `
+                <div class="movie-card" onclick="playContent('${movie.title}')">
+                    <div class="movie-thumbnail">
+                        <i class="fas fa-${movie.live ? 'broadcast-tower' : 'play'}"></i>
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-meta">
+                            ${movie.rating ? `<span class="rating">${movie.rating}⭐</span>` : ''}
+                            ${movie.year ? `<span>${movie.year}</span>` : ''}
+                            ${movie.live ? '<span>AO VIVO</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function playContent(title) {
+            alert(`Iniciando: ${title}\n\nPlayer será implementado em breve!`);
+        }
+
+        function showMoreInfo() {
+            alert('🎬 PaixãoFlix - Sua Central de Streaming!\n\n✅ Filmes e Séries\n✅ Canais ao Vivo\n✅ Conteúdo Kids\n✅ Multiplataforma\n✅ Atualizações Automáticas\n\n🚀 Em desenvolvimento constante!');
+        }
+    </script>
+</body>
+</html>
