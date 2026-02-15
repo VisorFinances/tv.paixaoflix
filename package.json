@@ -1,15 +1,16 @@
 {
-  "name": "paixaoflix",
-  "version": "1.0.0",
-  "description": "Plataforma de streaming PaixãoFlix - Netflix/Disney+ clone",
+  "name": "vite_react_shadcn_ts",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "lint": "eslint .",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
-    "type-check": "tsc --noEmit"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -86,46 +87,5 @@
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19",
     "vitest": "^3.2.4"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "keywords": [
-    "netflix",
-    "disney+",
-    "streaming",
-    "react",
-    "typescript",
-    "vite",
-    "paixaoflix",
-    "video",
-    "media",
-    "entertainment"
-  ],
-  "author": "PaixãoFlix Team",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/VisorFinances/tv.paixaoflix.git"
-  },
-  "bugs": {
-    "url": "https://github.com/VisorFinances/tv.paixaoflix/issues"
-  },
-  "homepage": "https://paixaoflix.com",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/VisorFinances"
   }
 }
