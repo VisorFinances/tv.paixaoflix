@@ -87,12 +87,8 @@ class DataManager {
     }
     
     setupOfflineSupport() {
-        // Setup service worker for offline support
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(error => {
-                console.log('Service Worker não suportado:', error);
-            });
-        }
+        // Service Worker not required for basic functionality
+        console.log('📱 Service Worker desabilitado para compatibilidade');
     }
     
     // GitHub Data Loading
@@ -160,7 +156,19 @@ class DataManager {
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        return await response.json();
+        const text = await response.text();
+        
+        // Handle GitHub returning text/plain instead of application/json
+        if (text.trim() === '') {
+            throw new Error('Empty response');
+        }
+        
+        try {
+            return JSON.parse(text);
+        } catch (error) {
+            console.error('JSON Parse Error:', error, 'Response length:', text.length);
+            throw new Error(`Invalid JSON response from ${url}`);
+        }
     }
     
     async fetchText(url) {

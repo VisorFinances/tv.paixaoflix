@@ -298,7 +298,7 @@ class PaixaoFlixApp {
         const heroPlayBtn = document.getElementById('heroPlayBtn');
         const heroInfoBtn = document.getElementById('heroInfoBtn');
         
-        if (heroTitle) heroTitle.textContent = content.title;
+        if (heroTitle) heroTitle.textContent = content.title || 'PaixãoFlix';
         if (heroDescription) heroDescription.textContent = content.description || 'Romance, ação, adrenalina e comédia';
         
         if (heroPlayBtn) {
@@ -307,6 +307,13 @@ class PaixaoFlixApp {
         
         if (heroInfoBtn) {
             heroInfoBtn.onclick = () => this.showDetails(content);
+        }
+    }
+    
+    playHeroContent() {
+        const featuredContent = this.getFeaturedContent();
+        if (featuredContent.length > 0) {
+            this.playContent(featuredContent[0]);
         }
     }
     
