@@ -1313,13 +1313,6 @@ class PaixaoFlix {
         
         const percent = (tempoAtual / total) * 100;
         
-        if (percent < 98) {
-            progresso.unshift({ id: videoID, time: tempoAtual, p: percent });
-            if (progresso.length > 3) progresso.pop();
-        }
-        
-        localStorage.setItem('paixaoflix_progress', JSON.stringify(progresso));
-    }
     loadAllSections() {
         // Dados de exemplo para cada seção
         const sectionsData = {
@@ -1327,7 +1320,7 @@ class PaixaoFlix {
                 { title: 'Avatar - Fogo e Cinzas', year: 2025, rating: 9.1, type: 'movie' },
                 { title: 'Capitão América', year: 2025, rating: 8.7, type: 'movie' },
                 { title: 'Mundo Jurássico', year: 2025, rating: 8.4, type: 'movie' },
-                { title: 'Bob Esponja', year: 2025, rating: 8.9, type: 'kids' }
+                { title: 'Bob Esponja', year: 2025, rating: 8.9, type: 'movie' }
             ],
             'os-melhores-de-2025': [
                 { title: 'Davi - Nasce Um Rei', year: 2025, rating: 8.6, type: 'movie' },
@@ -1381,10 +1374,34 @@ class PaixaoFlix {
             ]
         };
 
-        // Renderizar cada seção
+        // Renderizar cada seção com cards Tailwind
         Object.keys(sectionsData).forEach(sectionKey => {
-            this.renderSection(sectionKey, sectionsData[sectionKey]);
+            this.renderTailwindSection(sectionKey, sectionsData[sectionKey]);
         });
+    }
+
+    // Renderizar seção específica com Tailwind
+    renderTailwindSection(sectionKey, movies) {
+        const row = document.getElementById(`${sectionKey}-row`);
+        if (!row) return;
+
+        row.innerHTML = movies.map(movie => `
+            <div class="movie-card flex-shrink-0 w-48 cursor-pointer" onclick="paixaoflix.playMedia('${movie.title}')">
+                <div class="aspect-video bg-muted rounded-md overflow-hidden relative">
+                    <img src="https://via.placeholder.com/300x450/hsl(var(--muted))/000?text=${encodeURIComponent(movie.title.substring(0, 10))}" 
+                         alt="${movie.title}" 
+                         class="w-full h-full object-cover">
+                    <div class="movie-card-info">
+                        <div class="text-white font-semibold">${movie.title}</div>
+                        <div class="text-white/80 text-sm flex gap-2">
+                            ${movie.rating ? `<span>⭐ ${movie.rating}</span>` : ''}
+                            ${movie.year ? `<span>${movie.year}</span>` : ''}
+                            ${movie.type ? `<span>${this.getTypeLabel(movie.type)}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
 
     // Renderizar seção específica

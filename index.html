@@ -4,122 +4,336 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PaixãoFlix - Sua Plataforma de Streaming</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="logoof512.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        @layer base {
+          :root {
+            --background: 0 0% 8%;
+            --foreground: 0 0% 95%;
+
+            --card: 0 0% 11%;
+            --card-foreground: 0 0% 95%;
+
+            --popover: 0 0% 11%;
+            --popover-foreground: 0 0% 95%;
+
+            --primary: 0 85% 50%;
+            --primary-foreground: 0 0% 100%;
+
+            --secondary: 0 0% 16%;
+            --secondary-foreground: 0 0% 90%;
+
+            --muted: 0 0% 18%;
+            --muted-foreground: 0 0% 55%;
+
+            --accent: 0 0% 20%;
+            --accent-foreground: 0 0% 95%;
+
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 100%;
+
+            --border: 0 0% 20%;
+            --input: 0 0% 20%;
+            --ring: 0 85% 50%;
+
+            --radius: 0.5rem;
+
+            --sidebar-background: 0 0% 6%;
+            --sidebar-foreground: 0 0% 80%;
+            --sidebar-primary: 0 85% 50%;
+            --sidebar-primary-foreground: 0 0% 100%;
+            --sidebar-accent: 0 0% 14%;
+            --sidebar-accent-foreground: 0 0% 95%;
+            --sidebar-border: 0 0% 15%;
+            --sidebar-ring: 0 85% 50%;
+
+            --progress-bar: 210 100% 55%;
+            --hero-gradient: linear-gradient(to top, hsl(0 0% 8%) 0%, transparent 60%);
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+          }
+        }
+
+        @layer base {
+          * {
+            @apply border-border;
+          }
+
+          body {
+            @apply bg-background text-foreground font-sans;
+            font-family: 'Inter', sans-serif;
+          }
+
+          h1, h2, h3, .font-display {
+            font-family: 'Bebas Neue', sans-serif;
+          }
+
+          /* Scrollbar */
+          ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+          }
+          ::-webkit-scrollbar-track {
+            background: hsl(var(--background));
+          }
+          ::-webkit-scrollbar-thumb {
+            background: hsl(var(--muted));
+            border-radius: 3px;
+          }
+        }
+
+        @layer components {
+          .movie-card {
+            @apply relative rounded-md overflow-hidden cursor-pointer transition-all duration-300 ease-out;
+          }
+          .movie-card:hover {
+            transform: scale(1.2);
+            z-index: 30;
+            box-shadow: var(--card-shadow);
+          }
+          .movie-card:hover .movie-card-info {
+            @apply opacity-100 translate-y-0;
+          }
+          .movie-card-info {
+            @apply absolute bottom-0 left-0 right-0 p-3 opacity-0 translate-y-2 transition-all duration-300;
+            background: linear-gradient(to top, hsl(0 0% 5% / 0.95), transparent);
+          }
+
+          .sidebar-nav {
+            @apply transition-all duration-300 ease-in-out;
+          }
+
+          .category-row {
+            @apply flex gap-2 overflow-x-auto pb-4;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .category-row::-webkit-scrollbar {
+            display: none;
+          }
+
+          .menu-tile {
+            @apply relative rounded-lg overflow-hidden cursor-pointer transition-transform duration-300;
+          }
+          .menu-tile:hover {
+            transform: scale(1.05);
+          }
+        }
+    </style>
 </head>
-<body>
-    <!-- Sidebar Disney+ Style -->
-    <div id="sidebar" class="sidebar">
-        <div class="sidebar-header">
-            <img src="logoof512.png" alt="PaixãoFlix" class="logo">
+<body class="bg-background text-foreground">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-16 bg-sidebar-background border-r border-sidebar-border z-50 transition-all duration-300">
+        <div class="p-4">
+            <div class="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
+                <span class="text-sidebar-primary-foreground font-bold">P</span>
+            </div>
         </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="#" class="nav-item active" data-section="home">🏠 Início</a></li>
-                <li><a href="#" class="nav-item" data-section="cinema">🎬 Cinema</a></li>
-                <li><a href="#" class="nav-item" data-section="series">📺 Séries</a></li>
-                <li><a href="#" class="nav-item" data-section="canais">📡 Canais ao Vivo</a></li>
-                <li><a href="#" class="nav-item" data-section="kids">🧸 Kids</a></li>
-                <li><a href="#" class="nav-item" data-section="series-kids">🎈 Séries Kids</a></li>
-                <li><a href="#" class="nav-item" data-section="favoritos">❤️ Minha Lista</a></li>
-            </ul>
+        <nav class="sidebar-nav mt-8">
+            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="home">
+                <i class="fas fa-home text-sidebar-accent-foreground"></i>
+            </div>
+            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="cinema">
+                <i class="fas fa-film text-sidebar-accent-foreground"></i>
+            </div>
+            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="series">
+                <i class="fas fa-tv text-sidebar-accent-foreground"></i>
+            </div>
+            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="canais">
+                <i class="fas fa-broadcast-tower text-sidebar-accent-foreground"></i>
+            </div>
+            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="kids">
+                <i class="fas fa-child text-sidebar-accent-foreground"></i>
+            </div>
+            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="series-kids">
+                <i class="fas fa-baby text-sidebar-accent-foreground"></i>
+            </div>
+            <div class="menu-tile p-3 mb-2 hover:bg-sidebar-accent" data-section="favoritos">
+                <i class="fas fa-heart text-sidebar-accent-foreground"></i>
+            </div>
         </nav>
     </div>
 
     <!-- Main Content -->
-    <div id="main-content" class="main-content">
+    <main class="ml-16 min-h-screen bg-background">
         <!-- Header -->
-        <header class="header">
-            <div class="header-top">
-                <div class="search-container">
-                    <input type="text" id="search-input" placeholder="Buscar filmes, séries, canais..." class="search-input">
-                    <button id="search-btn" class="search-btn">🔍</button>
+        <header class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div class="container h-16 flex items-center justify-between px-4">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar filmes, séries..." class="w-64 bg-input border border-border rounded-md px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                    </div>
                 </div>
-                <div class="user-menu">
-                    <span>👤 Usuário</span>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-md hover:bg-accent">
+                        <i class="fas fa-user text-accent-foreground"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
+        <!-- Hero Section -->
+        <section class="relative h-[85vh] w-full overflow-hidden" style="background: var(--hero-gradient);">
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center max-w-4xl mx-auto px-4">
+                    <h1 class="font-display text-6xl md:text-8xl font-bold text-foreground mb-6">
+                        Bem-vindo à PaixãoFlix
+                    </h1>
+                    <p class="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                        Sua plataforma de streaming com milhares de opções
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button class="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-md text-lg font-semibold transition-colors">
+                            <i class="fas fa-play mr-2"></i>
+                            Assistir Agora
+                        </button>
+                        <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-8 py-3 rounded-md text-lg font-semibold transition-colors">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Saiba Mais
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Content Container -->
-        <div id="content-container" class="content-container">
-            <!-- Hero Banner -->
-            <section id="hero-banner" class="hero-banner">
-                <div class="hero-content">
-                    <h1 id="hero-title">Bem-vindo à PaixãoFlix</h1>
-                    <p id="hero-description">Sua plataforma de streaming com milhares de opções</p>
-                    <button class="hero-btn">▶️ Assistir Agora</button>
+        <div class="container px-4 py-8">
+            <!-- As 12 seções principais -->
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🍿 Prepare a Pipoca
+                </h2>
+                <div class="category-row" id="prepare-a-pipoca-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
                 </div>
             </section>
 
-            <!-- As 12 seções principais -->
-            <section class="content-section" data-section="prepare-a-pipoca">
-                <h2 class="section-title">🍿 Prepare a Pipoca</h2>
-                <div class="movies-grid" id="prepare-a-pipoca-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🔥 Os Melhores de 2025
+                </h2>
+                <div class="category-row" id="os-melhores-de-2025-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="os-melhores-de-2025">
-                <h2 class="section-title">🔥 Os Melhores de 2025</h2>
-                <div class="movies-grid" id="os-melhores-de-2025-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🚀 Lançamentos 2026
+                </h2>
+                <div class="category-row" id="lancamentos-2026-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="lancamentos-2026">
-                <h2 class="section-title">🚀 Lançamentos 2026</h2>
-                <div class="movies-grid" id="lancamentos-2026-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🎨 Animação
+                </h2>
+                <div class="category-row" id="animacao-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="animacao">
-                <h2 class="section-title">🎨 Animação</h2>
-                <div class="movies-grid" id="animacao-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    💥 Ação
+                </h2>
+                <div class="category-row" id="acao-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="acao">
-                <h2 class="section-title">💥 Ação</h2>
-                <div class="movies-grid" id="acao-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    😂 Comédia
+                </h2>
+                <div class="category-row" id="comedia-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="comedia">
-                <h2 class="section-title">😂 Comédia</h2>
-                <div class="movies-grid" id="comedia-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🎭 Drama
+                </h2>
+                <div class="category-row" id="drama-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="drama">
-                <h2 class="section-title">🎭 Drama</h2>
-                <div class="movies-grid" id="drama-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    😱 Terror
+                </h2>
+                <div class="category-row" id="terror-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="terror">
-                <h2 class="section-title">😱 Terror</h2>
-                <div class="movies-grid" id="terror-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🛸 Ficção Científica
+                </h2>
+                <div class="category-row" id="ficcao-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="ficcao">
-                <h2 class="section-title">🛸 Ficção Científica</h2>
-                <div class="movies-grid" id="ficcao-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🇧🇷 Nacional
+                </h2>
+                <div class="category-row" id="nacional-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="nacional">
-                <h2 class="section-title">🇧🇷 Nacional</h2>
-                <div class="movies-grid" id="nacional-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    📹 Documentário
+                </h2>
+                <div class="category-row" id="documentario-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
 
-            <section class="content-section" data-section="documentario">
-                <h2 class="section-title">📹 Documentário</h2>
-                <div class="movies-grid" id="documentario-grid"></div>
-            </section>
-
-            <section class="content-section" data-section="kids">
-                <h2 class="section-title">🧸 Kids</h2>
-                <div class="movies-grid" id="kids-grid"></div>
+            <section class="mb-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground mb-8 flex items-center">
+                    🧸 Kids
+                </h2>
+                <div class="category-row" id="kids-row">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
             </section>
         </div>
-    </div>
+    </main>
 
     <!-- Video Player Modal -->
-    <div id="player-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="player-container"></div>
+    <div id="player-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-card rounded-lg w-full max-w-4xl relative">
+                <button class="absolute top-4 right-4 text-muted-foreground hover:text-foreground" onclick="closePlayer()">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <div id="player-container" class="aspect-video w-full"></div>
+            </div>
         </div>
     </div>
 
