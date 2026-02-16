@@ -228,7 +228,8 @@ class PaixaoFlixApp {
         console.log(`📄 Resposta recebida: ${text.length} caracteres`);
         
         if (text.trim() === '') {
-            throw new Error('Resposta vazia');
+            console.log(`⚠️ Arquivo vazio encontrado: ${url}`);
+            return []; // Retorna array vazio em vez de erro
         }
         
         try {
@@ -276,11 +277,11 @@ class PaixaoFlixApp {
     loadFallbackData() {
         console.log('📺 Usando dados de exemplo...');
         const exampleMovies = [
-            { id: '1', title: 'Filme Ação 2024', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Ação+2024', year: '2024', genre: 'Ação', streamUrl: 'https://example.com/video1.mp4', type: 'movie' },
-            { id: '2', title: 'Comédia Romântica', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Comédia', year: '2024', genre: 'Comédia', streamUrl: 'https://example.com/video2.mp4', type: 'movie' },
-            { id: '3', title: 'Terror Psicológico', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Terror', year: '2024', genre: 'Terror', streamUrl: 'https://example.com/video3.mp4', type: 'movie' },
-            { id: '4', title: 'Drama Intenso', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Drama', year: '2024', genre: 'Drama', streamUrl: 'https://example.com/video4.mp4', type: 'movie' },
-            { id: '5', title: 'Animação Família', poster: 'https://via.placeholder.com/200x300/141414/e50914?text=Animação', year: '2024', genre: 'Animação', streamUrl: 'https://example.com/video5.mp4', type: 'movie' }
+            { id: '1', title: 'Filme Ação 2024', poster: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkFjw6fDo28gMjAyNDwvdGV4dD48L3N2Zz4=', year: '2024', genre: 'Ação', streamUrl: 'https://example.com/video1.mp4', type: 'movie' },
+            { id: '2', title: 'Comédia Romântica', poster: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkNvbWlkaWE8L3RleHQ+PC9zdmc+', year: '2024', genre: 'Comédia', streamUrl: 'https://example.com/video2.mp4', type: 'movie' },
+            { id: '3', title: 'Terror Psicológico', poster: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlRlcnJvcjwvdGV4dD48L3N2Zz4=', year: '2024', genre: 'Terror', streamUrl: 'https://example.com/video3.mp4', type: 'movie' },
+            { id: '4', title: 'Drama Intenso', poster: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkRyYW1hPC90ZXh0Pjwvc3ZnPg==', year: '2024', genre: 'Drama', streamUrl: 'https://example.com/video4.mp4', type: 'movie' },
+            { id: '5', title: 'Animação Família', poster: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkFuaW1hw6fDo288L3RleHQ+PC9zdmc+', year: '2024', genre: 'Animação', streamUrl: 'https://example.com/video5.mp4', type: 'movie' }
         ];
         
         this.data.cinema = this.shuffleArray(exampleMovies);
@@ -408,7 +409,7 @@ class PaixaoFlixApp {
         
         container.innerHTML = continueWatchingItems.map(item => `
             <div class="content-card continue-watching-card focusable" onclick="app.playContent(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                <img src="${item.poster}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x170/141414/e50914?text=Sem+Imagem'">
+                <img src="${item.poster}" alt="${item.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE3MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlNlbSBJbWFnZW08L3RleHQ+PC9zdmc+'">
                 <div class="content-card-overlay">
                     <div class="content-card-title">${item.title}</div>
                     <div class="content-card-meta">${item.progress.toFixed(0)}% assistido</div>
@@ -426,7 +427,7 @@ class PaixaoFlixApp {
         
         container.innerHTML = items.map(item => `
             <div class="content-card focusable" onclick="app.playContent(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                <img src="${item.poster}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/200x113/141414/e50914?text=Sem+Imagem'">
+                <img src="${item.poster}" alt="${item.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjExMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlNlbSBJbWFnZW08L3RleHQ+PC9zdmc+'">
                 <div class="content-card-overlay">
                     <div class="content-card-title">${item.title}</div>
                     <div class="content-card-meta">${item.year || '2024'} • ${this.cleanGenre(item.genre)}</div>
