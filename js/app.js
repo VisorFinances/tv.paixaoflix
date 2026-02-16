@@ -20,6 +20,12 @@ class PaixaoFlixApp {
     async init() {
         console.log('🚀 Iniciando PaixãoFlix...');
         
+        // Force dark theme immediately
+        document.documentElement.style.background = '#141414';
+        document.documentElement.style.color = '#ffffff';
+        document.body.style.background = '#141414';
+        document.body.style.color = '#ffffff';
+        
         // Initialize components
         this.setupEventListeners();
         this.setupNavigation();
