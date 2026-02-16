@@ -161,21 +161,13 @@ class PaixaoFlixApp {
             
             console.log('🌐 Buscando dados do GitHub...');
             
-            const [
-                cinemaData,
-                seriesData,
-                channelsData,
-                favoritesData,
-                kidsMoviesData,
-                kidsSeriesData
-            ] = await Promise.all([
-                this.fetchJson(baseUrl + 'cinema.json'),
-                this.fetchJson(baseUrl + 's%C3%A9ries.json'),
-                this.fetchM3U8(baseUrl + 'canaisaovivo.m3u8'),
-                this.fetchJson(baseUrl + 'favoritos.json'),
-                this.fetchJson(baseUrl + 'filmeskids.json'),
-                this.fetchJson(baseUrl + 's%C3%A9rieskids.json')
-            ]);
+            // Busca cada arquivo individualmente para não falhar completamente
+            const cinemaData = await this.fetchJson(baseUrl + 'cinema.json').catch(() => []);
+            const seriesData = await this.fetchJson(baseUrl + 's%C3%A9ries.json').catch(() => []);
+            const channelsData = await this.fetchM3U8(baseUrl + 'canaisaovivo.m3u8').catch(() => []);
+            const favoritesData = await this.fetchJson(baseUrl + 'favoritos.json').catch(() => []);
+            const kidsMoviesData = await this.fetchJson(baseUrl + 'filmeskids.json').catch(() => []);
+            const kidsSeriesData = await this.fetchJson(baseUrl + 's%C3%A9rieskids.json').catch(() => []);
             
             console.log('✅ Dados brutos recebidos:', {
                 cinema: cinemaData?.length || 0,
@@ -214,8 +206,8 @@ class PaixaoFlixApp {
             
         } catch (error) {
             console.error('❌ Erro ao carregar dados:', error);
-            console.log('🔄 Usando dados de exemplo...');
-            this.loadFallbackData();
+            console.log('🔄 Continuando com dados disponíveis...');
+            // Não carrega fallback, continua com dados que conseguiu carregar
         }
     }
     
@@ -265,7 +257,7 @@ class PaixaoFlixApp {
             } else if (line && !line.startsWith('#') && currentChannel.name) {
                 currentChannel.url = line.trim();
                 currentChannel.id = currentChannel.name.replace(/\s+/g, '-').toLowerCase();
-                currentChannel.logo = `https://via.placeholder.com/200x200/141414/e50914?text=${encodeURIComponent(currentChannel.name)}`;
+                currentChannel.logo = `data:image/svg+xml;base64,${btoa(`<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#141414"/><text x="50%" y="50%" font-family="Arial" font-size="14" fill="#e50914" text-anchor="middle" dy=".3em">${encodeURIComponent(currentChannel.name)}</text></svg>`)}`;
                 channels.push({...currentChannel});
                 currentChannel = {};
             }
@@ -661,7 +653,7 @@ class PaixaoFlixApp {
             container.innerHTML = `
                 <div class="series-header">
                     <div class="series-poster">
-                        <img src="${series.poster}" alt="${series.title}" onerror="this.src='https://via.placeholder.com/200x300/141414/e50914?text=Sem+Imagem'">
+                        <img src="${series.poster}" alt="${series.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTQxNDE0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2U1MDkxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlNlbSBJbWFnZW08L3RleHQ+PC9zdmc+'">
                     </div>
                     <div class="series-info">
                         <h2 class="series-title">${series.title}</h2>
