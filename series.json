@@ -1,0 +1,95 @@
+[
+  {
+    "id": "1",
+    "title": "Wandinha - 2ª Temporada",
+    "tmdb_id": "119051",
+    "identificador_archive": "PaixaoFlix-Wandinha-2a-Temporada",
+    "type": "serie",
+    "year": "2024",
+    "rating": "8.5",
+    "desc": "Wandinha e seu grupo de detetives enfrentam os crimes mais bizarros e perigosos do Brasil. Em cada episódio, eles investigam casos reais que chocaram o país, misturando humor negro com investigação criminal séria.",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/izLw6mf5coAJZV6n9wDfbYWXXHW.jpg",
+    "episodes": [
+      {
+        "id": "ep1",
+        "number": 1,
+        "title": "O Caso do Cadáver Fantasma",
+        "description": "Uma série de desaparecimentos misteriosos assombra uma pequena cidade. Wandinha e sua equipe viajam até o fundo para descobrir a verdade.",
+        "thumbnail": "https://picsum.photos/640/360?random=1",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "previewUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+      },
+      {
+        "id": "ep2",
+        "number": 2,
+        "title": "A Múmia do Mangue",
+        "description": "O corpo de uma múmia é encontrado no mangue. A equipe precisa descobrir se há alguma conexão com os casos antigos.",
+        "thumbnail": "https://picsum.photos/640/360?random=2",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        "previewUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+      },
+      {
+        "id": "ep3",
+        "number": 3,
+        "title": "O Segredo da Mansão Abandonada",
+        "description": "Uma mansão abandonada guarda segredos sombrios. Wandinha decide investigar sozinha durante a noite.",
+        "thumbnail": "https://picsum.photos/640/360?random=3",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        "previewUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Moana 2",
+    "tmdb_id": "1241982",
+    "url": "URL_DO_VIDEO_AQUI",
+    "type": "movie",
+    "year": "2016",
+    "rating": "7.2",
+    "desc": "Moana é uma jovem que navega em busca de sua identidade e salva seu povo. Ela descobre que é a última descendente de uma linhagem de navegadores polinésios.",
+    "poster": "https://image.tmdb.org/t/p/w600_and_h900_face/izLw6mf5coAJZV6n9wDfbYWXXHW.jpg"
+  },
+  {
+    "id": "3",
+    "title": "Percy Jackson e o Mar de Monstros",
+    "identificador_archive": "percy-jackson-e-o-mar-de-monstros-paixaoflix",
+    "genero": "Aventura",
+    "year": "2013",
+    "rating": "6.0",
+    "desc": "Percy Jackson e seus amigos estão na busca pelo Velocino de Ouro, o único artefato capaz de derrotar o vilão. Eles enfrentam criaturas mitológicas e perigos mortais.",
+    "poster": "https://4.bp.blogspot.com/-jMSNx8hJE/WNNLVASgffI/AAAAAAAABRI/sLCgpG8tp4UvtwNXI3Yo3TR-eFyKgYpZgCLcB/s1600/um-percy-jackson-e-o-mar-de-monstros-paixaoflix.jpg",
+    "type": "movie"
+  },
+  {
+    "id": "4",
+    "title": "Um Maluco no Pedaço - 1ª Temporada",
+    "identificador_archive": "um-maluco-no-pedaco-s01-paixaoflix",
+    "genero": "Comédia",
+    "year": "1990",
+    "rating": "7.9",
+    "desc": "Will é um jovem negro que adora Rap e sonha ser o maior DJ do Brasil. Ele vive na periferia e enfrenta os desafios da vida com bom humor e muita determinação.",
+    "poster": "https://4.bp.blogspot.com/-jMSNnNx8hJE/WNNLVASgffI/AAAAAAAABRI/sLCgpG8tp4UvtwNXI3Yo3TR-eFyKgYpZgCLcB/s1600/um-maluco-no-pedaco_torrent.jpg",
+    "type": "serie",
+    "episodes": [
+      {
+        "id": "ep1",
+        "number": 1,
+        "title": "O Primeiro Microfone",
+        "description": "Will consegue seu primeiro celular e começa a fazer sucesso como DJ na comunidade.",
+        "thumbnail": "https://picsum.photos/640/360?random=4",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "previewUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+      },
+      {
+        "id": "ep2",
+        "number": 2,
+        "title": "A Batalha dos DJs",
+        "description": "Will participa de uma competição de DJs e precisa mostrar seu talento.",
+        "thumbnail": "https://picsum.photos/640/360?random=5",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        "previewUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+      }
+    ]
+  }
+]
