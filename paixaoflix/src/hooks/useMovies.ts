@@ -31,7 +31,7 @@ export const useMovies = () => {
         // Process movies data
         const processedMovies = moviesData.map((item: any) => ({
           id: item.id || Math.random().toString(36).substr(2, 9),
-          title: cleanTitle(item.title || item.nome),
+          title: cleanTitle(item.title || item.nome || ''),
           description: item.description || item.sinopse || '',
           thumbnail: item.thumbnail || item.capa || '',
           year: item.year || item.ano,
@@ -46,14 +46,14 @@ export const useMovies = () => {
         // Process series data with PaixãoFlix identifier
         const processedSeries = seriesData.map((item: any) => ({
           id: `PaixãoFlix-${item.id || Math.random().toString(36).substr(2, 9)}`,
-          title: cleanTitle(item.title || item.nome),
+          title: cleanTitle(item.title || item.nome || ''),
           description: item.description || item.sinopse || '',
           thumbnail: item.thumbnail || item.capa || '',
           year: item.year || item.ano,
           rating: item.rating || item.avaliacao,
           genre: item.genre || item.genero,
           type: 'series' as const,
-          archiveId: item.archiveId,
+          archiveId: item.archiveId || item.identificador_archive,
           seasons: item.seasons || []
         }));
         
@@ -101,6 +101,7 @@ export const useMovies = () => {
   };
 
   const cleanTitle = (title: string): string => {
+    if (!title || typeof title !== 'string') return '';
     return title
       .replace(/CONV_/g, '')
       .replace(/%20/g, ' ')
@@ -111,8 +112,11 @@ export const useMovies = () => {
   const deduplicateByTitle = (items: Movie[]): Movie[] => {
     const seen = new Set<string>();
     return items.filter(item => {
-      const cleanTitle = item.title.toLowerCase().replace(/\s+(temporalada\s+\d+|season\s+\d+)$/i, '');
-      if (seen.has(cleanTitle)) return false;
+      if (!item.title) return false;
+      const cleanTitle = item.title.toLowerCase().replace(/\s+(temporada\s+\d+|season\s+\d+)$/i, '');
+      if (seen.has(cleanTitle)) {
+        return false;
+      }
       seen.add(cleanTitle);
       return true;
     });
