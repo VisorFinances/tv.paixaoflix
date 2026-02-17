@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiService, Series, Episode } from './lib/api';
-import { Play, Home, Tv, Search, User, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Home, Tv, Search, User, X, ChevronLeft } from 'lucide-react';
 import Player from './components/Player';
 
 function App() {
