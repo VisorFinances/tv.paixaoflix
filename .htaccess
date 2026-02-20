@@ -1,0 +1,33 @@
+# Bloquear acesso a arquivos específicos do domínio
+<Files "index.js">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Desativar indexação
+Options -Indexes
+
+# Página de manutenção para todos os acessos
+ErrorDocument 404 /index.html
+ErrorDocument 403 /index.html
+
+# Bloquear requisições externas
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Bloquear acesso a /data/
+    RewriteRule ^data/ - [F,L]
+    
+    # Bloquear acesso a /assets/
+    RewriteRule ^assets/ - [F,L]
+    
+    # Redirecionar tudo para manutenção (opcional)
+    # RewriteRule ^(.*)$ /index.html [L]
+</IfModule>
+
+# Headers de segurança
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>

@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /
+
+# Bloquear todos os robôs de indexação
+Disallow: /data/
+Disallow: /assets/
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Sitemap (quando disponível)
+# Sitemap: https://tv.paixaoflix.vip/sitemap.xml
