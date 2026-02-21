@@ -229,6 +229,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createContinueCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'continueWatching');
     }
 
     function renderDontMiss() {
@@ -239,6 +241,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'dontMiss');
     }
 
     function renderTop10() {
@@ -249,6 +253,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createTop10Card(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'top10Brazil');
     }
 
     function renderKids() {
@@ -259,6 +265,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'kids');
     }
 
     function renderSaturdayNight() {
@@ -269,6 +277,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'saturdayNight');
     }
 
     function renderAwarded() {
@@ -279,6 +289,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createAwardedCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'awarded');
     }
 
     function renderMarathon() {
@@ -289,6 +301,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'marathon');
     }
 
     function renderBlackCulture() {
@@ -303,6 +317,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const card = createCard(item);
                 grid.appendChild(card);
             });
+            
+            setupInfiniteScroll(grid, 'blackCulture');
         }
     }
 
@@ -314,6 +330,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'nostalgia');
     }
 
     function renderRomance() {
@@ -324,6 +342,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'romance');
     }
 
     function renderNational() {
@@ -334,6 +354,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const card = createCard(item);
             grid.appendChild(card);
         });
+        
+        setupInfiniteScroll(grid, 'national');
     }
 
     function renderSoapOperas() {
@@ -348,7 +370,78 @@ document.addEventListener('DOMContentLoaded', function() {
                 const card = createCard(item);
                 grid.appendChild(card);
             });
+            
+            setupInfiniteScroll(grid, 'soapOperas');
         }
+    }
+
+    // Infinite Scroll System
+    function setupInfiniteScroll(grid, sectionName) {
+        let isLoading = false;
+        let page = 1;
+        const itemsPerPage = 10;
+        
+        grid.addEventListener('scroll', function() {
+            const scrollLeft = grid.scrollLeft;
+            const scrollWidth = grid.scrollWidth;
+            const clientWidth = grid.clientWidth;
+            
+            // Check if scrolled to near the end (within 100px)
+            if (scrollLeft + clientWidth >= scrollWidth - 100 && !isLoading) {
+                loadMoreContent(grid, sectionName, page, itemsPerPage);
+            }
+        });
+    }
+    
+    function loadMoreContent(grid, sectionName, currentPage, itemsPerPage) {
+        const sectionData = streamingData[sectionName];
+        if (!sectionData || sectionData.length === 0) return;
+        
+        // Show loading indicator
+        const loadingCard = document.createElement('div');
+        loadingCard.className = 'card loading-card';
+        loadingCard.innerHTML = '<div class="loading-spinner">Carregando...</div>';
+        grid.appendChild(loadingCard);
+        
+        // Simulate loading delay
+        setTimeout(() => {
+            // Remove loading indicator
+            loadingCard.remove();
+            
+            // Generate more content (duplicate existing content for demo)
+            const startIndex = (currentPage * itemsPerPage) % sectionData.length;
+            const endIndex = Math.min(startIndex + itemsPerPage, sectionData.length);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                const item = sectionData[i];
+                let card;
+                
+                if (sectionName === 'continueWatching') {
+                    card = createContinueCard(item);
+                } else if (sectionName === 'top10Brazil') {
+                    card = createTop10Card(item);
+                } else if (sectionName === 'awarded') {
+                    card = createAwardedCard(item);
+                } else {
+                    card = createCard(item);
+                }
+                
+                grid.appendChild(card);
+            }
+            
+            // Add fade-in animation to new cards
+            const newCards = grid.querySelectorAll('.card:nth-last-child(-n+' + itemsPerPage + ')');
+            newCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateX(0)';
+                }, index * 50);
+            });
+            
+        }, 1000);
     }
 
     // Card creation functions
