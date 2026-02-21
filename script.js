@@ -654,22 +654,14 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             navLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
-        });
-    });
-
-    // Search
-    document.getElementById('searchBtn').addEventListener('click', function() {
-        const query = prompt('Buscar conteúdo:');
-        if (query) {
-            const results = streamingData.allContent.filter(item => 
-                item.title.toLowerCase().includes(query.toLowerCase())
-            );
-            if (results.length > 0) {
-                showContentModal(results[0]);
-            } else {
-                alert('Nenhum resultado encontrado');
+            
+            // Scroll suave para a seção correspondente
+            const targetId = this.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
             }
-        }
+        });
     });
 
     // Keyboard shortcuts
