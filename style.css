@@ -1,5 +1,7 @@
+/* Global Styles */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;font-family:Poppins,sans-serif;color:#fff;line-height:1.6}
+body{font-family:'Poppins',sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;overflow-x:hidden}
+html{scroll-behavior:smooth}
 .container{max-width:1200px;margin:0 auto;padding:0 20px}
 
 /* Header */
@@ -33,11 +35,7 @@ body{background:#0a0a0a;font-family:Poppins,sans-serif;color:#fff;line-height:1.
 /* Sections */
 .section{padding:40px 0}
 .section-title{font-size:24px;margin-bottom:15px;color:#fff}
-.content-grid{display:flex;gap:15px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#ff2e2e #1a1a1a}
-.content-grid::-webkit-scrollbar{height:6px}
-.content-grid::-webkit-scrollbar-track{background:#1a1a1a;border-radius:3px}
-.content-grid::-webkit-scrollbar-thumb{background:#ff2e2e;border-radius:3px}
-.content-grid::-webkit-scrollbar-thumb:hover{background:#ff4444}
+.content-grid{display:flex;gap:15px;overflow-x:hidden;scroll-behavior:smooth}
 
 /* Top 10 Container */
 .top10-container{display:flex;flex-direction:column;gap:15px}
