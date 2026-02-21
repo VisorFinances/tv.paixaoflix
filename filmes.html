@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmes - StreamFlix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="logo">🎬 <span>Stream</span>Flix</div>
+        <nav class="nav">
+            <a href="index.html">Início</a>
+            <a href="filmes.html" class="active">Filmes</a>
+            <a href="series.html">Séries</a>
+            <a href="live.html">TV ao Vivo</a>
+            <a href="#mylist">Minha Lista</a>
+        </nav>
+        <div class="profile">
+            <div class="search" id="searchBtn">🔍</div>
+            <img src="https://i.pravatar.cc/40" alt="Perfil" class="avatar">
+        </div>
+    </div>
+</header>
+
+<section class="hero" id="home">
+    <div class="hero-bg">
+        <img src="https://picsum.photos/1920/1080?random=movies-hero" alt="Filmes Hero">
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+        <h1>Filmes <span>Imperdíveis</span></h1>
+        <p>Os melhores lançamentos e clássicos do cinema</p>
+        <div class="hero-buttons">
+            <button class="btn-primary" onclick="playFeatured()">▶ Assistir Agora</button>
+            <button class="btn-secondary" onclick="showPlans()">Ver Planos</button>
+        </div>
+    </div>
+</section>
+
+<main class="main">
+    <!-- Lançamentos 2024 -->
+    <section class="section" id="releases-2024">
+        <div class="container">
+            <h2 class="section-title">🔥 Lançamentos 2024</h2>
+            <div class="content-grid" id="releases2024Grid"></div>
+        </div>
+    </section>
+
+    <!-- Ação -->
+    <section class="section" id="action-movies">
+        <div class="container">
+            <h2 class="section-title">💥 Ação</h2>
+            <div class="content-grid" id="actionGrid"></div>
+        </div>
+    </section>
+
+    <!-- Comédia -->
+    <section class="section" id="comedy-movies">
+        <div class="container">
+            <h2 class="section-title">😂 Comédia</h2>
+            <div class="content-grid" id="comedyGrid"></div>
+        </div>
+    </section>
+
+    <!-- Terror -->
+    <section class="section" id="horror-movies">
+        <div class="container">
+            <h2 class="section-title">😱 Terror</h2>
+            <div class="content-grid" id="horrorGrid"></div>
+        </div>
+    </section>
+
+    <!-- Romance -->
+    <section class="section" id="romance-movies">
+        <div class="container">
+            <h2 class="section-title">💕 Romance</h2>
+            <div class="content-grid" id="romanceGrid"></div>
+        </div>
+    </section>
+
+    <!-- Drama -->
+    <section class="section" id="drama-movies">
+        <div class="container">
+            <h2 class="section-title">🎭 Drama</h2>
+            <div class="content-grid" id="dramaGrid"></div>
+        </div>
+    </section>
+
+    <!-- Ficção Científica -->
+    <section class="section" id="scifi-movies">
+        <div class="container">
+            <h2 class="section-title">🚀 Ficção Científica</h2>
+            <div class="content-grid" id="scifiGrid"></div>
+        </div>
+    </section>
+
+    <!-- Clássicos -->
+    <section class="section" id="classic-movies">
+        <div class="container">
+            <h2 class="section-title">🎬 Clássicos</h2>
+            <div class="content-grid" id="classicGrid"></div>
+        </div>
+    </section>
+
+    <!-- Nacionais -->
+    <section class="section" id="national-movies">
+        <div class="container">
+            <h2 class="section-title">🇧🇷 Nacionais</h2>
+            <div class="content-grid" id="nationalGrid"></div>
+        </div>
+    </section>
+
+    <!-- Premiados -->
+    <section class="section" id="awarded-movies">
+        <div class="container">
+            <h2 class="section-title">🏆 Premiados</h2>
+            <div class="content-grid awarded-grid" id="awardedGrid"></div>
+        </div>
+    </section>
+</main>
+
+<!-- Player Modal -->
+<div id="playerModal" class="modal">
+    <div class="modal-backdrop" onclick="closePlayer()"></div>
+    <div class="modal-content">
+        <button class="close-btn" onclick="closePlayer()">✕</button>
+        <div id="playerContainer"></div>
+    </div>
+</div>
+
+<!-- Content Modal -->
+<div id="contentModal" class="modal">
+    <div class="modal-backdrop" onclick="closeContentModal()"></div>
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeContentModal()">✕</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>StreamFlix</h4>
+                <p>Sua plataforma de streaming</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navegação</h4>
+                <a href="index.html">Início</a>
+                <a href="filmes.html">Filmes</a>
+                <a href="series.html">Séries</a>
+                <a href="live.html">TV ao Vivo</a>
+            </div>
+            <div class="footer-section">
+                <h4>Suporte</h4>
+                <a href="#help">Ajuda</a>
+                <a href="#contact">Contato</a>
+                <a href="#terms">Termos</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 StreamFlix. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="filmes.js"></script>
+</body>
+</html>
