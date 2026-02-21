@@ -317,7 +317,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function createCard(item) {
         const card = document.createElement('div');
         card.className = 'card';
+        
+        // Adicionar número do Top 10 se tiver rank
+        const rankBadge = item.rank ? `<div class="rank-number">${item.rank}</div>` : '';
+        
         card.innerHTML = `
+            ${rankBadge}
             <img src="${item.image}" alt="${item.title}">
             <div class="card-overlay">
                 <h3 class="card-title">${item.title}</h3>
