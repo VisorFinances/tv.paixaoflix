@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: movie.titulo,
                     year: movie.year || '2024',
                     genre: movie.genero || movie.categories?.[0] || 'Geral',
+                    categories: movie.categories || [],
                     rating: movie.rating || '5.0',
                     duration: movie.duration || '2h 00min',
                     description: movie.desc || 'Filme incrível para toda família.',
@@ -39,18 +40,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     type: 'movie'
                 };
 
-                // Categorizar filmes
-                if (movie.categories) {
+                // Categorizar por categories (prioridade) e depois por genero
+                let categorized = false;
+                
+                // Tentar categorizar por categories primeiro
+                if (movie.categories && movie.categories.length > 0) {
                     movie.categories.forEach(category => {
-                        categorizeMovie(processedMovie, category);
+                        if (!categorized) {
+                            categorizeMovie(processedMovie, category);
+                            categorized = true;
+                        }
                     });
-                } else if (movie.genero) {
-                    categorizeMovie(processedMovie, movie.genero);
-                } else {
-                    // Adicionar a lançamentos se não tiver categoria
-                    moviesData.releases2024.push(processedMovie);
                 }
-
+                
+                // Se não categorizado por categories, tentar por genero
+                if (!categorized && movie.genero) {
+                    categorizeMovie(processedMovie, movie.genero);
+                }
+                
                 // Adicionar a premiados se tiver rating alto
                 if (parseFloat(movie.rating) >= 7.0) {
                     moviesData.awarded.push({
