@@ -596,9 +596,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Scroll suave para a seção correspondente
             const targetId = this.getAttribute('href').substring(1);
             const targetSection = document.getElementById(targetId);
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
         });
     });
 
