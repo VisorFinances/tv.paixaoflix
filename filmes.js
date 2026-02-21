@@ -467,4 +467,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize
     loadMoviesFromJSON();
     console.log('✅ Página de Filmes com JSON externo iniciada!');
+    
+    // Hero Banner com capas dos filmes
+    function rotateHeroBanner() {
+        const heroImage = document.getElementById('heroImage');
+        const heroTitle = document.getElementById('heroTitle');
+        const heroDescription = document.getElementById('heroDescription');
+        
+        if (heroImage && heroTitle && heroDescription) {
+            // Coletar todas as capas dos filmes
+            const allMovies = [
+                ...moviesData.releases2024,
+                ...moviesData.releases2025,
+                ...moviesData.action,
+                ...moviesData.comedy,
+                ...moviesData.horror,
+                ...moviesData.romance,
+                ...moviesData.drama,
+                ...moviesData.scifi,
+                ...moviesData.classic,
+                ...moviesData.national,
+                ...moviesData.awarded,
+                ...moviesData.adult
+            ];
+            
+            // Selecionar capa aleatória
+            const randomMovie = allMovies[Math.floor(Math.random() * allMovies.length)];
+            
+            // Fade out
+            heroImage.style.opacity = '0';
+            heroTitle.style.opacity = '0';
+            heroDescription.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Update content
+                heroImage.src = randomMovie.poster || randomMovie.image;
+                heroTitle.textContent = randomMovie.title;
+                heroDescription.textContent = `${randomMovie.year} • ${randomMovie.genre || 'Geral'} • ⭐ ${randomMovie.rating}`;
+                
+                // Fade in
+                setTimeout(() => {
+                    heroImage.style.opacity = '1';
+                    heroTitle.style.opacity = '1';
+                    heroDescription.style.opacity = '1';
+                }, 100);
+            }, 500);
+        }
+    }
 });
