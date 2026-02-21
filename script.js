@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         grid.innerHTML = '';
         
         streamingData.top10Brazil.forEach(item => {
-            const card = createTop10Card(item);
+            const card = createCard(item);
             grid.appendChild(card);
         });
         

@@ -37,16 +37,6 @@ html{scroll-behavior:smooth}
 .section-title{font-size:24px;margin-bottom:15px;color:#fff}
 .content-grid{display:flex;gap:15px;overflow-x:hidden;scroll-behavior:smooth}
 
-/* Top 10 Container */
-.top10-container{display:flex;flex-direction:column;gap:15px}
-.top10-item{display:flex;background:#1a1a1a;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s}
-.top10-item:hover{transform:scale(1.02);box-shadow:0 10px 30px rgba(255,0,0,0.3)}
-.top10-rank{display:flex;align-items:center;justify-content:center;width:60px;background:#ff2e2e;font-size:24px;font-weight:700}
-.top10-content{flex:1;display:flex;align-items:center;padding:15px}
-.top10-content img{width:80px;height:120px;object-fit:cover;border-radius:8px;margin-right:15px}
-.top10-info h3{font-size:18px;margin-bottom:5px}
-.top10-info p{color:#ccc;font-size:14px}
-
 /* Cards */
 .card{background:#1a1a1a;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;flex-shrink:0;width:180px;height:270px;position:relative}
 .card:hover{transform:scale(1.05);box-shadow:0 10px 30px rgba(255,0,0,0.3)}
