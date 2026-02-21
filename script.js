@@ -512,6 +512,70 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('streamflix-progress', JSON.stringify(streamingData.continueWatching));
     }
 
+    // Hero Banner Rotation
+    const heroData = [
+        {
+            image: "https://picsum.photos/1920/1080?random=hero1",
+            title: "StreamFlix",
+            description: "Sua plataforma de streaming preferida"
+        },
+        {
+            image: "https://picsum.photos/1920/1080?random=hero2",
+            title: "Filmes Imperdíveis",
+            description: "Os melhores lançamentos e clássicos do cinema"
+        },
+        {
+            image: "https://picsum.photos/1920/1080?random=hero3",
+            title: "Séries Emoção",
+            description: "Maratonar as melhores séries nunca foi tão fácil"
+        },
+        {
+            image: "https://picsum.photos/1920/1080?random=hero4",
+            title: "TV ao Vivo",
+            description: "Não perca nenhum momento ao vivo"
+        },
+        {
+            image: "https://picsum.photos/1920/1080?random=hero5",
+            title: "Kids & Família",
+            description: "Conteúdo para toda família assistir juntos"
+        }
+    ];
+
+    let currentHeroIndex = 0;
+
+    function rotateHeroBanner() {
+        const heroImage = document.getElementById('heroImage');
+        const heroTitle = document.getElementById('heroTitle');
+        const heroDescription = document.getElementById('heroDescription');
+        
+        if (heroImage && heroTitle && heroDescription) {
+            // Fade out
+            heroImage.style.opacity = '0';
+            heroTitle.style.opacity = '0';
+            heroDescription.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Update content
+                currentHeroIndex = (currentHeroIndex + 1) % heroData.length;
+                const currentHero = heroData[currentHeroIndex];
+                
+                heroImage.src = currentHero.image;
+                heroTitle.textContent = currentHero.title;
+                heroDescription.textContent = currentHero.description;
+                
+                // Fade in
+                setTimeout(() => {
+                    heroImage.style.opacity = '1';
+                    heroTitle.style.opacity = '1';
+                    heroDescription.style.opacity = '1';
+                }, 100);
+            }, 500);
+        }
+    }
+
+    // Start rotation
+    setInterval(rotateHeroBanner, 5000);
+
     // Other functions
     window.playFeatured = function() {
         playVideo('Ação Explosiva', 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
