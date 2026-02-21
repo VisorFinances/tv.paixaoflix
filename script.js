@@ -21,30 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializar dados
     function initializeData() {
-        // Conteúdo base
-        const baseContent = [
-            { id: 1, title: "Ação Explosiva", type: "Filme", year: 2024, category: ["acao"], image: "https://picsum.photos/300/450?random=1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 2, title: "Romance Proibido", type: "Série", year: 2026, category: ["lancamento-2026", "romance"], image: "https://picsum.photos/300/450?random=2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 3, title: "Terror Noturno", type: "Filme", year: 2023, category: ["terror"], image: "https://picsum.photos/300/450?random=3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 4, title: "Comédia Leve", type: "Série", year: 2024, category: ["comedia"], image: "https://picsum.photos/300/450?random=4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 5, title: "Drama Intenso", type: "Filme", year: 2024, category: ["drama"], image: "https://picsum.photos/300/450?random=5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 6, title: "Kids Aventura", type: "Série", year: 2024, category: ["kids"], image: "https://picsum.photos/300/450?random=6", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 7, title: "Suspense Psicológico", type: "Filme", year: 2024, category: ["suspense"], image: "https://picsum.photos/300/450?random=7", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 8, title: "Família Unida", type: "Filme", year: 2024, category: ["familia"], image: "https://picsum.photos/300/450?random=8", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 9, title: "Religioso", type: "Filme", year: 2024, category: ["religioso"], image: "https://picsum.photos/300/450?random=9", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 10, title: "Musical", type: "Filme", year: 2024, category: ["musical"], image: "https://picsum.photos/300/450?random=10", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 11, title: "Dorama", type: "Série", year: 2024, category: ["dorama"], image: "https://picsum.photos/300/450?random=11", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 12, title: "Adulto", type: "Filme", year: 2024, category: ["adulto"], image: "https://picsum.photos/300/450?random=12", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 13, title: "Policial", type: "Série", year: 2024, category: ["policial"], image: "https://picsum.photos/300/450?random=13", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 14, title: "Anime", type: "Série", year: 2024, category: ["anime"], image: "https://picsum.photos/300/450?random=14", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 15, title: "Animação", type: "Filme", year: 2024, category: ["animacao"], image: "https://picsum.photos/300/450?random=15", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 16, title: "Nacional", type: "Filme", year: 2024, category: ["nacional"], image: "https://picsum.photos/300/450?random=16", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 17, title: "Ficção Científica", type: "Filme", year: 2024, category: ["ficcao"], image: "https://picsum.photos/300/450?random=17", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 18, title: "Clássico", type: "Filme", year: 1995, category: ["classicos"], image: "https://picsum.photos/300/450?random=18", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 19, title: "Negritude", type: "Série", year: 2024, category: ["negritude"], image: "https://picsum.photos/300/450?random=19", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 20, title: "Novela", type: "Novela", year: 2024, category: ["novela"], image: "https://picsum.photos/300/450?random=20", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" }
-        ];
-
+        // Conteúdo base vazio - apenas mídias do JSON externo
+        const baseContent = [];
+        
         streamingData.allContent = baseContent;
         
         // Carregar progresso salvo
@@ -57,151 +36,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Carregar seções
     function loadSections() {
-        // Não Deixe de Ver (Lançamentos 2026)
-        streamingData.dontMiss = streamingData.allContent.filter(item => 
-            item.category.includes('lancamento-2026')
-        );
-
-        // Top 10 Brasileiro
-        loadTop10Brazil();
-
-        // Kids
-        streamingData.kids = streamingData.allContent.filter(item => 
-            item.category.includes('kids')
-        );
-
-        // Sábado à Noite
-        loadSaturdayNight();
-
-        // Premiados
-        loadAwarded();
-
-        // Maratona
-        loadMarathon();
-
-        // Negritude
-        streamingData.blackCulture = streamingData.allContent.filter(item => 
-            item.category.includes('negritude')
-        );
-
-        // Nostalgia
-        streamingData.nostalgia = streamingData.allContent.filter(item => 
-            item.category.includes('classicos')
-        );
-
-        // Romance
-        streamingData.romance = streamingData.allContent.filter(item => 
-            item.category.includes('romance')
-        ).slice(0, 10);
-
-        // Nacionais
-        streamingData.national = streamingData.allContent.filter(item => 
-            item.category.includes('nacional')
-        );
-
-        // Novelas
-        streamingData.soapOperas = streamingData.allContent.filter(item => 
-            item.category.includes('novela')
-        );
-
+        // Não Deixe de Ver (Lançamentos 2026) - vazio sem JSON
+        streamingData.dontMiss = [];
+        
+        // Top 10 Brasileiro - vazio sem JSON
+        streamingData.top10Brazil = [];
+        
+        // Kids - vazio sem JSON
+        streamingData.kids = [];
+        
+        // Sábado à Noite - vazio sem JSON
+        streamingData.saturdayNight = [];
+        
+        // Premiados - vazio sem JSON
+        streamingData.awarded = [];
+        
+        // Maratona - vazio sem JSON
+        streamingData.marathon = [];
+        
+        // Negritude - vazio sem JSON
+        streamingData.blackCulture = [];
+        
+        // Nostalgia - vazio sem JSON
+        streamingData.nostalgia = [];
+        
+        // Romance - vazio sem JSON
+        streamingData.romance = [];
+        
+        // Nacionais - vazio sem JSON
+        streamingData.national = [];
+        
+        // Novelas - vazio sem JSON
+        streamingData.soapOperas = [];
+        
         // Renderizar seções
         renderSections();
-    }
-
-    // Top 10 Brasileiro
-    function loadTop10Brazil() {
-        const top10Content = [
-            { rank: 1, title: "Ação Explosiva", available: true },
-            { rank: 2, title: "Romance Proibido", available: true },
-            { rank: 3, title: "Terror Noturno", available: false },
-            { rank: 4, title: "Comédia Leve", available: true },
-            { rank: 5, title: "Drama Intenso", available: true },
-            { rank: 6, title: "Kids Aventura", available: false },
-            { rank: 7, title: "Suspense Psicológico", available: true },
-            { rank: 8, title: "Família Unida", available: true },
-            { rank: 9, title: "Religioso", available: false },
-            { rank: 10, title: "Musical", available: true }
-        ];
-
-        streamingData.top10Brazil = top10Content.map(item => {
-            const content = streamingData.allContent.find(c => c.title === item.title);
-            return {
-                ...content,
-                rank: item.rank,
-                comingSoon: !item.available
-            };
-        });
-
-        // Atualizar a cada 7 minutos
-        setInterval(() => {
-            streamingData.top10Brazil.forEach(item => {
-                if (item.comingSoon && Math.random() > 0.7) {
-                    item.comingSoon = false;
-                    renderTop10();
-                }
-            });
-        }, 420000);
-    }
-
-    // Sábado à Noite
-    function loadSaturdayNight() {
-        const categories = ["comedia", "suspense", "terror", "drama", "familia", "religioso", "musical", "dorama", "adulto", "policial", "anime", "animacao", "nacional", "ficcao"];
-        
-        streamingData.saturdayNight = categories.map(cat => {
-            const content = streamingData.allContent.find(item => item.category.includes(cat));
-            return content || streamingData.allContent[Math.floor(Math.random() * streamingData.allContent.length)];
-        });
-
-        // Verificar horário
-        checkSaturdaySchedule();
-        setInterval(checkSaturdaySchedule, 60000);
-    }
-
-    function checkSaturdaySchedule() {
-        const now = new Date();
-        const day = now.getDay(); // 0 = Domingo, 6 = Sábado
-        const hour = now.getHours();
-        
-        const section = document.getElementById('saturday-night');
-        
-        if (day === 6 && hour >= 16 && hour < 24) {
-            // Sábado 16:59 - 23:59
-            section.style.display = 'block';
-        } else if (day === 0 && hour < 12) {
-            // Domingo 00:00 - 11:59
-            section.style.display = 'block';
-        } else {
-            section.style.display = 'none';
-        }
-    }
-
-    // Premiados
-    function loadAwarded() {
-        const awardedContent = [
-            { title: "Ação Explosiva", award: "Oscar", year: 2024 },
-            { title: "Drama Intenso", award: "Globo de Ouro", year: 2024 },
-            { title: "Clássico", award: "Cannes", year: 1995 }
-        ];
-
-        streamingData.awarded = awardedContent.map(award => {
-            const content = streamingData.allContent.find(c => c.title === award.title);
-            return {
-                ...content,
-                award: award.award,
-                awardYear: award.year
-            };
-        }).slice(0, 10);
-    }
-
-    // Maratona
-    function loadMarathon() {
-        const series = streamingData.allContent.filter(item => item.type === "Série");
-        const kidsSeries = series.filter(item => item.category.includes('kids'));
-        
-        streamingData.marathon = [
-            ...series.slice(0, 7),
-            ...kidsSeries.slice(0, 3)
-        ];
     }
 
     // Renderizar seções
