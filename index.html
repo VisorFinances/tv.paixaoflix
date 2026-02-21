@@ -3,42 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebTV - Em Manutenção</title>
-    <style>
-        body {
-            background: #0a0a0a;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-        }
-        .maintenance {
-            max-width: 500px;
-            padding: 40px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        h1 {
-            color: #ff2e2e;
-            margin-bottom: 20px;
-        }
-        p {
-            color: #ccc;
-            line-height: 1.6;
-        }
-    </style>
+    <title>StreamFlix - Sistema de Streaming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
 </head>
 <body>
-    <div class="maintenance">
-        <h1>🔧 Em Manutenção</h1>
-        <p>Olá! O site está temporariamente em manutenção para melhorias.</p>
-        <p>Estamos trabalhando para trazer uma experiência ainda melhor para você.</p>
-        <p>Volte em breve!</p>
+
+<header class="header">
+    <div class="container">
+        <div class="logo">🎬 <span>Stream</span>Flix</div>
+        <nav class="nav">
+            <a href="#home" class="active">Início</a>
+            <a href="#movies">Filmes</a>
+            <a href="#series">Séries</a>
+            <a href="#live">TV ao Vivo</a>
+            <a href="#mylist">Minha Lista</a>
+        </nav>
+        <div class="profile">
+            <div class="search" id="searchBtn">🔍</div>
+            <img src="https://i.pravatar.cc/40" alt="Perfil" class="avatar">
+        </div>
     </div>
+</header>
+
+<section class="hero" id="home">
+    <div class="hero-bg">
+        <img src="https://picsum.photos/1920/1080?random=hero" alt="Hero">
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+        <h1>Streaming <span>Profissional</span></h1>
+        <p>Milhares de filmes e séries em alta qualidade</p>
+        <div class="hero-buttons">
+            <button class="btn-primary" onclick="playFeatured()">▶ Assistir Agora</button>
+            <button class="btn-secondary" onclick="showPlans()">Ver Planos</button>
+        </div>
+    </div>
+</section>
+
+<main class="main">
+    <!-- Destaques -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🔥 Em Destaque</h2>
+            <div class="content-grid" id="featuredGrid"></div>
+        </div>
+    </section>
+
+    <!-- Filmes -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">🎬 Filmes</h2>
+            <div class="content-grid" id="moviesGrid"></div>
+        </div>
+    </section>
+
+    <!-- Séries -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">📺 Séries</h2>
+            <div class="content-grid" id="seriesGrid"></div>
+        </div>
+    </section>
+
+    <!-- TV ao Vivo -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">📡 TV ao Vivo</h2>
+            <div class="content-grid" id="liveGrid"></div>
+        </div>
+    </section>
+</main>
+
+<!-- Player Modal -->
+<div id="playerModal" class="modal">
+    <div class="modal-backdrop" onclick="closePlayer()"></div>
+    <div class="modal-content">
+        <button class="close-btn" onclick="closePlayer()">✕</button>
+        <div id="playerContainer"></div>
+    </div>
+</div>
+
+<!-- Content Modal -->
+<div id="contentModal" class="modal">
+    <div class="modal-backdrop" onclick="closeContentModal()"></div>
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeContentModal()">✕</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>StreamFlix</h4>
+                <p>Sua plataforma de streaming</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navegação</h4>
+                <a href="#home">Início</a>
+                <a href="#movies">Filmes</a>
+                <a href="#series">Séries</a>
+                <a href="#live">TV ao Vivo</a>
+            </div>
+            <div class="footer-section">
+                <h4>Suporte</h4>
+                <a href="#help">Ajuda</a>
+                <a href="#contact">Contato</a>
+                <a href="#terms">Termos</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 StreamFlix. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
