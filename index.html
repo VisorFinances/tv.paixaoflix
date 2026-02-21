@@ -33,8 +33,8 @@
         <div class="hero-overlay"></div>
     </div>
     <div class="hero-content">
-        <h1>Streaming <span>Profissional</span></h1>
-        <p>Milhares de filmes e séries em alta qualidade</p>
+        <h1>Streaming <span>Inteligente</span></h1>
+        <p>Conteúdo personalizado com atualizações em tempo real</p>
         <div class="hero-buttons">
             <button class="btn-primary" onclick="playFeatured()">▶ Assistir Agora</button>
             <button class="btn-secondary" onclick="showPlans()">Ver Planos</button>
@@ -43,35 +43,99 @@
 </section>
 
 <main class="main">
-    <!-- Destaques -->
-    <section class="section">
+    <!-- Continuar Assistindo -->
+    <section class="section" id="continue-watching">
         <div class="container">
-            <h2 class="section-title">🔥 Em Destaque</h2>
-            <div class="content-grid" id="featuredGrid"></div>
+            <h2 class="section-title">▶️ Continuar Assistindo</h2>
+            <div class="content-grid" id="continueGrid"></div>
         </div>
     </section>
 
-    <!-- Filmes -->
-    <section class="section">
+    <!-- Não Deixe de Ver -->
+    <section class="section" id="dont-miss">
         <div class="container">
-            <h2 class="section-title">🎬 Filmes</h2>
-            <div class="content-grid" id="moviesGrid"></div>
+            <h2 class="section-title">🔥 Não Deixe de Ver</h2>
+            <div class="content-grid" id="dontMissGrid"></div>
         </div>
     </section>
 
-    <!-- Séries -->
-    <section class="section">
+    <!-- Top 10 Brasileiro -->
+    <section class="section" id="top10-brazil">
         <div class="container">
-            <h2 class="section-title">📺 Séries</h2>
-            <div class="content-grid" id="seriesGrid"></div>
+            <h2 class="section-title">🏆 Top 10 Brasileiro</h2>
+            <div class="top10-container" id="top10Grid"></div>
         </div>
     </section>
 
-    <!-- TV ao Vivo -->
-    <section class="section">
+    <!-- As Crianças Amam -->
+    <section class="section" id="kids-love">
         <div class="container">
-            <h2 class="section-title">📡 TV ao Vivo</h2>
-            <div class="content-grid" id="liveGrid"></div>
+            <h2 class="section-title">👶 As Crianças Amam</h2>
+            <div class="content-grid" id="kidsGrid"></div>
+        </div>
+    </section>
+
+    <!-- Sábado à Noite Merece -->
+    <section class="section" id="saturday-night" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">🎉 Sábado à Noite Merece</h2>
+            <div class="content-grid" id="saturdayGrid"></div>
+        </div>
+    </section>
+
+    <!-- Premiados pela Mídia -->
+    <section class="section" id="awarded">
+        <div class="container">
+            <h2 class="section-title">🏆 Premiados pela Mídia</h2>
+            <div class="content-grid awarded-grid" id="awardedGrid"></div>
+        </div>
+    </section>
+
+    <!-- Prepare sua Pipoca -->
+    <section class="section" id="marathon">
+        <div class="container">
+            <h2 class="section-title">🍿 Prepare sua Pipoca e Venha Maratonar</h2>
+            <div class="content-grid" id="marathonGrid"></div>
+        </div>
+    </section>
+
+    <!-- Negritude em Destaque -->
+    <section class="section" id="black-culture" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">✊ Negritude em Destaque</h2>
+            <div class="content-grid" id="blackGrid"></div>
+        </div>
+    </section>
+
+    <!-- Nostalgia que Aquece o Coração -->
+    <section class="section" id="nostalgia">
+        <div class="container">
+            <h2 class="section-title">💖 Nostalgia que Aquece o Coração</h2>
+            <div class="content-grid" id="nostalgiaGrid"></div>
+        </div>
+    </section>
+
+    <!-- Romances para se Inspirar -->
+    <section class="section" id="romance">
+        <div class="container">
+            <h2 class="section-title">💕 Romances para se Inspirar</h2>
+            <div class="content-grid" id="romanceGrid"></div>
+        </div>
+    </section>
+
+    <!-- Nacionais de Sucesso -->
+    <section class="section" id="national">
+        <div class="container">
+            <h2 class="section-title">🇧🇷 Nacionais de Sucesso</h2>
+            <div class="content-grid" id="nationalGrid"></div>
+        </div>
+    </section>
+
+    <!-- Novela é Sempre Bem Vinda -->
+    <section class="section" id="soap-operas" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">📺 Novela é Sempre Bem Vinda</h2>
+            <div class="content-grid" id="soapGrid"></div>
         </div>
     </section>
 </main>
@@ -82,6 +146,20 @@
     <div class="modal-content">
         <button class="close-btn" onclick="closePlayer()">✕</button>
         <div id="playerContainer"></div>
+    </div>
+</div>
+
+<!-- Continue Watching Modal -->
+<div id="continueModal" class="modal">
+    <div class="modal-backdrop" onclick="closeContinueModal()"></div>
+    <div class="modal-content continue-modal">
+        <h3>Continuar Assistindo?</h3>
+        <p id="continueTitle"></p>
+        <div class="continue-buttons">
+            <button class="btn-primary" onclick="resumeWatching()">▶ Continuar</button>
+            <button class="btn-secondary" onclick="restartWatching()">🔄 Recomeçar</button>
+            <button class="btn-secondary" onclick="closeContinueModal()">Cancelar</button>
+        </div>
     </div>
 </div>
 
@@ -99,7 +177,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4>StreamFlix</h4>
-                <p>Sua plataforma de streaming</p>
+                <p>Sua plataforma de streaming inteligente</p>
             </div>
             <div class="footer-section">
                 <h4>Navegação</h4>

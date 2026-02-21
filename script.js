@@ -1,144 +1,446 @@
-// StreamFlix - Sistema de Streaming Completo
+// StreamFlix - Sistema Inteligente de Streaming
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // Base de dados local
+    // Base de dados completa
     const streamingData = {
-        featured: [
-            { id: 1, title: "Ação Explosiva", type: "Filme", rating: "4.8", year: "2024", image: "https://picsum.photos/300/450?random=1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 2, title: "Romance Proibido", type: "Série", rating: "4.6", year: "2024", image: "https://picsum.photos/300/450?random=2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 3, title: "Terror Noturno", type: "Filme", rating: "4.5", year: "2023", image: "https://picsum.photos/300/450?random=3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 4, title: "Comédia Leve", type: "Série", rating: "4.7", year: "2024", image: "https://picsum.photos/300/450?random=4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" }
-        ],
-        movies: [
-            { id: 5, title: "Missão Impossível", type: "Filme", year: "2024", image: "https://picsum.photos/300/450?random=5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 6, title: "Velocidade Máxima", type: "Filme", year: "2023", image: "https://picsum.photos/300/450?random=6", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 7, title: "Herói em Ação", type: "Filme", year: "2024", image: "https://picsum.photos/300/450?random=7", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 8, title: "Batalha Final", type: "Filme", year: "2023", image: "https://picsum.photos/300/450?random=8", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 9, title: "Resgate Urgente", type: "Filme", year: "2024", image: "https://picsum.photos/300/450?random=9", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 10, title: "Aventura Perdida", type: "Filme", year: "2023", image: "https://picsum.photos/300/450?random=10", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" }
-        ],
-        series: [
-            { id: 11, title: "Drama Intenso", type: "Série", year: "2024", image: "https://picsum.photos/300/450?random=11", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 12, title: "Comédia Romântica", type: "Série", year: "2023", image: "https://picsum.photos/300/450?random=12", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 13, title: "Suspense Psicológico", type: "Série", year: "2024", image: "https://picsum.photos/300/450?random=13", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 14, title: "Ficção Científica", type: "Série", year: "2023", image: "https://picsum.photos/300/450?random=14", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 15, title: "Mistério Policial", type: "Série", year: "2024", image: "https://picsum.photos/300/450?random=15", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 16, title: "Aventura Épica", type: "Série", year: "2023", image: "https://picsum.photos/300/450?random=16", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" }
-        ],
-        live: [
-            { id: 17, title: "Canal de Notícias", type: "Ao Vivo", image: "https://picsum.photos/300/450?random=17", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", live: true },
-            { id: 18, title: "Esportes ao Vivo", type: "Ao Vivo", image: "https://picsum.photos/300/450?random=18", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8", live: true },
-            { id: 19, title: "Variedades", type: "Ao Vivo", image: "https://picsum.photos/300/450?random=19", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", live: true },
-            { id: 20, title: "Documentários", type: "Ao Vivo", image: "https://picsum.photos/300/450?random=20", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8", live: true }
-        ]
+        continueWatching: [],
+        dontMiss: [],
+        top10Brazil: [],
+        kids: [],
+        saturdayNight: [],
+        awarded: [],
+        marathon: [],
+        blackCulture: [],
+        nostalgia: [],
+        romance: [],
+        national: [],
+        soapOperas: [],
+        allContent: []
     };
 
-    let currentPlayer = null;
-    const watchlist = JSON.parse(localStorage.getItem('streamflix-watchlist') || '[]');
+    // Inicializar dados
+    function initializeData() {
+        // Conteúdo base
+        const baseContent = [
+            { id: 1, title: "Ação Explosiva", type: "Filme", year: 2024, category: ["acao"], image: "https://picsum.photos/300/450?random=1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 2, title: "Romance Proibido", type: "Série", year: 2026, category: ["lancamento-2026", "romance"], image: "https://picsum.photos/300/450?random=2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 3, title: "Terror Noturno", type: "Filme", year: 2023, category: ["terror"], image: "https://picsum.photos/300/450?random=3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 4, title: "Comédia Leve", type: "Série", year: 2024, category: ["comedia"], image: "https://picsum.photos/300/450?random=4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 5, title: "Drama Intenso", type: "Filme", year: 2024, category: ["drama"], image: "https://picsum.photos/300/450?random=5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 6, title: "Kids Aventura", type: "Série", year: 2024, category: ["kids"], image: "https://picsum.photos/300/450?random=6", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 7, title: "Suspense Psicológico", type: "Filme", year: 2024, category: ["suspense"], image: "https://picsum.photos/300/450?random=7", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 8, title: "Família Unida", type: "Filme", year: 2024, category: ["familia"], image: "https://picsum.photos/300/450?random=8", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 9, title: "Religioso", type: "Filme", year: 2024, category: ["religioso"], image: "https://picsum.photos/300/450?random=9", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 10, title: "Musical", type: "Filme", year: 2024, category: ["musical"], image: "https://picsum.photos/300/450?random=10", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 11, title: "Dorama", type: "Série", year: 2024, category: ["dorama"], image: "https://picsum.photos/300/450?random=11", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 12, title: "Adulto", type: "Filme", year: 2024, category: ["adulto"], image: "https://picsum.photos/300/450?random=12", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 13, title: "Policial", type: "Série", year: 2024, category: ["policial"], image: "https://picsum.photos/300/450?random=13", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 14, title: "Anime", type: "Série", year: 2024, category: ["anime"], image: "https://picsum.photos/300/450?random=14", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 15, title: "Animação", type: "Filme", year: 2024, category: ["animacao"], image: "https://picsum.photos/300/450?random=15", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 16, title: "Nacional", type: "Filme", year: 2024, category: ["nacional"], image: "https://picsum.photos/300/450?random=16", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 17, title: "Ficção Científica", type: "Filme", year: 2024, category: ["ficcao"], image: "https://picsum.photos/300/450?random=17", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 18, title: "Clássico", type: "Filme", year: 1995, category: ["classicos"], image: "https://picsum.photos/300/450?random=18", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
+            { id: 19, title: "Negritude", type: "Série", year: 2024, category: ["negritude"], image: "https://picsum.photos/300/450?random=19", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { id: 20, title: "Novela", type: "Novela", year: 2024, category: ["novela"], image: "https://picsum.photos/300/450?random=20", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" }
+        ];
 
-    // Header scroll effect
-    const header = document.querySelector('.header');
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 100) {
-            header.style.background = 'rgba(0,0,0,0.95)';
-        } else {
-            header.style.background = 'rgba(0,0,0,0.9)';
-        }
-    });
+        streamingData.allContent = baseContent;
+        
+        // Carregar progresso salvo
+        const savedProgress = JSON.parse(localStorage.getItem('streamflix-progress') || '[]');
+        streamingData.continueWatching = savedProgress.slice(0, 5);
+        
+        // Carregar seções
+        loadSections();
+    }
 
-    // Navigation
-    const navLinks = document.querySelectorAll('.nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            
-            const targetId = this.getAttribute('href').substring(1);
-            const targetSection = document.getElementById(targetId);
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
+    // Carregar seções
+    function loadSections() {
+        // Não Deixe de Ver (Lançamentos 2026)
+        streamingData.dontMiss = streamingData.allContent.filter(item => 
+            item.category.includes('lancamento-2026')
+        );
+
+        // Top 10 Brasileiro
+        loadTop10Brazil();
+
+        // Kids
+        streamingData.kids = streamingData.allContent.filter(item => 
+            item.category.includes('kids')
+        );
+
+        // Sábado à Noite
+        loadSaturdayNight();
+
+        // Premiados
+        loadAwarded();
+
+        // Maratona
+        loadMarathon();
+
+        // Negritude
+        streamingData.blackCulture = streamingData.allContent.filter(item => 
+            item.category.includes('negritude')
+        );
+
+        // Nostalgia
+        streamingData.nostalgia = streamingData.allContent.filter(item => 
+            item.category.includes('classicos')
+        );
+
+        // Romance
+        streamingData.romance = streamingData.allContent.filter(item => 
+            item.category.includes('romance')
+        ).slice(0, 10);
+
+        // Nacionais
+        streamingData.national = streamingData.allContent.filter(item => 
+            item.category.includes('nacional')
+        );
+
+        // Novelas
+        streamingData.soapOperas = streamingData.allContent.filter(item => 
+            item.category.includes('novela')
+        );
+
+        // Renderizar seções
+        renderSections();
+    }
+
+    // Top 10 Brasileiro
+    function loadTop10Brazil() {
+        const top10Content = [
+            { rank: 1, title: "Ação Explosiva", available: true },
+            { rank: 2, title: "Romance Proibido", available: true },
+            { rank: 3, title: "Terror Noturno", available: false },
+            { rank: 4, title: "Comédia Leve", available: true },
+            { rank: 5, title: "Drama Intenso", available: true },
+            { rank: 6, title: "Kids Aventura", available: false },
+            { rank: 7, title: "Suspense Psicológico", available: true },
+            { rank: 8, title: "Família Unida", available: true },
+            { rank: 9, title: "Religioso", available: false },
+            { rank: 10, title: "Musical", available: true }
+        ];
+
+        streamingData.top10Brazil = top10Content.map(item => {
+            const content = streamingData.allContent.find(c => c.title === item.title);
+            return {
+                ...content,
+                rank: item.rank,
+                comingSoon: !item.available
+            };
         });
-    });
 
-    // Create cards
-    function createCard(item, type = 'default') {
+        // Atualizar a cada 7 minutos
+        setInterval(() => {
+            streamingData.top10Brazil.forEach(item => {
+                if (item.comingSoon && Math.random() > 0.7) {
+                    item.comingSoon = false;
+                    renderTop10();
+                }
+            });
+        }, 420000);
+    }
+
+    // Sábado à Noite
+    function loadSaturdayNight() {
+        const categories = ["comedia", "suspense", "terror", "drama", "familia", "religioso", "musical", "dorama", "adulto", "policial", "anime", "animacao", "nacional", "ficcao"];
+        
+        streamingData.saturdayNight = categories.map(cat => {
+            const content = streamingData.allContent.find(item => item.category.includes(cat));
+            return content || streamingData.allContent[Math.floor(Math.random() * streamingData.allContent.length)];
+        });
+
+        // Verificar horário
+        checkSaturdaySchedule();
+        setInterval(checkSaturdaySchedule, 60000);
+    }
+
+    function checkSaturdaySchedule() {
+        const now = new Date();
+        const day = now.getDay(); // 0 = Domingo, 6 = Sábado
+        const hour = now.getHours();
+        
+        const section = document.getElementById('saturday-night');
+        
+        if (day === 6 && hour >= 16 && hour < 24) {
+            // Sábado 16:59 - 23:59
+            section.style.display = 'block';
+        } else if (day === 0 && hour < 12) {
+            // Domingo 00:00 - 11:59
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
+    }
+
+    // Premiados
+    function loadAwarded() {
+        const awardedContent = [
+            { title: "Ação Explosiva", award: "Oscar", year: 2024 },
+            { title: "Drama Intenso", award: "Globo de Ouro", year: 2024 },
+            { title: "Clássico", award: "Cannes", year: 1995 }
+        ];
+
+        streamingData.awarded = awardedContent.map(award => {
+            const content = streamingData.allContent.find(c => c.title === award.title);
+            return {
+                ...content,
+                award: award.award,
+                awardYear: award.year
+            };
+        }).slice(0, 10);
+    }
+
+    // Maratona
+    function loadMarathon() {
+        const series = streamingData.allContent.filter(item => item.type === "Série");
+        const kidsSeries = series.filter(item => item.category.includes('kids'));
+        
+        streamingData.marathon = [
+            ...series.slice(0, 7),
+            ...kidsSeries.slice(0, 3)
+        ];
+    }
+
+    // Renderizar seções
+    function renderSections() {
+        renderContinueWatching();
+        renderDontMiss();
+        renderTop10();
+        renderKids();
+        renderSaturdayNight();
+        renderAwarded();
+        renderMarathon();
+        renderBlackCulture();
+        renderNostalgia();
+        renderRomance();
+        renderNational();
+        renderSoapOperas();
+    }
+
+    // Render functions
+    function renderContinueWatching() {
+        const grid = document.getElementById('continueGrid');
+        grid.innerHTML = '';
+        
+        streamingData.continueWatching.forEach(item => {
+            const card = createContinueCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderDontMiss() {
+        const grid = document.getElementById('dontMissGrid');
+        grid.innerHTML = '';
+        
+        streamingData.dontMiss.forEach(item => {
+            const card = createCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderTop10() {
+        const grid = document.getElementById('top10Grid');
+        grid.innerHTML = '';
+        
+        streamingData.top10Brazil.forEach(item => {
+            const card = createTop10Card(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderKids() {
+        const grid = document.getElementById('kidsGrid');
+        grid.innerHTML = '';
+        
+        streamingData.kids.forEach(item => {
+            const card = createCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderSaturdayNight() {
+        const grid = document.getElementById('saturdayGrid');
+        grid.innerHTML = '';
+        
+        streamingData.saturdayNight.forEach(item => {
+            const card = createCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderAwarded() {
+        const grid = document.getElementById('awardedGrid');
+        grid.innerHTML = '';
+        
+        streamingData.awarded.forEach(item => {
+            const card = createAwardedCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderMarathon() {
+        const grid = document.getElementById('marathonGrid');
+        grid.innerHTML = '';
+        
+        streamingData.marathon.forEach(item => {
+            const card = createCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderBlackCulture() {
+        const section = document.getElementById('black-culture');
+        const grid = document.getElementById('blackGrid');
+        
+        if (streamingData.blackCulture.length > 0) {
+            section.style.display = 'block';
+            grid.innerHTML = '';
+            
+            streamingData.blackCulture.forEach(item => {
+                const card = createCard(item);
+                grid.appendChild(card);
+            });
+        }
+    }
+
+    function renderNostalgia() {
+        const grid = document.getElementById('nostalgiaGrid');
+        grid.innerHTML = '';
+        
+        streamingData.nostalgia.forEach(item => {
+            const card = createCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderRomance() {
+        const grid = document.getElementById('romanceGrid');
+        grid.innerHTML = '';
+        
+        streamingData.romance.forEach(item => {
+            const card = createCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderNational() {
+        const grid = document.getElementById('nationalGrid');
+        grid.innerHTML = '';
+        
+        streamingData.national.forEach(item => {
+            const card = createCard(item);
+            grid.appendChild(card);
+        });
+    }
+
+    function renderSoapOperas() {
+        const section = document.getElementById('soap-operas');
+        const grid = document.getElementById('soapGrid');
+        
+        if (streamingData.soapOperas.length > 0) {
+            section.style.display = 'block';
+            grid.innerHTML = '';
+            
+            streamingData.soapOperas.forEach(item => {
+                const card = createCard(item);
+                grid.appendChild(card);
+            });
+        }
+    }
+
+    // Card creation functions
+    function createCard(item) {
         const card = document.createElement('div');
         card.className = 'card';
-        
-        let cardHTML = `
+        card.innerHTML = `
             <img src="${item.image}" alt="${item.title}">
             <div class="card-overlay">
                 <h3 class="card-title">${item.title}</h3>
-                <p class="card-info">${item.type} ${item.year ? '• ' + item.year : ''} ${item.rating ? '• ⭐ ' + item.rating : ''}</p>
+                <p class="card-info">${item.type} • ${item.year}</p>
+            </div>
         `;
         
-        if (item.live) {
-            cardHTML += `<span class="live-badge">🔴 AO VIVO</span>`;
-        }
-        
-        cardHTML += `</div>`;
-        card.innerHTML = cardHTML;
-        
-        card.addEventListener('click', function() {
-            showContentModal(item);
-        });
-        
+        card.addEventListener('click', () => showContentModal(item));
         return card;
     }
 
-    // Load content sections
-    function loadContent() {
-        console.log('🔄 Carregando conteúdo...');
+    function createContinueCard(item) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="${item.image}" alt="${item.title}">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${item.progress}%"></div>
+            </div>
+            <div class="card-overlay">
+                <h3 class="card-title">${item.title}</h3>
+                <p class="card-info">${item.progress}% assistido</p>
+            </div>
+        `;
         
-        // Featured
-        const featuredGrid = document.getElementById('featuredGrid');
-        streamingData.featured.forEach(item => {
-            featuredGrid.appendChild(createCard(item, 'featured'));
-        });
-        
-        // Movies
-        const moviesGrid = document.getElementById('moviesGrid');
-        streamingData.movies.forEach(item => {
-            moviesGrid.appendChild(createCard(item, 'movie'));
-        });
-        
-        // Series
-        const seriesGrid = document.getElementById('seriesGrid');
-        streamingData.series.forEach(item => {
-            seriesGrid.appendChild(createCard(item, 'series'));
-        });
-        
-        // Live TV
-        const liveGrid = document.getElementById('liveGrid');
-        streamingData.live.forEach(item => {
-            liveGrid.appendChild(createCard(item, 'live'));
-        });
-        
-        console.log('✅ Conteúdo carregado com sucesso!');
+        card.addEventListener('click', () => showContinueModal(item));
+        return card;
     }
 
-    // Content Modal
+    function createTop10Card(item) {
+        const card = document.createElement('div');
+        card.className = 'top10-item';
+        card.innerHTML = `
+            <div class="top10-rank">${item.rank}</div>
+            <div class="top10-content">
+                <img src="${item.image}" alt="${item.title}">
+                <div class="top10-info">
+                    <h3>${item.title}</h3>
+                    <p>${item.type} • ${item.year}</p>
+                </div>
+                ${item.comingSoon ? '<div class="coming-soon">Em Breve</div>' : ''}
+            </div>
+        `;
+        
+        card.addEventListener('click', () => {
+            if (!item.comingSoon) {
+                showContentModal(item);
+            }
+        });
+        return card;
+    }
+
+    function createAwardedCard(item) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="award-badge">${item.award}</div>
+            <img src="${item.image}" alt="${item.title}">
+            <div class="award-info">${item.award} ${item.awardYear}</div>
+            <div class="card-overlay">
+                <h3 class="card-title">${item.title}</h3>
+                <p class="card-info">${item.type} • ${item.year}</p>
+            </div>
+        `;
+        
+        card.addEventListener('click', () => showContentModal(item));
+        return card;
+    }
+
+    // Modal functions
+    let currentPlayer = null;
+    let currentContinueItem = null;
+
     function showContentModal(item) {
         const modal = document.getElementById('contentModal');
         const modalContent = document.getElementById('modalContent');
-        
-        const isInWatchlist = watchlist.includes(item.title);
         
         modalContent.innerHTML = `
             <div style="display: flex; gap: 30px;">
                 <img src="${item.image}" alt="${item.title}" style="width: 200px; height: 300px; object-fit: cover; border-radius: 8px;">
                 <div style="flex: 1;">
-                    <h2 style="margin-bottom: 15px;">${item.title}</h2>
-                    <p style="color: #ccc; margin-bottom: 10px;">${item.type} ${item.year ? '• ' + item.year : ''}</p>
-                    <p style="color: #ccc; margin-bottom: 20px;">${item.rating ? '⭐ ' + item.rating : ''}</p>
-                    <p style="margin-bottom: 30px;">Esta é uma descrição detalhada do conteúdo selecionado. Aproveite a melhor experiência de streaming com qualidade superior.</p>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button class="btn-primary" onclick="playVideo('${item.title}', '${item.stream}')">▶ Assistir Agora</button>
-                        <button class="btn-secondary" onclick="toggleWatchlist('${item.title}')">${isInWatchlist ? '✓ Na Lista' : '+ Minha Lista'}</button>
-                    </div>
+                    <h2>${item.title}</h2>
+                    <p style="color: #ccc;">${item.type} • ${item.year}</p>
+                    <p style="margin: 20px 0;">Descrição do conteúdo selecionado.</p>
+                    <button class="btn-primary" onclick="playVideo('${item.title}', '${item.stream}')">▶ Assistir Agora</button>
                 </div>
             </div>
         `;
@@ -146,11 +448,41 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'flex';
     }
 
+    function showContinueModal(item) {
+        currentContinueItem = item;
+        const modal = document.getElementById('continueModal');
+        const title = document.getElementById('continueTitle');
+        
+        title.textContent = item.title;
+        modal.style.display = 'flex';
+    }
+
+    window.resumeWatching = function() {
+        if (currentContinueItem) {
+            playVideo(currentContinueItem.title, currentContinueItem.stream);
+            closeContinueModal();
+        }
+    };
+
+    window.restartWatching = function() {
+        if (currentContinueItem) {
+            currentContinueItem.progress = 0;
+            saveProgress();
+            playVideo(currentContinueItem.title, currentContinueItem.stream);
+            closeContinueModal();
+        }
+    };
+
+    window.closeContinueModal = function() {
+        document.getElementById('continueModal').style.display = 'none';
+        currentContinueItem = null;
+    };
+
     window.closeContentModal = function() {
         document.getElementById('contentModal').style.display = 'none';
     };
 
-    // Player Modal
+    // Player functions
     window.playVideo = function(title, stream) {
         closeContentModal();
         const modal = document.getElementById('playerModal');
@@ -158,12 +490,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         modal.style.display = 'flex';
         
-        // Destroy existing player
         if (currentPlayer) {
             currentPlayer.destroy();
         }
         
-        // Create new player
         currentPlayer = new Clappr.Player({
             source: stream,
             parentId: '#playerContainer',
@@ -172,7 +502,8 @@ document.addEventListener('DOMContentLoaded', function() {
             autoPlay: true
         });
         
-        console.log(`🎬 Reproduzindo: ${title}`);
+        // Simular progresso
+        simulateProgress(title);
     };
 
     window.closePlayer = function() {
@@ -183,142 +514,99 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('playerModal').style.display = 'none';
     };
 
-    // Watchlist
-    window.toggleWatchlist = function(title) {
-        const index = watchlist.indexOf(title);
-        if (index > -1) {
-            watchlist.splice(index, 1);
-            showNotification('Removido da sua lista');
+    // Progress functions
+    function simulateProgress(title) {
+        const item = streamingData.continueWatching.find(item => item.title === title);
+        if (item) {
+            const interval = setInterval(() => {
+                if (item.progress < 95) {
+                    item.progress += 1;
+                    saveProgress();
+                    renderContinueWatching();
+                } else {
+                    clearInterval(interval);
+                }
+            }, 5000);
         } else {
-            watchlist.push(title);
-            showNotification('Adicionado à sua lista');
-        }
-        localStorage.setItem('streamflix-watchlist', JSON.stringify(watchlist));
-        
-        // Update modal if open
-        const modal = document.getElementById('contentModal');
-        if (modal.style.display === 'flex') {
-            const modalContent = document.getElementById('modalContent');
-            const button = modalContent.querySelector('button[onclick*="toggleWatchlist"]');
-            if (button) {
-                button.textContent = watchlist.includes(title) ? '✓ Na Lista' : '+ Minha Lista';
+            const newItem = {
+                title: title,
+                progress: 0,
+                image: `https://picsum.photos/300/450?random=${Date.now()}`
+            };
+            streamingData.continueWatching.unshift(newItem);
+            if (streamingData.continueWatching.length > 5) {
+                streamingData.continueWatching.pop();
             }
+            saveProgress();
         }
-    };
+    }
 
-    // Featured content play
+    function saveProgress() {
+        localStorage.setItem('streamflix-progress', JSON.stringify(streamingData.continueWatching));
+    }
+
+    // Other functions
     window.playFeatured = function() {
         playVideo('Ação Explosiva', 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
     };
 
-    // Plans modal
     window.showPlans = function() {
-        const modal = document.getElementById('contentModal');
-        const modalContent = document.getElementById('modalContent');
-        
-        modalContent.innerHTML = `
-            <h2>Planos StreamFlix</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
-                <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; text-align: center;">
-                    <h3>Básico</h3>
-                    <p style="font-size: 24px; margin: 20px 0;">R$ 19,90/mês</p>
-                    <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
-                        <li>✓ 1 tela simultânea</li>
-                        <li>✓ HD 720p</li>
-                        <li>✓ Catálogo completo</li>
-                    </ul>
-                    <button class="btn-secondary">Assinar</button>
-                </div>
-                <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; text-align: center; border: 2px solid #ff2e2e;">
-                    <h3>Premium</h3>
-                    <p style="font-size: 24px; margin: 20px 0;">R$ 29,90/mês</p>
-                    <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
-                        <li>✓ 4 telas simultâneas</li>
-                        <li>✓ Full HD 1080p</li>
-                        <li>✓ Catálogo completo</li>
-                        <li>✓ Downloads offline</li>
-                    </ul>
-                    <button class="btn-primary">Assinar</button>
-                </div>
-                <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; text-align: center;">
-                    <h3>Family</h3>
-                    <p style="font-size: 24px; margin: 20px 0;">R$ 39,90/mês</p>
-                    <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
-                        <li>✓ 6 telas simultâneas</li>
-                        <li>✓ 4K Ultra HD</li>
-                        <li>✓ Catálogo completo</li>
-                        <li>✓ Downloads offline</li>
-                        <li>✓ Perfis individuais</li>
-                    </ul>
-                    <button class="btn-secondary">Assinar</button>
-                </div>
-            </div>
-        `;
-        
-        modal.style.display = 'flex';
+        alert('Planos de assinatura em breve!');
     };
 
-    // Search functionality
-    const searchBtn = document.getElementById('searchBtn');
-    if (searchBtn) {
-        searchBtn.addEventListener('click', function() {
-            const query = prompt('Buscar conteúdo:');
-            if (query) {
-                performSearch(query);
-            }
+    // Navigation
+    const navLinks = document.querySelectorAll('.nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
         });
-    }
+    });
 
-    function performSearch(query) {
-        const allContent = [
-            ...streamingData.featured,
-            ...streamingData.movies,
-            ...streamingData.series,
-            ...streamingData.live
-        ];
-        
-        const results = allContent.filter(item => 
-            item.title.toLowerCase().includes(query.toLowerCase())
-        );
-        
-        if (results.length > 0) {
-            showContentModal(results[0]);
-        } else {
-            showNotification('Nenhum resultado encontrado');
+    // Search
+    document.getElementById('searchBtn').addEventListener('click', function() {
+        const query = prompt('Buscar conteúdo:');
+        if (query) {
+            const results = streamingData.allContent.filter(item => 
+                item.title.toLowerCase().includes(query.toLowerCase())
+            );
+            if (results.length > 0) {
+                showContentModal(results[0]);
+            } else {
+                alert('Nenhum resultado encontrado');
+            }
         }
-    }
-
-    // Notification system
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #ff2e2e;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            z-index: 10000;
-            animation: slideUp 0.3s ease;
-        `;
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-    }
+    });
 
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            closeContentModal();
             closePlayer();
+            closeContentModal();
+            closeContinueModal();
         }
     });
 
+    // Header scroll
+    const header = document.querySelector('.header');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 100) {
+            header.style.background = 'rgba(0,0,0,0.95)';
+        } else {
+            header.style.background = 'rgba(0,0,0,0.9)';
+        }
+    });
+
+    // Procurar novelas a cada 11 minutos
+    setInterval(() => {
+        const soapSection = document.getElementById('soap-operas');
+        if (streamingData.soapOperas.length > 0 && soapSection.style.display === 'none') {
+            renderSoapOperas();
+        }
+    }, 660000);
+
     // Initialize
-    loadContent();
-    console.log('✅ StreamFlix iniciado com sucesso!');
+    initializeData();
+    console.log('✅ StreamFlix Inteligente iniciado!');
 });
