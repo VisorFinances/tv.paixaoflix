@@ -1,83 +1,167 @@
-// StreamFlix - Página de Filmes
+// StreamFlix - Página de Filmes com JSON Externo
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // Base de dados de filmes
-    const moviesData = {
-        releases2024: [
-            { id: 1, title: "Ação Explosiva 2024", year: 2024, genre: "acao", rating: "4.8", duration: "2h 15min", image: "https://picsum.photos/300/450?random=movie1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 2, title: "Romance Moderno", year: 2024, genre: "romance", rating: "4.6", duration: "1h 45min", image: "https://picsum.photos/300/450?random=movie2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 3, title: "Comédia do Ano", year: 2024, genre: "comedia", rating: "4.7", duration: "1h 30min", image: "https://picsum.photos/300/450?random=movie3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 4, title: "Terror Psicológico", year: 2024, genre: "terror", rating: "4.5", duration: "2h 00min", image: "https://picsum.photos/300/450?random=movie4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 5, title: "Drama Intenso", year: 2024, genre: "drama", rating: "4.9", duration: "2h 20min", image: "https://picsum.photos/300/450?random=movie5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        action: [
-            { id: 6, title: "Missão Impossível", year: 2024, genre: "acao", rating: "4.8", duration: "2h 30min", image: "https://picsum.photos/300/450?random=action1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 7, title: "Velocidade Máxima", year: 2023, genre: "acao", rating: "4.6", duration: "2h 00min", image: "https://picsum.photos/300/450?random=action2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 8, title: "Herói em Ação", year: 2024, genre: "acao", rating: "4.7", duration: "2h 15min", image: "https://picsum.photos/300/450?random=action3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 9, title: "Batalha Final", year: 2023, genre: "acao", rating: "4.5", duration: "2h 45min", image: "https://picsum.photos/300/450?random=action4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 10, title: "Resgate Urgente", year: 2024, genre: "acao", rating: "4.8", duration: "2h 10min", image: "https://picsum.photos/300/450?random=action5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 11, title: "Guerra Civil", year: 2024, genre: "acao", rating: "4.9", duration: "2h 40min", image: "https://picsum.photos/300/450?random=action6", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" }
-        ],
-        comedy: [
-            { id: 12, title: "Comédia Leve", year: 2024, genre: "comedia", rating: "4.3", duration: "1h 30min", image: "https://picsum.photos/300/450?random=comedy1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 13, title: "Risada Garantida", year: 2023, genre: "comedia", rating: "4.5", duration: "1h 45min", image: "https://picsum.photos/300/450?random=comedy2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 14, title: "Piadas Mortais", year: 2024, genre: "comedia", rating: "4.2", duration: "1h 25min", image: "https://picsum.photos/300/450?random=comedy3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 15, title: "Comédia Romântica", year: 2024, genre: "comedia", rating: "4.4", duration: "1h 40min", image: "https://picsum.photos/300/450?random=comedy4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 16, title: "Humor Negro", year: 2023, genre: "comedia", rating: "4.1", duration: "1h 35min", image: "https://picsum.photos/300/450?random=comedy5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        horror: [
-            { id: 17, title: "Terror Noturno", year: 2024, genre: "terror", rating: "4.6", duration: "2h 00min", image: "https://picsum.photos/300/450?random=horror1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 18, title: "Pesadelo", year: 2023, genre: "terror", rating: "4.4", duration: "1h 50min", image: "https://picsum.photos/300/450?random=horror2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 19, title: "Casa Assombrada", year: 2024, genre: "terror", rating: "4.7", duration: "2h 10min", image: "https://picsum.photos/300/450?random=horror3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 20, title: "Horror Psicológico", year: 2024, genre: "terror", rating: "4.5", duration: "2h 20min", image: "https://picsum.photos/300/450?random=horror4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 21, title: "Zumbi Apocalypse", year: 2023, genre: "terror", rating: "4.3", duration: "2h 15min", image: "https://picsum.photos/300/450?random=horror5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        romance: [
-            { id: 22, title: "Amor Eterno", year: 2024, genre: "romance", rating: "4.8", duration: "2h 00min", image: "https://picsum.photos/300/450?random=romance1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 23, title: "Encontro Perfeito", year: 2023, genre: "romance", rating: "4.6", duration: "1h 45min", image: "https://picsum.photos/300/450?random=romance2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 24, title: "Paixão Proibida", year: 2024, genre: "romance", rating: "4.7", duration: "2h 10min", image: "https://picsum.photos/300/450?random=romance3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 25, title: "Coração Partido", year: 2024, genre: "romance", rating: "4.5", duration: "1h 55min", image: "https://picsum.photos/300/450?random=romance4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 26, title: "Amor à Primeira Vista", year: 2023, genre: "romance", rating: "4.4", duration: "2h 05min", image: "https://picsum.photos/300/450?random=romance5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        drama: [
-            { id: 27, title: "Drama Intenso", year: 2024, genre: "drama", rating: "4.9", duration: "2h 30min", image: "https://picsum.photos/300/450?random=drama1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 28, title: "Vidas Cruzadas", year: 2023, genre: "drama", rating: "4.7", duration: "2h 15min", image: "https://picsum.photos/300/450?random=drama2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 29, title: "Justiça", year: 2024, genre: "drama", rating: "4.8", duration: "2h 45min", image: "https://picsum.photos/300/450?random=drama3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 30, title: "Redenção", year: 2024, genre: "drama", rating: "4.6", duration: "2h 20min", image: "https://picsum.photos/300/450?random=drama4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 31, title: "Esperança", year: 2023, genre: "drama", rating: "4.5", duration: "2h 00min", image: "https://picsum.photos/300/450?random=drama5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        scifi: [
-            { id: 32, title: "Ficção Científica", year: 2024, genre: "ficcao", rating: "4.7", duration: "2h 40min", image: "https://picsum.photos/300/450?random=scifi1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 33, title: "Viagem no Tempo", year: 2023, genre: "ficcao", rating: "4.5", duration: "2h 25min", image: "https://picsum.photos/300/450?random=scifi2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 34, title: "Marte", year: 2024, genre: "ficcao", rating: "4.8", duration: "2h 50min", image: "https://picsum.photos/300/450?random=scifi3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 35, title: "Robôs", year: 2024, genre: "ficcao", rating: "4.6", duration: "2h 15min", image: "https://picsum.photos/300/450?random=scifi4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 36, title: "Espaço Sideral", year: 2023, genre: "ficcao", rating: "4.4", duration: "2h 30min", image: "https://picsum.photos/300/450?random=scifi5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        classic: [
-            { id: 37, title: "Clássico 1970", year: 1970, genre: "classico", rating: "4.9", duration: "2h 00min", image: "https://picsum.photos/300/450?random=classic1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 38, title: "Clássico 1980", year: 1980, genre: "classico", rating: "4.8", duration: "2h 15min", image: "https://picsum.photos/300/450?random=classic2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 39, title: "Clássico 1990", year: 1990, genre: "classico", rating: "4.7", duration: "2h 30min", image: "https://picsum.photos/300/450?random=classic3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 40, title: "Clássico 2000", year: 2000, genre: "classico", rating: "4.6", duration: "2h 10min", image: "https://picsum.photos/300/450?random=classic4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 41, title: "Clássico 2010", year: 2010, genre: "classico", rating: "4.5", duration: "2h 20min", image: "https://picsum.photos/300/450?random=classic5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        national: [
-            { id: 42, title: "Filme Brasileiro 1", year: 2024, genre: "nacional", rating: "4.5", duration: "2h 00min", image: "https://picsum.photos/300/450?random=national1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 43, title: "Filme Brasileiro 2", year: 2023, genre: "nacional", rating: "4.3", duration: "1h 45min", image: "https://picsum.photos/300/450?random=national2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 44, title: "Filme Brasileiro 3", year: 2024, genre: "nacional", rating: "4.6", duration: "2h 15min", image: "https://picsum.photos/300/450?random=national3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 45, title: "Filme Brasileiro 4", year: 2023, genre: "nacional", rating: "4.4", duration: "1h 50min", image: "https://picsum.photos/300/450?random=national4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 46, title: "Filme Brasileiro 5", year: 2024, genre: "nacional", rating: "4.7", duration: "2h 05min", image: "https://picsum.photos/300/450?random=national5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ],
-        awarded: [
-            { id: 47, title: "Filme Premiado 1", year: 2024, genre: "drama", rating: "4.9", award: "Oscar", awardYear: 2024, duration: "2h 30min", image: "https://picsum.photos/300/450?random=awarded1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 48, title: "Filme Premiado 2", year: 2023, genre: "acao", rating: "4.8", award: "Globo de Ouro", awardYear: 2023, duration: "2h 15min", image: "https://picsum.photos/300/450?random=awarded2", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 49, title: "Filme Premiado 3", year: 2024, genre: "drama", rating: "4.7", award: "Cannes", awardYear: 2024, duration: "2h 45min", image: "https://picsum.photos/300/450?random=awarded3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-            { id: 50, title: "Filme Premiado 4", year: 2023, genre: "comedia", rating: "4.6", award: "BAFTA", awardYear: 2023, duration: "2h 00min", image: "https://picsum.photos/300/450?random=awarded4", stream: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" },
-            { id: 51, title: "Filme Premiado 5", year: 2024, genre: "ficcao", rating: "4.8", award: "SAG Award", awardYear: 2024, duration: "2h 20min", image: "https://picsum.photos/300/450?random=awarded5", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-        ]
+    let moviesData = {
+        releases2024: [],
+        action: [],
+        comedy: [],
+        horror: [],
+        romance: [],
+        drama: [],
+        scifi: [],
+        classic: [],
+        national: [],
+        awarded: []
     };
 
     let currentPlayer = null;
+
+    // Carregar dados do JSON externo
+    async function loadMoviesFromJSON() {
+        try {
+            console.log('🔄 Carregando filmes do JSON externo...');
+            const response = await fetch('https://raw.githubusercontent.com/VisorFinances/tv.paixaoflix/refs/heads/main/data/filmes');
+            const movies = await response.json();
+            
+            // Processar e categorizar filmes
+            movies.forEach(movie => {
+                const processedMovie = {
+                    id: movie.tmdb_id || Math.random().toString(36).substr(2, 9),
+                    title: movie.titulo,
+                    year: movie.year || '2024',
+                    genre: movie.genero || movie.categories?.[0] || 'Geral',
+                    rating: movie.rating || '5.0',
+                    duration: movie.duration || '2h 00min',
+                    description: movie.desc || 'Filme incrível para toda família.',
+                    poster: movie.poster || `https://picsum.photos/300/450?random=${Math.random()}`,
+                    stream: movie.url || 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    type: 'movie'
+                };
+
+                // Categorizar filmes
+                if (movie.categories) {
+                    movie.categories.forEach(category => {
+                        categorizeMovie(processedMovie, category);
+                    });
+                } else if (movie.genero) {
+                    categorizeMovie(processedMovie, movie.genero);
+                } else {
+                    // Adicionar a lançamentos se não tiver categoria
+                    moviesData.releases2024.push(processedMovie);
+                }
+
+                // Adicionar a premiados se tiver rating alto
+                if (parseFloat(movie.rating) >= 7.0) {
+                    moviesData.awarded.push({
+                        ...processedMovie,
+                        award: 'Premiado',
+                        awardYear: movie.year || '2024'
+                    });
+                }
+            });
+
+            console.log('✅ Filmes carregados e categorizados:', moviesData);
+            renderMovieSections();
+            
+        } catch (error) {
+            console.error('❌ Erro ao carregar JSON:', error);
+            // Carregar dados de fallback
+            loadFallbackData();
+        }
+    }
+
+    // Função para categorizar filmes
+    function categorizeMovie(movie, category) {
+        const normalizedCategory = category.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        
+        switch(normalizedCategory) {
+            case 'lancamento 2026':
+            case 'lancamento':
+                moviesData.releases2024.push(movie);
+                break;
+            case 'acao':
+            case 'ação':
+                moviesData.action.push(movie);
+                break;
+            case 'comedia':
+            case 'comédia':
+                moviesData.comedy.push(movie);
+                break;
+            case 'terror':
+                moviesData.horror.push(movie);
+                break;
+            case 'romance':
+                moviesData.romance.push(movie);
+                break;
+            case 'drama':
+                moviesData.drama.push(movie);
+                break;
+            case 'sci-fi':
+            case 'ficcao':
+            case 'ficção científica':
+                moviesData.scifi.push(movie);
+                break;
+            case 'classico':
+            case 'clássicos':
+                moviesData.classic.push(movie);
+                break;
+            case 'nacional':
+            case 'brasileiro':
+                moviesData.national.push(movie);
+                break;
+            case 'anime':
+                moviesData.scifi.push(movie); // Adicionar a ficção científica por enquanto
+                break;
+            case 'animacao':
+            case 'animação':
+                moviesData.comedy.push(movie); // Adicionar a comédia por enquanto
+                break;
+            default:
+                // Adicionar a lançamentos se não se encaixar
+                if (!moviesData.releases2024.find(m => m.id === movie.id)) {
+                    moviesData.releases2024.push(movie);
+                }
+        }
+    }
+
+    // Dados de fallback
+    function loadFallbackData() {
+        console.log('🔄 Carregando dados de fallback...');
+        moviesData = {
+            releases2024: [
+                { id: 1, title: "Ação Explosiva 2024", year: 2024, genre: "acao", rating: "4.8", duration: "2h 15min", poster: "https://picsum.photos/300/450?random=movie1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            action: [
+                { id: 2, title: "Missão Impossível", year: 2024, genre: "acao", rating: "4.8", duration: "2h 30min", poster: "https://picsum.photos/300/450?random=action1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            comedy: [
+                { id: 3, title: "Comédia Leve", year: 2024, genre: "comedia", rating: "4.3", duration: "1h 30min", poster: "https://picsum.photos/300/450?random=comedy1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            horror: [
+                { id: 4, title: "Terror Noturno", year: 2024, genre: "terror", rating: "4.6", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=horror1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            romance: [
+                { id: 5, title: "Amor Eterno", year: 2024, genre: "romance", rating: "4.8", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=romance1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            drama: [
+                { id: 6, title: "Drama Intenso", year: 2024, genre: "drama", rating: "4.9", duration: "2h 30min", poster: "https://picsum.photos/300/450?random=drama1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            scifi: [
+                { id: 7, title: "Ficção Científica", year: 2024, genre: "ficcao", rating: "4.7", duration: "2h 40min", poster: "https://picsum.photos/300/450?random=scifi1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            classic: [
+                { id: 8, title: "Clássico 1970", year: 1970, genre: "classico", rating: "4.9", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=classic1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            national: [
+                { id: 9, title: "Filme Brasileiro", year: 2024, genre: "nacional", rating: "4.5", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=national1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
+            awarded: [
+                { id: 10, title: "Filme Premiado", year: 2024, genre: "drama", rating: "4.9", award: "Oscar", awardYear: 2024, duration: "2h 30min", poster: "https://picsum.photos/300/450?random=awarded1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ]
+        };
+        renderMovieSections();
+    }
 
     // Header scroll effect
     const header = document.querySelector('.header');
@@ -99,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Load all movie sections
-    function loadMovieSections() {
+    function renderMovieSections() {
         console.log('🔄 Carregando seções de filmes...');
         
         // Lançamentos 2024
@@ -180,10 +264,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-            <img src="${movie.image}" alt="${movie.title}">
+            <img src="${movie.poster || movie.image}" alt="${movie.title}">
             <div class="card-overlay">
                 <h3 class="card-title">${movie.title}</h3>
-                <p class="card-info">${movie.year} • ${movie.duration} • ⭐ ${movie.rating}</p>
+                <p class="card-info">${movie.year} • ${movie.duration || '2h 00min'} • ⭐ ${movie.rating}</p>
             </div>
         `;
         
@@ -196,12 +280,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-            <div class="award-badge">${movie.award}</div>
-            <img src="${movie.image}" alt="${movie.title}">
-            <div class="award-info">${movie.award} ${movie.awardYear}</div>
+            <div class="award-badge">${movie.award || 'Premiado'}</div>
+            <img src="${movie.poster || movie.image}" alt="${movie.title}">
+            <div class="award-info">${movie.award || 'Premiado'} ${movie.awardYear || movie.year}</div>
             <div class="card-overlay">
                 <h3 class="card-title">${movie.title}</h3>
-                <p class="card-info">${movie.year} • ${movie.duration} • ⭐ ${movie.rating}</p>
+                <p class="card-info">${movie.year} • ${movie.duration || '2h 00min'} • ⭐ ${movie.rating}</p>
             </div>
         `;
         
@@ -275,12 +359,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         modalContent.innerHTML = `
             <div style="display: flex; gap: 30px;">
-                <img src="${movie.image}" alt="${movie.title}" style="width: 200px; height: 300px; object-fit: cover; border-radius: 8px;">
+                <img src="${movie.poster || movie.image}" alt="${movie.title}" style="width: 200px; height: 300px; object-fit: cover; border-radius: 8px;">
                 <div style="flex: 1;">
                     <h2>${movie.title}</h2>
-                    <p style="color: #ccc;">${movie.year} • ${movie.duration} • ${movie.genre}</p>
+                    <p style="color: #ccc;">${movie.year} • ${movie.duration || '2h 00min'} • ${movie.genre}</p>
                     <p style="color: #ff2e2e;">⭐ ${movie.rating}</p>
-                    <p style="margin: 20px 0;">Esta é uma descrição detalhada do filme selecionado. Uma história envolvente com atuações incríveis e direção de primeira linha.</p>
+                    <p style="margin: 20px 0;">${movie.description || 'Esta é uma descrição detalhada do filme selecionado. Uma história envolvente com atuações incríveis e direção de primeira linha.'}</p>
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                         <button class="btn-primary" onclick="playVideo('${movie.title}', '${movie.stream}')">▶ Assistir Agora</button>
                         <button class="btn-secondary" onclick="closeContentModal()">Fechar</button>
@@ -329,7 +413,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hero functions
     window.playFeatured = function() {
-        playVideo('Ação Explosiva 2024', 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
+        // Tocar o primeiro filme disponível
+        const firstMovie = moviesData.releases2024[0] || moviesData.action[0];
+        if (firstMovie) {
+            playVideo(firstMovie.title, firstMovie.stream);
+        }
     };
 
     window.showPlans = function() {
@@ -374,6 +462,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initialize
-    loadMovieSections();
-    console.log('✅ Página de Filmes iniciada com sucesso!');
+    loadMoviesFromJSON();
+    console.log('✅ Página de Filmes com JSON externo iniciada!');
 });
