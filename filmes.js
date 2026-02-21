@@ -125,39 +125,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Dados de fallback
+    // Dados de fallback (apenas mídias que não estão no JSON externo)
     function loadFallbackData() {
         console.log('🔄 Carregando dados de fallback...');
         moviesData = {
             releases2024: [
-                { id: 1, title: "Ação Explosiva 2024", year: 2024, genre: "acao", rating: "4.8", duration: "2h 15min", poster: "https://picsum.photos/300/450?random=movie1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
-            ],
-            action: [
+                // Apenas mídias não presentes no JSON
+                { id: 1, title: "Ação Explosiva 2024", year: 2024, genre: "acao", rating: "4.8", duration: "2h 15min", poster: "https://picsum.photos/300/450?random=movie1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
                 { id: 2, title: "Missão Impossível", year: 2024, genre: "acao", rating: "4.8", duration: "2h 30min", poster: "https://picsum.photos/300/450?random=action1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
+            action: [
+                { id: 3, title: "Velocidade Máxima", year: 2024, genre: "acao", rating: "4.6", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=action2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 4, title: "Herói em Ação", year: 2024, genre: "acao", rating: "4.7", duration: "2h 15min", poster: "https://picsum.photos/300/450?random=action3", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+            ],
             comedy: [
-                { id: 3, title: "Comédia Leve", year: 2024, genre: "comedia", rating: "4.3", duration: "1h 30min", poster: "https://picsum.photos/300/450?random=comedy1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 5, title: "Comédia Leve", year: 2024, genre: "comedia", rating: "4.3", duration: "1h 30min", poster: "https://picsum.photos/300/450?random=comedy1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 6, title: "Risada Garantida", year: 2024, genre: "comedia", rating: "4.5", duration: "1h 45min", poster: "https://picsum.photos/300/450?random=comedy2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
             horror: [
-                { id: 4, title: "Terror Noturno", year: 2024, genre: "terror", rating: "4.6", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=horror1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 7, title: "Terror Noturno", year: 2024, genre: "terror", rating: "4.6", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=horror1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 8, title: "Pesadelo", year: 2024, genre: "terror", rating: "4.4", duration: "1h 50min", poster: "https://picsum.photos/300/450?random=horror2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
             romance: [
-                { id: 5, title: "Amor Eterno", year: 2024, genre: "romance", rating: "4.8", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=romance1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 9, title: "Amor Eterno", year: 2024, genre: "romance", rating: "4.8", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=romance1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 10, title: "Encontro Perfeito", year: 2024, genre: "romance", rating: "4.6", duration: "1h 45min", poster: "https://picsum.photos/300/450?random=romance2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
             drama: [
-                { id: 6, title: "Drama Intenso", year: 2024, genre: "drama", rating: "4.9", duration: "2h 30min", poster: "https://picsum.photos/300/450?random=drama1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 11, title: "Drama Intenso", year: 2024, genre: "drama", rating: "4.9", duration: "2h 30min", poster: "https://picsum.photos/300/450?random=drama1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 12, title: "Vidas Cruzadas", year: 2024, genre: "drama", rating: "4.7", duration: "2h 15min", poster: "https://picsum.photos/300/450?random=drama2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
             scifi: [
-                { id: 7, title: "Ficção Científica", year: 2024, genre: "ficcao", rating: "4.7", duration: "2h 40min", poster: "https://picsum.photos/300/450?random=scifi1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 13, title: "Ficção Científica", year: 2024, genre: "ficcao", rating: "4.7", duration: "2h 40min", poster: "https://picsum.photos/300/450?random=scifi1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 14, title: "Viagem no Tempo", year: 2024, genre: "ficcao", rating: "4.5", duration: "2h 25min", poster: "https://picsum.photos/300/450?random=scifi2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
             classic: [
-                { id: 8, title: "Clássico 1970", year: 1970, genre: "classico", rating: "4.9", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=classic1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 15, title: "Clássico 1970", year: 1970, genre: "classico", rating: "4.9", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=classic1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 16, title: "Clássico 1980", year: 1980, genre: "classico", rating: "4.8", duration: "2h 15min", poster: "https://picsum.photos/300/450?random=classic2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
             national: [
-                { id: 9, title: "Filme Brasileiro", year: 2024, genre: "nacional", rating: "4.5", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=national1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 17, title: "Filme Brasileiro 1", year: 2024, genre: "nacional", rating: "4.5", duration: "2h 00min", poster: "https://picsum.photos/300/450?random=national1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+                { id: 18, title: "Filme Brasileiro 2", year: 2024, genre: "nacional", rating: "4.3", duration: "1h 45min", poster: "https://picsum.photos/300/450?random=national2", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ],
             awarded: [
-                { id: 10, title: "Filme Premiado", year: 2024, genre: "drama", rating: "4.9", award: "Oscar", awardYear: 2024, duration: "2h 30min", poster: "https://picsum.photos/300/450?random=awarded1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+                { id: 19, title: "Filme Premiado", year: 2024, genre: "drama", rating: "4.9", award: "Oscar", awardYear: 2024, duration: "2h 30min", poster: "https://picsum.photos/300/450?random=awarded1", stream: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
             ]
         };
         renderMovieSections();
